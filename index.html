@@ -421,8 +421,8 @@ async function startAnalysis(){const yr=document.getElementById('f-year').value,
     initSecs();
     SECS.forEach(s=>updSec(s.id,'run'));
     let done=0;
-    for(let i=0;i<SECS.length;i+=4){
-      const chunk=SECS.slice(i,i+4);
+    for(let i=0;i<SECS.length;i+=6){
+      const chunk=SECS.slice(i,i+6);
       await Promise.all(chunk.map(async s=>{
         try{
           const t=await api(SYS,makeQ(s.id,dc,ka,ma,ds));
