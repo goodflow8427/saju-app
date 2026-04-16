@@ -210,13 +210,16 @@ textarea.inp{resize:vertical;min-height:68px;line-height:1.7;}
     <div id="sub-status"></div>
   <div id="code-section" class="code-wrap">
     <div class="code-title">✦ 구독 코드 입력</div>
+    <div style="margin-bottom:8px;">
+      <input class="code-input" id="email-input" placeholder="이메일 주소" type="email" style="letter-spacing:0;margin-bottom:6px;display:block;width:100%;">
+    </div>
     <div class="code-row">
-      <input class="code-input" id="code-input" placeholder="코드를 입력하세요" maxlength="20">
+      <input class="code-input" id="code-input" placeholder="구독 코드 8자리" maxlength="8" style="text-transform:uppercase;">
       <button class="code-btn" onclick="submitCode()">적용</button>
     </div>
     <div class="code-msg" id="code-msg"></div>
     <div style="margin-top:10px;font-size:11px;color:#6a5a4a;text-align:center;">
-      구독 후 카카오톡으로 코드를 받으세요 · <a href="https://qr.kakaopay.com/Ej8YEKUhZ" target="_blank" style="color:#c9a84c;">구독하기 ₩9,900</a>
+      구독 후 이메일로 코드를 받으세요 · <a href="https://qr.kakaopay.com/Ej8YEKUhZ" target="_blank" style="color:#c9a84c;">구독하기 ₩9,900</a>
     </div>
   </div>
   <div id="mj-res"></div>
@@ -421,29 +424,45 @@ function selYr(v,el){pYr=v;document.querySelectorAll('#p-form .chip').forEach(c=
 function togArea(v,el){if(pAr.includes(v)){pAr=pAr.filter(a=>a!==v);el.classList.remove('on');}else{pAr.push(v);el.classList.add('on');}}
 async function genPlan(){if(!pYr){const e=document.getElementById('p-err');e.textContent='기간을 선택해주세요.';e.classList.remove('hidden');return;}if(!pAr.length){const e=document.getElementById('p-err');e.textContent='영역을 선택해주세요.';e.classList.remove('hidden');return;}document.getElementById('p-err').classList.add('hidden');document.getElementById('p-form').classList.add('hidden');document.getElementById('p-ldg').classList.remove('hidden');const goal=document.getElementById('p-goal').value;const yr2=new Date().getFullYear();const q=`사주:${G.dc} 성별:${G.form.gender==='female'?'여성':'남성'} 나이:${G.ka}세\n계획:${pYr}년 영역:${pAr.join(',')}${goal?' 목표:'+goal:''}\nJSON 배열만 반환하세요:\n[{"period":"${yr2}년","theme":"테마","goal":"목표","guidelines":["행동1","행동2","행동3"],"reason":"근거"}]\n${pYr==='10'?'4개':pYr+'개'} 항목.`;try{const raw=await api('사주명리 전문가입니다. JSON만 반환하세요.',q);const clean=raw.replace(/```json|```/g,'').trim();const list=JSON.parse(clean.match(/\[[\s\S]*\]/)[0]);document.getElementById('p-title').textContent=pYr+'년 맞춤 로드맵';document.getElementById('p-areas').textContent=pAr.join(' · ');document.getElementById('p-items').innerHTML=list.map(item=>`<div class="pi2"><div class="pp3">${item.period} · ${item.theme}</div><div class="pg3">${item.goal}</div><div class="pgd">${(item.guidelines||[]).map(g=>'· '+g+'<br>').join('')}</div><div class="pr">${item.reason}</div></div>`).join('');document.getElementById('p-ldg').classList.add('hidden');document.getElementById('p-res').classList.remove('hidden');}catch(e){document.getElementById('p-ldg').classList.add('hidden');document.getElementById('p-form').classList.remove('hidden');document.getElementById('p-err').textContent='오류.';document.getElementById('p-err').classList.remove('hidden');}}
 function resetPlan(){document.getElementById('p-res').classList.add('hidden');document.getElementById('p-form').classList.remove('hidden');pYr='';pAr=[];document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));}
-function submitCode(){
-  const code=document.getElementById('code-input').value.trim();
+async function submitCode(){
+  const code=document.getElementById('code-input').value.trim().toUpperCase();
+  const email=document.getElementById('email-input').value.trim().toLowerCase();
   const msg=document.getElementById('code-msg');
-  if(!code){msg.className='code-msg err';msg.textContent='코드를 입력해주세요.';return;}
-  const days=activateCode(code);
-  if(days){
-    msg.className='code-msg ok';
-    msg.textContent=`✓ 구독 활성화! ${days}일 이용 가능합니다.`;
-    document.getElementById('code-input').value='';
-    setTimeout(()=>{
-      updateSubUI();
-      // 잠긴 섹션 다시 표시
-      SECS.forEach(s=>{
-        if(!FREE_SECS.includes(s.id)&&G.secs[s.id]?.t){
-          updSec(s.id,'done',G.secs[s.id].t);
-          const bd=document.getElementById('sb-'+s.id);
-          if(bd)bd.classList.remove('open');
-        }
-      });
-    },1000);
-  } else {
+  if(!email){msg.className='code-msg err';msg.textContent='이메일을 입력해주세요.';return;}
+  if(!code||code.length<6){msg.className='code-msg err';msg.textContent='코드를 입력해주세요.';return;}
+  msg.className='code-msg';msg.textContent='확인 중…';
+  try{
+    const res=await fetch('/api/admin',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'verify',code,email})
+    });
+    const data=await res.json();
+    if(data.valid){
+      const exp=new Date().getTime()+(data.days*24*60*60*1000);
+      localStorage.setItem('saju-sub-exp',exp.toString());
+      localStorage.setItem('saju-sub-email',email);
+      msg.className='code-msg ok';
+      msg.textContent=`✓ 구독 활성화! ${data.days}일 이용 가능합니다.`;
+      document.getElementById('code-input').value='';
+      document.getElementById('email-input').value='';
+      setTimeout(()=>{
+        updateSubUI();
+        SECS.forEach(s=>{
+          if(!FREE_SECS.includes(s.id)&&G.secs[s.id]?.t){
+            updSec(s.id,'done',G.secs[s.id].t);
+            const bd=document.getElementById('sb-'+s.id);
+            if(bd)bd.classList.remove('open');
+          }
+        });
+      },1000);
+    } else {
+      msg.className='code-msg err';
+      msg.textContent=data.error||'유효하지 않은 코드입니다.';
+    }
+  }catch(e){
     msg.className='code-msg err';
-    msg.textContent='유효하지 않은 코드입니다.';
+    msg.textContent='서버 오류. 잠시 후 다시 시도해주세요.';
   }
 }
 function updateSubUI(){
