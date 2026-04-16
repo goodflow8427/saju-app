@@ -338,7 +338,30 @@ function togSec(id){
 function isSubscribed(){
   return localStorage.getItem('saju-sub')==='1';
 }
-function updSec(id,status,text=''){const st=document.getElementById('st-'+id);const tx=document.getElementById('txt-'+id);if(!st)return;st.className='sec-st '+status;st.textContent=status==='done'?'완료 ▾':status==='run'?'분석 중…':'대기';if(text)tx.innerHTML=mdHTML(text);}
+function updSec(id,status,text=''){
+  const st=document.getElementById('st-'+id);
+  const tx=document.getElementById('txt-'+id);
+  if(!st)return;
+  st.className='sec-st '+status;
+  st.textContent=status==='done'?'완료 ▾':status==='run'?'분석 중…':'대기';
+  if(text){
+    if(!FREE_SECS.includes(id)&&!isSubscribed()){
+      // 유료 섹션 - 미리보기만 보여주고 잠금
+      const preview=text.replace(/<[^>]+>/g,'').slice(0,60)+'...';
+      tx.dataset.locked='1';
+      tx.innerHTML=`<p style="color:#6a5a4a;font-size:13px;margin-bottom:12px;filter:blur(3px);">${preview}</p>
+      <div class="lock-box">
+        <div class="lock-icon">🔒</div>
+        <div class="lock-title">구독 후 전체 내용을 확인하세요</div>
+        <div class="lock-desc">월 9,900원으로 12개 섹션 전체<br>오늘 운세 · 궁합 · 대운 · 로드맵 무제한</div>
+        <a class="lock-btn" href="https://qr.kakaopay.com/Ej8YEKUhZ" target="_blank">카카오페이로 구독하기 ₩9,900</a>
+        <div class="lock-notice">입금 후 카카오톡으로 입금자명을 보내주시면<br>구독이 활성화됩니다.</div>
+      </div>`;
+    } else {
+      tx.innerHTML=mdHTML(text);
+    }
+  }
+}
 function updPrg(done,total){const p=done/total*100+'%';const pb=document.getElementById('prg');const pb2=document.getElementById('prg2');const pt=document.getElementById('prg-t');const pt2=document.getElementById('prg-t2');if(pb)pb.style.width=p;if(pb2)pb2.style.width=p;if(pt)pt.textContent=done+' / '+total+' 완료';if(pt2){pt2.textContent=done>=total?'분석 완료 ✓':'분석 중… '+done+'/'+total;if(done>=total){const pw=document.getElementById('prg-wrap');if(pw)pw.style.display='none';}}}
 async function startAnalysis(){const yr=document.getElementById('f-year').value,mo=document.getElementById('f-month').value,dy=document.getElementById('f-day').value,hr=document.getElementById('f-hour').value,mn=document.getElementById('f-minute').value,gd=document.getElementById('f-gender').value,nm=document.getElementById('f-name').value;if(!yr||!mo||!dy||hr===''||mn===''){const e=document.getElementById('f-err');e.textContent='생년월일과 시간을 모두 입력해주세요.';e.classList.remove('hidden');return;}document.getElementById('f-err').classList.add('hidden');const y=parseInt(yr),m=parseInt(mo),d=parseInt(dy),h=parseInt(hr);const sj=calc(y,m,d,h),dc=desc(sj);const ka=new Date().getFullYear()-y+1,ma=new Date().getFullYear()-y,ds=ST[sj.day.s];G={saju:sj,dc,form:{name:nm,year:yr,month:mo,day:dy,hour:hr,minute:mn,gender:gd},ka,ma,ds,secs:{},openSec:'s1'};clr();document.getElementById('mj-load').innerHTML=mjHTML(sj);show('s-loading');updPrg(0,SECS.length);await sv();for(let i=0;i<2;i++){const s=SECS[i];try{const t=await api(SYS,makeQ(s.id,dc,ka,ma,ds));G.secs[s.id]={t,done:true};svSec(s.id,t);}catch(e){G.secs[s.id]={t:'오류.',done:true};}updPrg(i+1,SECS.length);}show('s-main');document.getElementById('r-name').textContent=nm||'명반 분석 결과';document.getElementById('r-meta').textContent=yr+'.'+mo+'.'+dy+' '+hr+':'+mn.padStart(2,'0')+' · '+(gd==='female'?'여성':'남성');document.getElementById('mj-res').innerHTML=mjHTML(sj);initSecs();let done=0;SECS.forEach(s=>{if(G.secs[s.id]?.done){updSec(s.id,'done',G.secs[s.id].t);done++;}});updPrg(done,SECS.length);setTimeout(()=>{const sb=document.getElementById('sb-s1');if(sb)sb.classList.add('open');},100);for(let i=2;i<SECS.length;i++){const s=SECS[i];updSec(s.id,'run');try{const t=await api(SYS,makeQ(s.id,dc,ka,ma,ds));G.secs[s.id]={t,done:true};svSec(s.id,t);updSec(s.id,'done',t);}catch(e){G.secs[s.id]={t:'오류.',done:true};updSec(s.id,'done','오류.');}done++;updPrg(done,SECS.length);sv();}}
 let tdLoaded=false;
