@@ -251,31 +251,12 @@ function desc(sj){const e={};['year','month','day','hour'].forEach(k=>{const a=S
 function tdp(){const n=new Date(),y=n.getFullYear(),m=n.getMonth()+1,d=n.getDate(),h=n.getHours(),Y=yp(y,m,d),MB=mb(m,d),MS=ms(Y.s,MB),DP=dp(y,m,d),HB=hb(h),HS=hs(DP.s,HB);return{year:{s:Y.s,b:Y.b},month:{s:MS,b:MB},day:{s:DP.s,b:DP.b},hour:{s:HS,b:HB}};}
 function mjHTML(sj){const cols=[{l:'시주',p:sj.hour},{l:'일주',p:sj.day},{l:'월주',p:sj.month},{l:'년주',p:sj.year}];const hc=cols.map(c=>`<div class="mj-hc">${c.l}</div>`).join('');const sc=cols.map(({p})=>`<div class="mj-cell"><span class="mj-h" style="color:${EC[SEL[p.s]]}">${ST[p.s]}</span><span class="mj-k">${SKR[p.s]}</span><span class="mj-e" style="color:${EC[SEL[p.s]]}">${SEL[p.s]}</span></div>`).join('');const bc=cols.map(({p})=>`<div class="mj-cell"><span class="mj-h" style="color:${EC[BEL[p.b]]}">${BR[p.b]}</span><span class="mj-k">${BKR[p.b]}</span><span class="mj-e" style="color:${EC[BEL[p.b]]}">${BEL[p.b]}</span></div>`).join('');return`<div class="mj"><div class="mj-hd"><div class="mj-hc"></div>${hc}</div><div class="mj-row"><div class="mj-lbl">천간</div>${sc}</div><div class="mj-row"><div class="mj-lbl">지지</div>${bc}</div></div>`;}
 function mdHTML(t){if(!t)return'';let h=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h2>$1</h2>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/^---+$/gm,'<hr>').replace(/^&gt; (.+)$/gm,'<blockquote>$1</blockquote>');
-  // 코드블럭을 인포카드로 변환
-  h=h.replace(/```[\s\S]*?```/g,m=>{
-    const inner=m.replace(/^```\w*\n?/,'').replace(/```$/,'').trim();
-    const rows=inner.split('\n').filter(r=>r.trim()&&!r.match(/^\|[-:\s|]+\|$/));
-    const isTable=rows.length>0&&rows[0].includes('|');
-    if(isTable){
-      let tb='<table>';
-      rows.forEach((r,i)=>{
-        const cells=r.split('|').slice(1,-1);
-        const tag=i===0?'th':'td';
-        tb+=`<tr>${cells.map(c=>`<${tag}>${c.trim()}</${tag}>`).join('')}</tr>`;
-      });
-      return tb+'</table>';
-    }
-    // 일반 코드블럭 → 인포카드
-    const lines=inner.split('\n').map(l=>{
-      l=l.trim();
-      if(!l)return'';
-      // | 로 시작하는 줄 → 카드 아이템
-      if(l.startsWith('|'))l=l.replace(/\|/g,'').trim();
-      // ★ → 강조
-      l=l.replace(/★/g,'<span style="color:#c9a84c">✦</span>');
-      return`<div class="ic-row">${l}</div>`;
-    }).filter(Boolean).join('');
-    return`<div class="info-card">${lines}</div>`;
+  // 코드블럭 완전 제거 (내용만 추출)
+  h=h.replace(/```[\w]*\n?([\s\S]*?)```/g,(_,inner)=>{
+    const lines=inner.trim().split('\n')
+      .map(l=>l.replace(/^\|(.*)\|$/,'$1').replace(/\|/g,' · ').trim())
+      .filter(l=>l&&!l.match(/^[-:\s]+$/));
+    return lines.map(l=>`<p>${l.replace(/★/g,'✦')}</p>`).join('');
   });
 h=h.replace(/(\|.+\|\n?)+/g,m=>{const rows=m.trim().split('\n').filter(r=>!/^\|[\s\-:|]+\|$/.test(r));if(!rows.length)return m;let tb='<table>';rows.forEach((r,i)=>{const cells=r.split('|').slice(1,-1);const tag=i===0?'th':'td';tb+=`<tr>${cells.map(c=>`<${tag}>${c.trim()}</${tag}>`).join('')}</tr>`;});return tb+'</table>';});
 h=h.replace(/(^[-*•] .+\n?)+/gm,m=>{const items=m.trim().split('\n').filter(Boolean);return'<ul>'+items.map(i=>`<li>${i.replace(/^[-*•] /,'')}</li>`).join('')+'</ul>';});
