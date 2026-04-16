@@ -133,6 +133,17 @@ textarea.inp{resize:vertical;min-height:68px;line-height:1.7;}
 .pr{font-size:11px;color:#5a4a34;padding:6px 10px;background:rgba(201,168,76,.04);border-radius:7px;border-left:2px solid rgba(201,168,76,.17);}
 .pr::before{content:'✦ ';color:#c9a84c;}
 .hidden{display:none!important;}
+.code-wrap{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:18px;margin-bottom:16px;}
+.code-title{font-size:12px;letter-spacing:2px;color:#c9a84c;margin-bottom:10px;}
+.code-row{display:flex;gap:8px;}
+.code-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.25);border-radius:9px;padding:11px 14px;color:#f0e6d0;font-family:'Noto Serif KR',serif;font-size:14px;outline:none;letter-spacing:3px;}
+.code-input:focus{border-color:rgba(201,168,76,.6);}
+.code-btn{padding:11px 16px;background:linear-gradient(135deg,#b8922a,#e8c96a);border:none;border-radius:9px;color:#08080f;font-family:'Noto Serif KR',serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.code-msg{font-size:11px;margin-top:7px;text-align:center;}
+.code-msg.ok{color:#6db36d;}
+.code-msg.err{color:#e08080;}
+.sub-active{background:rgba(109,179,109,.1);border:1px solid rgba(109,179,109,.3);border-radius:14px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.sub-active-txt{font-size:12px;color:#6db36d;}
 .lock-overlay{position:relative;overflow:hidden;}
 .lock-overlay::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(8,8,15,.95));border-radius:13px;pointer-events:none;}
 .lock-box{background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));border:1px solid rgba(201,168,76,.35);border-radius:13px;padding:20px;text-align:center;margin-top:8px;}
@@ -196,7 +207,19 @@ textarea.inp{resize:vertical;min-height:68px;line-height:1.7;}
     <button class="tab" onclick="switchTab('plan',this)">🗺️ 로드맵</button>
   </div>
   <div id="t-analysis">
-    <div id="mj-res"></div>
+    <div id="sub-status"></div>
+  <div id="code-section" class="code-wrap">
+    <div class="code-title">✦ 구독 코드 입력</div>
+    <div class="code-row">
+      <input class="code-input" id="code-input" placeholder="코드를 입력하세요" maxlength="20">
+      <button class="code-btn" onclick="submitCode()">적용</button>
+    </div>
+    <div class="code-msg" id="code-msg"></div>
+    <div style="margin-top:10px;font-size:11px;color:#6a5a4a;text-align:center;">
+      구독 후 카카오톡으로 코드를 받으세요 · <a href="https://qr.kakaopay.com/Ej8YEKUhZ" target="_blank" style="color:#c9a84c;">구독하기 ₩9,900</a>
+    </div>
+  </div>
+  <div id="mj-res"></div>
     <div id="prg-wrap" style="margin-bottom:12px;"><div style="font-size:11px;color:#6a5a4a;margin-bottom:4px;" id="prg-t2">분석 중…</div><div class="prg"><div class="prg-b" id="prg2" style="width:0%"></div></div></div>
     <div class="sec-list" id="sec-list"></div>
     <button class="btn2" onclick="resetAll()">처음부터 다시 분석하기</button>
@@ -296,7 +319,10 @@ function sv(){try{localStorage.setItem('saju',JSON.stringify({form:G.form,saju:G
 function svSec(id,t){try{localStorage.setItem('saju-sec-'+id,t);}catch(e){}}
 function ldSec(id){try{return localStorage.getItem('saju-sec-'+id)||null;}catch{return null;}}
 function clr(){try{localStorage.removeItem('saju');SECS.forEach(s=>localStorage.removeItem('saju-sec-'+s.id));}catch(e){}}
-function show(id){['s-form','s-loading','s-main'].forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));}
+function show(id){
+  ['s-form','s-loading','s-main'].forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));
+  if(id==='s-main')setTimeout(updateSubUI,100);
+}
 function switchTab(id,btn){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));if(btn)btn.classList.add('on');['analysis','today','couple','daeun','plan'].forEach(t=>document.getElementById('t-'+t).classList.toggle('hidden',t!==id));if(id==='today')loadToday();if(id==='daeun')loadDaeun();}
 const FREE_SECS=['s1','s2','s3'];
 function initSecs(){
@@ -336,7 +362,28 @@ function togSec(id){
   sv();
 }
 function isSubscribed(){
-  return localStorage.getItem('saju-sub')==='1';
+  const exp=localStorage.getItem('saju-sub-exp');
+  if(!exp)return false;
+  return new Date().getTime()<parseInt(exp);
+}
+function getSubDays(){
+  const exp=localStorage.getItem('saju-sub-exp');
+  if(!exp)return 0;
+  const ms=parseInt(exp)-new Date().getTime();
+  return Math.max(0,Math.ceil(ms/86400000));
+}
+function activateCode(code){
+  // 유효한 코드 목록 (가영님이 관리)
+  const CODES={
+    'SAJU2024':30,'SAJU30':30,'SAJU7':7,
+    'VIP2024':90,'VIP365':365,
+    'FREE7':7,'FREE30':30,
+  };
+  const days=CODES[code.toUpperCase()];
+  if(!days)return false;
+  const exp=new Date().getTime()+(days*24*60*60*1000);
+  localStorage.setItem('saju-sub-exp',exp.toString());
+  return days;
 }
 function updSec(id,status,text=''){
   const st=document.getElementById('st-'+id);
@@ -374,6 +421,43 @@ function selYr(v,el){pYr=v;document.querySelectorAll('#p-form .chip').forEach(c=
 function togArea(v,el){if(pAr.includes(v)){pAr=pAr.filter(a=>a!==v);el.classList.remove('on');}else{pAr.push(v);el.classList.add('on');}}
 async function genPlan(){if(!pYr){const e=document.getElementById('p-err');e.textContent='기간을 선택해주세요.';e.classList.remove('hidden');return;}if(!pAr.length){const e=document.getElementById('p-err');e.textContent='영역을 선택해주세요.';e.classList.remove('hidden');return;}document.getElementById('p-err').classList.add('hidden');document.getElementById('p-form').classList.add('hidden');document.getElementById('p-ldg').classList.remove('hidden');const goal=document.getElementById('p-goal').value;const yr2=new Date().getFullYear();const q=`사주:${G.dc} 성별:${G.form.gender==='female'?'여성':'남성'} 나이:${G.ka}세\n계획:${pYr}년 영역:${pAr.join(',')}${goal?' 목표:'+goal:''}\nJSON 배열만 반환하세요:\n[{"period":"${yr2}년","theme":"테마","goal":"목표","guidelines":["행동1","행동2","행동3"],"reason":"근거"}]\n${pYr==='10'?'4개':pYr+'개'} 항목.`;try{const raw=await api('사주명리 전문가입니다. JSON만 반환하세요.',q);const clean=raw.replace(/```json|```/g,'').trim();const list=JSON.parse(clean.match(/\[[\s\S]*\]/)[0]);document.getElementById('p-title').textContent=pYr+'년 맞춤 로드맵';document.getElementById('p-areas').textContent=pAr.join(' · ');document.getElementById('p-items').innerHTML=list.map(item=>`<div class="pi2"><div class="pp3">${item.period} · ${item.theme}</div><div class="pg3">${item.goal}</div><div class="pgd">${(item.guidelines||[]).map(g=>'· '+g+'<br>').join('')}</div><div class="pr">${item.reason}</div></div>`).join('');document.getElementById('p-ldg').classList.add('hidden');document.getElementById('p-res').classList.remove('hidden');}catch(e){document.getElementById('p-ldg').classList.add('hidden');document.getElementById('p-form').classList.remove('hidden');document.getElementById('p-err').textContent='오류.';document.getElementById('p-err').classList.remove('hidden');}}
 function resetPlan(){document.getElementById('p-res').classList.add('hidden');document.getElementById('p-form').classList.remove('hidden');pYr='';pAr=[];document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));}
+function submitCode(){
+  const code=document.getElementById('code-input').value.trim();
+  const msg=document.getElementById('code-msg');
+  if(!code){msg.className='code-msg err';msg.textContent='코드를 입력해주세요.';return;}
+  const days=activateCode(code);
+  if(days){
+    msg.className='code-msg ok';
+    msg.textContent=`✓ 구독 활성화! ${days}일 이용 가능합니다.`;
+    document.getElementById('code-input').value='';
+    setTimeout(()=>{
+      updateSubUI();
+      // 잠긴 섹션 다시 표시
+      SECS.forEach(s=>{
+        if(!FREE_SECS.includes(s.id)&&G.secs[s.id]?.t){
+          updSec(s.id,'done',G.secs[s.id].t);
+          const bd=document.getElementById('sb-'+s.id);
+          if(bd)bd.classList.remove('open');
+        }
+      });
+    },1000);
+  } else {
+    msg.className='code-msg err';
+    msg.textContent='유효하지 않은 코드입니다.';
+  }
+}
+function updateSubUI(){
+  const statusEl=document.getElementById('sub-status');
+  const codeEl=document.getElementById('code-section');
+  if(isSubscribed()){
+    const days=getSubDays();
+    if(statusEl)statusEl.innerHTML=`<div class="sub-active"><span style="font-size:18px;">✅</span><div class="sub-active-txt">구독 중 · 잔여 ${days}일</div></div>`;
+    if(codeEl)codeEl.style.display='none';
+  } else {
+    if(statusEl)statusEl.innerHTML='';
+    if(codeEl)codeEl.style.display='block';
+  }
+}
 function resetAll(){clr();location.reload();}
 window.addEventListener('DOMContentLoaded',()=>{
   // 항상 빈 폼으로 시작 (이전 데이터 복원 안 함)
