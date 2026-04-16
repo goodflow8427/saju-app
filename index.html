@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>사주 생애 로드맵</title>
+<title>사주봐 — AI 사주 분석</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -168,10 +169,10 @@ textarea.inp{resize:vertical;min-height:68px;line-height:1.7;}
 <div class="bg">
 <div class="header">
   <span class="sym">☯</span>
-  <div class="badge">Destiny Roadmap</div>
-  <h1 class="title">사주 생애 로드맵</h1>
+  <div class="badge">SAJU봐</div>
+  <h1 class="title">사주봐</h1>
   <div class="divl"></div>
-  <p class="sub">생년월일시를 입력하면 사주팔자를 정밀 계산하고<br>AI가 생애 전체 흐름을 분석합니다</p>
+  <p class="sub">생년월일시만 입력하면<br>AI가 당신의 사주를 깊이 분석합니다</p>
 </div>
 <div class="wrap">
 <div id="s-form" class="card">
@@ -185,7 +186,7 @@ textarea.inp{resize:vertical;min-height:68px;line-height:1.7;}
     <div><label class="lbl">분</label><input class="inp" id="f-minute" placeholder="예: 30" maxlength="2" inputmode="numeric"></div>
   </div>
   <div id="f-err" class="err hidden"></div>
-  <button class="btn" onclick="startAnalysis()">명반 분석 시작</button>
+  <button class="btn" onclick="startAnalysis()">내 사주 분석하기</button>
 </div>
 <div id="s-loading" class="hidden">
   <div id="mj-load"></div>
