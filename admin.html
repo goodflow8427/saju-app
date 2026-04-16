@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사주 로드맵 관리자</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#08080f;color:#e8dcc8;font-family:'Noto Serif KR',serif;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.wrap{width:100%;max-width:480px;padding:20px;}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);border-radius:18px;padding:32px;}
+.title{font-size:20px;font-weight:600;color:#f0e6d0;text-align:center;margin-bottom:8px;}
+.sub{font-size:12px;color:#6a5a4a;text-align:center;margin-bottom:28px;letter-spacing:1px;}
+.lbl{font-size:10px;letter-spacing:3px;color:#c9a84c;text-transform:uppercase;display:block;margin-bottom:6px;margin-top:14px;}
+.inp{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.18);border-radius:9px;padding:12px 14px;color:#f0e6d0;font-size:14px;outline:none;width:100%;font-family:inherit;}
+.inp:focus{border-color:rgba(201,168,76,.6);}
+select.inp option{background:#120e1c;}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#b8922a,#e8c96a,#b8922a);background-size:200%;border:none;border-radius:11px;color:#08080f;font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;margin-top:20px;}
+.btn:hover{opacity:.9;}
+.result{margin-top:20px;padding:16px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:11px;display:none;}
+.result-code{font-size:28px;font-weight:700;color:#c9a84c;text-align:center;letter-spacing:4px;margin:8px 0;}
+.result-info{font-size:12px;color:#9a8a6a;text-align:center;line-height:1.8;}
+.copy-btn{width:100%;padding:10px;background:transparent;border:1px solid rgba(201,168,76,.3);border-radius:9px;color:#c9a84c;font-size:12px;cursor:pointer;margin-top:10px;letter-spacing:2px;}
+.copy-btn:hover{background:rgba(201,168,76,.08);}
+.err{margin-top:12px;padding:12px;background:rgba(180,50,50,.1);border:1px solid rgba(180,50,50,.3);border-radius:9px;color:#e08080;font-size:12px;text-align:center;display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="title">☯ 관리자 페이지</div>
+    <div class="sub">구독 코드 생성</div>
+    
+    <label class="lbl">관리자 비밀번호</label>
+    <input class="inp" type="password" id="password" placeholder="비밀번호 입력">
+    
+    <label class="lbl">사용자 이메일</label>
+    <input class="inp" type="email" id="email" placeholder="user@example.com">
+    
+    <label class="lbl">구독 기간</label>
+    <select class="inp" id="days">
+      <option value="7">7일 (체험)</option>
+      <option value="30" selected>30일 (1개월)</option>
+      <option value="90">90일 (3개월)</option>
+      <option value="365">365일 (1년)</option>
+    </select>
+    
+    <button class="btn" onclick="generateCode()">구독 코드 생성</button>
+    
+    <div class="err" id="err"></div>
+    
+    <div class="result" id="result">
+      <div style="font-size:11px;color:#6a5a4a;text-align:center;margin-bottom:8px;">생성된 구독 코드</div>
+      <div class="result-code" id="result-code"></div>
+      <div class="result-info" id="result-info"></div>
+      <button class="copy-btn" onclick="copyCode()">📋 코드 복사</button>
+      <button class="copy-btn" onclick="copyMsg()" style="margin-top:6px;">💬 카카오톡 메시지 복사</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentCode = '';
+let currentEmail = '';
+let currentDays = 30;
+
+async function generateCode() {
+  const password = document.getElementById('password').value;
+  const email = document.getElementById('email').value;
+  const days = document.getElementById('days').value;
+  const err = document.getElementById('err');
+  const result = document.getElementById('result');
+  
+  err.style.display = 'none';
+  result.style.display = 'none';
+  
+  if (!password || !email) {
+    err.textContent = '비밀번호와 이메일을 입력해주세요.';
+    err.style.display = 'block';
+    return;
+  }
+  
+  try {
+    const res = await fetch('/api/admin', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ action: 'generate', password, email, days: parseInt(days) })
+    });
+    const data = await res.json();
+    
+    if (!res.ok) {
+      err.textContent = data.error || '오류가 발생했습니다.';
+      err.style.display = 'block';
+      return;
+    }
+    
+    currentCode = data.code;
+    currentEmail = email;
+    currentDays = parseInt(days);
+    
+    document.getElementById('result-code').textContent = data.code;
+    document.getElementById('result-info').innerHTML = 
+      `이메일: ${email}<br>기간: ${days}일<br>유효: 발급일로부터 7일 이내 사용 가능`;
+    result.style.display = 'block';
+    
+  } catch(e) {
+    err.textContent = '서버 오류가 발생했습니다.';
+    err.style.display = 'block';
+  }
+}
+
+function copyCode() {
+  navigator.clipboard.writeText(currentCode);
+  alert('코드가 복사됐습니다: ' + currentCode);
+}
+
+function copyMsg() {
+  const msg = `안녕하세요! 사주 생애 로드맵 구독 코드를 보내드립니다 🌟\n\n구독 코드: ${currentCode}\n이용 기간: ${currentDays}일\n\n앱에서 코드를 입력하시면 전체 분석을 보실 수 있습니다!\nsaju-app-mo5m.vercel.app\n\n감사합니다 ☯`;
+  navigator.clipboard.writeText(msg);
+  alert('메시지가 복사됐습니다!');
+}
+</script>
+</body>
+</html>
