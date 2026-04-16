@@ -165,13 +165,13 @@ textarea.inp{resize:vertical;min-height:68px;line-height:1.7;}
 <div class="wrap">
 <div id="s-form" class="card">
   <div class="fg2">
-    <div class="full"><label class="lbl">이름 (선택)</label><input class="inp" id="f-name" placeholder="이름을 입력하세요"></div>
-    <div><label class="lbl">태어난 해</label><input class="inp" id="f-year" placeholder="예: 1994" maxlength="4" inputmode="numeric"></div>
+    <div class="full"><label class="lbl">이름 (선택)</label><input class="inp" id="f-name" placeholder="예: 홍길동"></div>
+    <div><label class="lbl">태어난 해</label><input class="inp" id="f-year" placeholder="예: 1990" maxlength="4" inputmode="numeric"></div>
     <div><label class="lbl">성별</label><select class="inp" id="f-gender"><option value="female">여성</option><option value="male">남성</option></select></div>
-    <div><label class="lbl">월</label><input class="inp" id="f-month" placeholder="예: 4" maxlength="2" inputmode="numeric"></div>
-    <div><label class="lbl">일</label><input class="inp" id="f-day" placeholder="예: 20" maxlength="2" inputmode="numeric"></div>
-    <div><label class="lbl">시 (24시간)</label><input class="inp" id="f-hour" placeholder="예: 14" maxlength="2" inputmode="numeric"></div>
-    <div><label class="lbl">분</label><input class="inp" id="f-minute" placeholder="예: 47" maxlength="2" inputmode="numeric"></div>
+    <div><label class="lbl">월</label><input class="inp" id="f-month" placeholder="예: 3" maxlength="2" inputmode="numeric"></div>
+    <div><label class="lbl">일</label><input class="inp" id="f-day" placeholder="예: 15" maxlength="2" inputmode="numeric"></div>
+    <div><label class="lbl">시 (24시간)</label><input class="inp" id="f-hour" placeholder="예: 10" maxlength="2" inputmode="numeric"></div>
+    <div><label class="lbl">분</label><input class="inp" id="f-minute" placeholder="예: 30" maxlength="2" inputmode="numeric"></div>
   </div>
   <div id="f-err" class="err hidden"></div>
   <button class="btn" onclick="startAnalysis()">명반 분석 시작</button>
@@ -210,7 +210,7 @@ textarea.inp{resize:vertical;min-height:68px;line-height:1.7;}
     <div id="c-form" class="card">
       <div style="text-align:center;font-size:12px;color:#7a6a5a;margin-bottom:13px;">상대방의 생년월일시를 입력하세요</div>
       <div class="fg2">
-        <div class="full"><label class="lbl">상대방 이름 (선택)</label><input class="inp" id="c-name" placeholder="이름을 입력하세요"></div>
+        <div class="full"><label class="lbl">상대방 이름 (선택)</label><input class="inp" id="c-name" placeholder="예: 홍길동"></div>
         <div><label class="lbl">태어난 해</label><input class="inp" id="c-year" placeholder="예: 1990" maxlength="4" inputmode="numeric"></div>
         <div><label class="lbl">성별</label><select class="inp" id="c-gender"><option value="male">남성</option><option value="female">여성</option></select></div>
         <div><label class="lbl">월</label><input class="inp" id="c-month" placeholder="예: 3" maxlength="2" inputmode="numeric"></div>
@@ -375,7 +375,9 @@ function togArea(v,el){if(pAr.includes(v)){pAr=pAr.filter(a=>a!==v);el.classList
 async function genPlan(){if(!pYr){const e=document.getElementById('p-err');e.textContent='기간을 선택해주세요.';e.classList.remove('hidden');return;}if(!pAr.length){const e=document.getElementById('p-err');e.textContent='영역을 선택해주세요.';e.classList.remove('hidden');return;}document.getElementById('p-err').classList.add('hidden');document.getElementById('p-form').classList.add('hidden');document.getElementById('p-ldg').classList.remove('hidden');const goal=document.getElementById('p-goal').value;const yr2=new Date().getFullYear();const q=`사주:${G.dc} 성별:${G.form.gender==='female'?'여성':'남성'} 나이:${G.ka}세\n계획:${pYr}년 영역:${pAr.join(',')}${goal?' 목표:'+goal:''}\nJSON 배열만 반환하세요:\n[{"period":"${yr2}년","theme":"테마","goal":"목표","guidelines":["행동1","행동2","행동3"],"reason":"근거"}]\n${pYr==='10'?'4개':pYr+'개'} 항목.`;try{const raw=await api('사주명리 전문가입니다. JSON만 반환하세요.',q);const clean=raw.replace(/```json|```/g,'').trim();const list=JSON.parse(clean.match(/\[[\s\S]*\]/)[0]);document.getElementById('p-title').textContent=pYr+'년 맞춤 로드맵';document.getElementById('p-areas').textContent=pAr.join(' · ');document.getElementById('p-items').innerHTML=list.map(item=>`<div class="pi2"><div class="pp3">${item.period} · ${item.theme}</div><div class="pg3">${item.goal}</div><div class="pgd">${(item.guidelines||[]).map(g=>'· '+g+'<br>').join('')}</div><div class="pr">${item.reason}</div></div>`).join('');document.getElementById('p-ldg').classList.add('hidden');document.getElementById('p-res').classList.remove('hidden');}catch(e){document.getElementById('p-ldg').classList.add('hidden');document.getElementById('p-form').classList.remove('hidden');document.getElementById('p-err').textContent='오류.';document.getElementById('p-err').classList.remove('hidden');}}
 function resetPlan(){document.getElementById('p-res').classList.add('hidden');document.getElementById('p-form').classList.remove('hidden');pYr='';pAr=[];document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));}
 function resetAll(){clr();location.reload();}
-window.addEventListener('DOMContentLoaded',()=>{try{const sv2=JSON.parse(localStorage.getItem('saju')||'{}');if(sv2?.saju&&sv2?.form){G.form=sv2.form;G.saju=sv2.saju;G.dc=sv2.dc||'';G.secs=sv2.secs||{};G.openSec=sv2.openSec||'s1';const y=parseInt(sv2.form.year);G.ka=new Date().getFullYear()-y+1;G.ma=new Date().getFullYear()-y;G.ds=ST[sv2.saju.day.s];show('s-main');document.getElementById('r-name').textContent=sv2.form.name||'명반 분석 결과';document.getElementById('r-meta').textContent=sv2.form.year+'.'+sv2.form.month+'.'+sv2.form.day+' '+sv2.form.hour+':'+sv2.form.minute.padStart(2,'0')+' · '+(sv2.form.gender==='female'?'여성':'남성');document.getElementById('mj-res').innerHTML=mjHTML(sv2.saju);initSecs();let done=0;SECS.forEach(s=>{const t=ldSec(s.id)||G.secs[s.id]?.t||null;if(t){G.secs[s.id]={t,done:true};updSec(s.id,'done',t);done++;}});updPrg(done,SECS.length);if(sv2.openSec){setTimeout(()=>{const sb=document.getElementById('sb-'+sv2.openSec);if(sb)sb.classList.add('open');},100);}if(done<SECS.length){(async()=>{for(const s of SECS){if(!G.secs[s.id]?.done){updSec(s.id,'run');try{const t=await api(SYS,makeQ(s.id,G.dc,G.ka,G.ma,G.ds));G.secs[s.id]={t,done:true};svSec(s.id,t);updSec(s.id,'done',t);}catch{updSec(s.id,'done','오류.');}done++;updPrg(done,SECS.length);sv();}}})();}}else{try{const sf=JSON.parse(localStorage.getItem('saju')||'{}');if(sf.form){const f=sf.form;['name','year','month','day','hour','minute'].forEach(k=>{const el=document.getElementById('f-'+k);if(el&&f[k])el.value=f[k];});if(f.gender)document.getElementById('f-gender').value=f.gender;}}catch{}}}catch(e){}});
+window.addEventListener('DOMContentLoaded',()=>{
+  // 항상 빈 폼으로 시작 (이전 데이터 복원 안 함)
+});
 document.addEventListener('visibilitychange',()=>{if(G.saju)sv();});
 </script>
 </body>
