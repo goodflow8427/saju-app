@@ -155,6 +155,7 @@ select.form-inp option{background:#120e1c;}
     <button class="tab-btn active" onclick="switchTab('analysis', this)">☯ 명반</button>
     <button class="tab-btn" onclick="switchTab('career', this)">💼 커리어 <span style="font-size:9px;color:#c9a84c;">🔒</span></button>
     <button class="tab-btn" onclick="switchTab('wealth', this)">💰 재물 <span style="font-size:9px;color:#c9a84c;">🔒</span></button>
+    <button class="tab-btn" onclick="switchTab('love', this)">💕 연애 <span style="font-size:9px;color:#c9a84c;">🔒</span></button>
   </div>
   <div id="sub-status"></div>
   <div id="code-section" class="code-wrap">
@@ -183,6 +184,10 @@ select.form-inp option{background:#120e1c;}
   
   <div id="tab-wealth" class="tab-content">
     <div id="wealth-content"></div>
+  </div>
+  
+  <div id="tab-love" class="tab-content">
+    <div id="love-content"></div>
   </div>
   
   <div style="margin-top:20px;text-align:center;">
@@ -438,6 +443,7 @@ function switchTab(tabId, btn){
   document.getElementById('tab-'+tabId).classList.add('active');
   if(tabId==='career')loadCareer();
   if(tabId==='wealth')loadWealth();
+  if(tabId==='love')loadLove();
 }
 
 var WEALTH_SECS=[
@@ -568,6 +574,118 @@ function renderWealthCalendar(months){
   for(var i=0;i<12;i++){
     var status=months[i]||'normal';
     var emoji=status==='good'?'⭐':status==='bad'?'⚠️':'·';
+    html+='<div class="cal-month '+status+'"><div>'+monthNames[i]+'</div><div style="font-size:14px;margin-top:4px;">'+emoji+'</div><span class="cal-label">'+(status==='good'?'좋음':status==='bad'?'주의':'보통')+'</span></div>';
+  }
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+var LOVE_SECS=[
+  {id:'l1',i:'💝',t:'이상형과 나의 연애 스타일'},
+  {id:'l2',i:'💕',t:'배우자 특징과 만남 시기'},
+  {id:'l3',i:'💒',t:'결혼 적령기와 좋은 해'},
+  {id:'l4',i:'⚡',t:'연애 주의사항'},
+  {id:'l5',i:'🌹',t:'관계를 오래 유지하는 법'}
+];
+var loveLoaded=false;
+
+async function loadLove(){
+  var el=document.getElementById('love-content');
+  if(!isSubscribed()){
+    el.innerHTML='<div class="career-lock"><div style="font-size:44px;margin-bottom:16px;">🔒</div><div style="font-size:17px;color:#f0e6d0;font-weight:600;margin-bottom:8px;">연애 분석은 구독 후 이용</div><div style="font-size:13px;color:#9a8a6a;margin-bottom:20px;line-height:1.8;">월 5,000원으로<br>이상형·배우자·결혼 시기·<br>연애운 시각화까지 모두 이용</div><a class="lock-btn" href="'+KAKAO_URL+'" target="_blank">카카오페이로 구독하기 ₩5,000</a><div style="font-size:10px;color:#6a5a4a;margin-top:14px;">커리어 + 재물 + 연애 통합 구독</div></div>';
+    return;
+  }
+  if(loveLoaded)return;
+  loveLoaded=true;
+  
+  var vizHTML='<div class="viz-wrap"><div class="viz-title">✦ 10년 연애운 흐름</div><div id="love-chart"></div></div>';
+  vizHTML+='<div class="viz-wrap"><div class="viz-title">✦ '+new Date().getFullYear()+'년 월별 만남운</div><div id="love-calendar"></div></div>';
+  
+  var secHTML=LOVE_SECS.map(function(s){
+    return '<div class="sec-item" id="si-'+s.id+'"><div class="sec-hd" onclick="togSec(\''+s.id+'\')"><span class="sec-icon">'+s.i+'</span><span class="sec-ttl">'+s.t+'</span><span class="sec-st" id="st-'+s.id+'">분석 중…</span></div><div class="sec-bd" id="sb-'+s.id+'"><div class="sec-txt" id="txt-'+s.id+'"></div></div></div>';
+  }).join('');
+  
+  el.innerHTML=vizHTML+secHTML;
+  renderLoveChart();
+  renderLoveCalendar();
+  
+  try{
+    var currentYear=new Date().getFullYear();
+    var fullPrompt='현재는 '+currentYear+'년입니다. 사주 명식: '+G.dc+'\n\n아래 5가지 연애·결혼 항목을 각각 상세히 분석해주세요. 각 항목 제목을 [[제목]] 형식으로 정확히 써주세요. 또한 마지막에 [[CHART]] 태그에 향후 10년간 연애운 점수를 쉼표로 구분해 써주세요 (1-100). [[CALENDAR]] 태그에 '+currentYear+'년 1월부터 12월까지 만남운을 good/normal/bad 중 하나로 쉼표 구분해 써주세요.\n\n[[l1]] 이상형과 나의 연애 스타일\n\n[[l2]] 배우자 특징과 만남 시기\n\n[[l3]] 결혼 적령기와 좋은 해\n\n[[l4]] 연애 주의사항\n\n[[l5]] 관계를 오래 유지하는 법\n\n[[CHART]] 예: 60,70,75,80,85,80,75,70,65,60\n\n[[CALENDAR]] 예: good,normal,good,bad,normal,good,good,normal,bad,good,normal,good';
+    var fullText=await api(SYS,fullPrompt);
+    
+    LOVE_SECS.forEach(function(s){
+      var pattern=new RegExp('\\[\\['+s.id+'\\]\\]([\\s\\S]*?)(?=\\[\\[l\\d\\]\\]|\\[\\[CHART\\]\\]|$)');
+      var match=fullText.match(pattern);
+      var sectionText=match?match[1].trim():'';
+      document.getElementById('txt-'+s.id).textContent=sectionText;
+      document.getElementById('st-'+s.id).textContent='완료';
+    });
+    
+    var chartMatch=fullText.match(/\[\[CHART\]\]\s*([\d,\s]+)/);
+    if(chartMatch){
+      var scores=chartMatch[1].split(',').map(function(x){return parseInt(x.trim());}).filter(function(x){return !isNaN(x);});
+      if(scores.length>=5)renderLoveChart(scores);
+    }
+    
+    var calMatch=fullText.match(/\[\[CALENDAR\]\]\s*([a-z,\s]+)/i);
+    if(calMatch){
+      var months=calMatch[1].split(',').map(function(x){return x.trim().toLowerCase();}).filter(function(x){return x;});
+      if(months.length>=6)renderLoveCalendar(months);
+    }
+  }catch(e){
+    LOVE_SECS.forEach(function(s){
+      document.getElementById('txt-'+s.id).textContent='오류. 다시 시도해주세요.';
+      document.getElementById('st-'+s.id).textContent='오류';
+    });
+  }
+  
+  setTimeout(function(){var sb=document.getElementById('sb-l1');if(sb)sb.classList.add('open');},300);
+}
+
+function renderLoveChart(scores){
+  var el=document.getElementById('love-chart');
+  if(!el)return;
+  if(!scores){scores=[50,60,70,65,75,80,85,80,75,70];}
+  var currentYear=new Date().getFullYear();
+  var max=Math.max.apply(null,scores);
+  var min=Math.min.apply(null,scores);
+  var range=max-min||1;
+  var w=300,h=160;
+  var points=scores.map(function(s,i){
+    var x=(i/(scores.length-1))*w;
+    var y=h-((s-min)/range)*h;
+    return x+','+y;
+  }).join(' ');
+  var svg='<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:200px;">';
+  for(var i=0;i<5;i++){
+    var y=i*(h/4);
+    svg+='<line x1="0" y1="'+y+'" x2="'+w+'" y2="'+y+'" stroke="rgba(255,150,200,0.1)" stroke-dasharray="2,2"/>';
+  }
+  svg+='<polygon points="0,'+h+' '+points+' '+w+','+h+'" fill="url(#loveGrad)" opacity="0.3"/>';
+  svg+='<polyline points="'+points+'" fill="none" stroke="#e85c8a" stroke-width="2"/>';
+  scores.forEach(function(s,i){
+    var x=(i/(scores.length-1))*w;
+    var y=h-((s-min)/range)*h;
+    svg+='<circle cx="'+x+'" cy="'+y+'" r="4" fill="#f06090"/>';
+  });
+  svg+='<defs><linearGradient id="loveGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#f06090"/><stop offset="100%" stop-color="#e85c8a" stop-opacity="0"/></linearGradient></defs>';
+  svg+='</svg>';
+  var labels='<div class="chart-labels">';
+  for(var i=0;i<scores.length;i++){labels+='<span>'+(currentYear+i)+'</span>';}
+  labels+='</div>';
+  el.innerHTML=svg+labels;
+}
+
+function renderLoveCalendar(months){
+  var el=document.getElementById('love-calendar');
+  if(!el)return;
+  if(!months){months=['normal','normal','normal','normal','normal','normal','normal','normal','normal','normal','normal','normal'];}
+  var monthNames=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  var html='<div class="cal-grid">';
+  for(var i=0;i<12;i++){
+    var status=months[i]||'normal';
+    var emoji=status==='good'?'💕':status==='bad'?'⚠️':'·';
     html+='<div class="cal-month '+status+'"><div>'+monthNames[i]+'</div><div style="font-size:14px;margin-top:4px;">'+emoji+'</div><span class="cal-label">'+(status==='good'?'좋음':status==='bad'?'주의':'보통')+'</span></div>';
   }
   html+='</div>';
