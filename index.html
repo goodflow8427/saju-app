@@ -447,10 +447,10 @@ async function loadCareer(){
     return '<div class="sec-item" id="si-'+s.id+'"><div class="sec-hd" onclick="togSec(\''+s.id+'\')"><span class="sec-icon">'+s.i+'</span><span class="sec-ttl">'+s.t+'</span><span class="sec-st" id="st-'+s.id+'">분석 중…</span></div><div class="sec-bd" id="sb-'+s.id+'"><div class="sec-txt" id="txt-'+s.id+'"></div></div></div>';
   }).join('');
   
-  for(var i=0;i<CAREER_SECS.length;i+=3){
-    if(i>0)await new Promise(function(r){setTimeout(r,1500);});
-    var chunk=CAREER_SECS.slice(i,i+3);
-    await Promise.all(chunk.map(async function(s){
+  for(var i=0;i<CAREER_SECS.length;i++){
+    var s=CAREER_SECS[i];
+    if(i>0)await new Promise(function(r){setTimeout(r,2000);});
+    await (async function(s){
       try{
         var prompt='사주 명식: '+G.dc+'\n\n분석 항목: '+s.t+'\n\n위 사주를 바탕으로 "'+s.t+'"에 대해 명리적 근거와 함께 상세히 분석해주세요. 구체적인 직업명, 시기, 유형을 포함해주세요.';
         var t=await api(SYS,prompt);
@@ -460,7 +460,7 @@ async function loadCareer(){
         document.getElementById('txt-'+s.id).textContent='오류. 다시 시도해주세요.';
         document.getElementById('st-'+s.id).textContent='오류';
       }
-    }));
+    })(s);
   }
   // 첫 섹션 자동 열기
   setTimeout(function(){var sb=document.getElementById('sb-c1');if(sb)sb.classList.add('open');},300);
