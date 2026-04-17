@@ -365,7 +365,8 @@ async function api(sys,msg){
 var SYS='당신은 사주명리학 전문가입니다. 사주 명식은 정확히 계산된 것이므로 절대 수정하지 마세요. 모든 분석에 명리적 근거를 포함하세요. 차분하고 신뢰감 있는 말투로 한국어로만 답하세요. 구조적으로 명확하게 답하되 코드블럭과 표는 사용하지 마세요.';
 function makePrompt(id,dc){
   var sec=SECS.filter(function(x){return x.id===id;})[0];
-  return '사주 명식: '+dc+'\n\n분석 항목: '+sec.t+'\n\n위 사주를 바탕으로 "'+sec.t+'"에 대해 상세히 분석해주세요.';
+  var currentYear=new Date().getFullYear();
+  return '현재는 '+currentYear+'년입니다. 사주 명식: '+dc+'\n\n분석 항목: '+sec.t+'\n\n위 사주를 바탕으로 "'+sec.t+'"에 대해 상세히 분석해주세요.';
 }
 function show(id){
   ['s-form','s-loading','s-main'].forEach(function(s){
@@ -452,7 +453,8 @@ async function loadCareer(){
     if(i>0)await new Promise(function(r){setTimeout(r,2000);});
     await (async function(s){
       try{
-        var prompt='사주 명식: '+G.dc+'\n\n분석 항목: '+s.t+'\n\n위 사주를 바탕으로 "'+s.t+'"에 대해 명리적 근거와 함께 상세히 분석해주세요. 구체적인 직업명, 시기, 유형을 포함해주세요.';
+        var currentYear=new Date().getFullYear();
+        var prompt='현재는 '+currentYear+'년입니다. 사주 명식: '+G.dc+'\n\n분석 항목: '+s.t+'\n\n위 사주를 바탕으로 "'+s.t+'"에 대해 명리적 근거와 함께 상세히 분석해주세요. 구체적인 직업명, 시기, 유형을 포함해주세요. 월별 분석 시 반드시 '+currentYear+'년 1월부터 12월까지 모두 포함해주세요.';
         var t=await api(SYS,prompt);
         document.getElementById('txt-'+s.id).textContent=t;
         document.getElementById('st-'+s.id).textContent='완료';
