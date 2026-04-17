@@ -75,6 +75,19 @@ select.form-inp option{background:#120e1c;}
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 .career-lock{padding:40px 20px;text-align:center;background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.15);border-radius:14px;margin-bottom:20px;}
+.viz-wrap{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:20px;margin-bottom:16px;}
+.viz-title{font-size:11px;letter-spacing:3px;color:#c9a84c;margin-bottom:14px;text-align:center;}
+.chart-box{position:relative;height:200px;padding:10px 0;}
+.chart-line{position:absolute;inset:20px 0;}
+.chart-grid{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;}
+.chart-grid-line{border-top:1px dashed rgba(201,168,76,.1);height:1px;}
+.chart-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:9px;color:#6a5a4a;}
+.cal-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:10px;}
+.cal-month{padding:10px 4px;text-align:center;border-radius:8px;font-size:11px;border:1px solid rgba(201,168,76,.15);}
+.cal-month.good{background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(232,201,106,.1));border-color:rgba(201,168,76,.5);color:#f0e6d0;font-weight:600;}
+.cal-month.bad{background:rgba(150,80,80,.1);border-color:rgba(200,100,100,.3);color:#c09090;}
+.cal-month.normal{background:rgba(255,255,255,.02);color:#9a8a6a;}
+.cal-label{font-size:9px;display:block;margin-top:2px;}
 </style>
 </head>
 <body>
@@ -141,6 +154,7 @@ select.form-inp option{background:#120e1c;}
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('analysis', this)">☯ 명반</button>
     <button class="tab-btn" onclick="switchTab('career', this)">💼 커리어 <span style="font-size:9px;color:#c9a84c;">🔒</span></button>
+    <button class="tab-btn" onclick="switchTab('wealth', this)">💰 재물 <span style="font-size:9px;color:#c9a84c;">🔒</span></button>
   </div>
   <div id="sub-status"></div>
   <div id="code-section" class="code-wrap">
@@ -165,6 +179,10 @@ select.form-inp option{background:#120e1c;}
   
   <div id="tab-career" class="tab-content">
     <div id="career-content"></div>
+  </div>
+  
+  <div id="tab-wealth" class="tab-content">
+    <div id="wealth-content"></div>
   </div>
   
   <div style="margin-top:20px;text-align:center;">
@@ -419,7 +437,143 @@ function switchTab(tabId, btn){
   btn.classList.add('active');
   document.getElementById('tab-'+tabId).classList.add('active');
   if(tabId==='career')loadCareer();
+  if(tabId==='wealth')loadWealth();
 }
+
+var WEALTH_SECS=[
+  {id:'w1',i:'💎',t:'평생 재물 총량과 타고난 재물 그릇'},
+  {id:'w2',i:'🏦',t:'돈 버는 패턴 (월급·사업·투자 중 무엇이 맞는가)'},
+  {id:'w3',i:'📈',t:'투자 타이밍 분석'},
+  {id:'w4',i:'⚠️',t:'재물 위험 시기와 주의사항'},
+  {id:'w5',i:'💰',t:'재물을 지키고 불리는 전략'}
+];
+var wealthLoaded=false;
+
+async function loadWealth(){
+  var el=document.getElementById('wealth-content');
+  if(!isSubscribed()){
+    el.innerHTML='<div class="career-lock"><div style="font-size:44px;margin-bottom:16px;">🔒</div><div style="font-size:17px;color:#f0e6d0;font-weight:600;margin-bottom:8px;">재물 분석은 구독 후 이용</div><div style="font-size:13px;color:#9a8a6a;margin-bottom:20px;line-height:1.8;">월 5,000원으로<br>재물 그릇·투자 타이밍·<br>재물 흐름 시각화까지 모두 이용</div><a class="lock-btn" href="'+KAKAO_URL+'" target="_blank">카카오페이로 구독하기 ₩5,000</a><div style="font-size:10px;color:#6a5a4a;margin-top:14px;">커리어 + 재물 통합 구독</div></div>';
+    return;
+  }
+  if(wealthLoaded)return;
+  wealthLoaded=true;
+  
+  // 시각화 영역 + 섹션
+  var vizHTML='<div class="viz-wrap"><div class="viz-title">✦ 10년 재물 흐름</div><div id="wealth-chart"></div></div>';
+  vizHTML+='<div class="viz-wrap"><div class="viz-title">✦ '+new Date().getFullYear()+'년 월별 재물운</div><div id="wealth-calendar"></div></div>';
+  
+  var secHTML=WEALTH_SECS.map(function(s){
+    return '<div class="sec-item" id="si-'+s.id+'"><div class="sec-hd" onclick="togSec(\''+s.id+'\')"><span class="sec-icon">'+s.i+'</span><span class="sec-ttl">'+s.t+'</span><span class="sec-st" id="st-'+s.id+'">분석 중…</span></div><div class="sec-bd" id="sb-'+s.id+'"><div class="sec-txt" id="txt-'+s.id+'"></div></div></div>';
+  }).join('');
+  
+  el.innerHTML=vizHTML+secHTML;
+  
+  // 시각화 생성 (AI 분석과 병행)
+  renderWealthChart();
+  renderWealthCalendar();
+  
+  // AI 분석 (1번 호출)
+  try{
+    var currentYear=new Date().getFullYear();
+    var fullPrompt='현재는 '+currentYear+'년입니다. 사주 명식: '+G.dc+'\n\n아래 5가지 재물 관련 항목을 각각 상세히 분석해주세요. 각 항목 제목을 [[제목]] 형식으로 정확히 써주세요. 또한 마지막에 [[CHART]] 태그 안에 10년간 재물 점수를 쉼표로 구분해서 써주세요 (1-100 사이 숫자). [[CALENDAR]] 태그 안에 '+currentYear+'년 1월부터 12월까지 각 월의 재물운을 good/normal/bad 중 하나로 쉼표 구분해 써주세요.\n\n[[w1]] 평생 재물 총량과 타고난 재물 그릇\n\n[[w2]] 돈 버는 패턴 (월급·사업·투자 중 무엇이 맞는지)\n\n[[w3]] 투자 타이밍 분석\n\n[[w4]] 재물 위험 시기와 주의사항\n\n[[w5]] 재물을 지키고 불리는 전략\n\n[[CHART]] 예: 60,65,70,75,80,85,90,85,80,75\n\n[[CALENDAR]] 예: good,normal,bad,good,normal,good,bad,normal,good,normal,good,good';
+    var fullText=await api(SYS,fullPrompt);
+    
+    // 각 섹션 파싱
+    WEALTH_SECS.forEach(function(s){
+      var pattern=new RegExp('\\[\\['+s.id+'\\]\\]([\\s\\S]*?)(?=\\[\\[w\\d\\]\\]|\\[\\[CHART\\]\\]|$)');
+      var match=fullText.match(pattern);
+      var sectionText=match?match[1].trim():'';
+      document.getElementById('txt-'+s.id).textContent=sectionText;
+      document.getElementById('st-'+s.id).textContent='완료';
+    });
+    
+    // 차트 데이터 파싱
+    var chartMatch=fullText.match(/\[\[CHART\]\]\s*([\d,\s]+)/);
+    if(chartMatch){
+      var scores=chartMatch[1].split(',').map(function(x){return parseInt(x.trim());}).filter(function(x){return !isNaN(x);});
+      if(scores.length>=5)renderWealthChart(scores);
+    }
+    
+    // 캘린더 데이터 파싱
+    var calMatch=fullText.match(/\[\[CALENDAR\]\]\s*([a-z,\s]+)/i);
+    if(calMatch){
+      var months=calMatch[1].split(',').map(function(x){return x.trim().toLowerCase();}).filter(function(x){return x;});
+      if(months.length>=6)renderWealthCalendar(months);
+    }
+  }catch(e){
+    WEALTH_SECS.forEach(function(s){
+      document.getElementById('txt-'+s.id).textContent='오류. 다시 시도해주세요.';
+      document.getElementById('st-'+s.id).textContent='오류';
+    });
+  }
+  
+  setTimeout(function(){var sb=document.getElementById('sb-w1');if(sb)sb.classList.add('open');},300);
+}
+
+function renderWealthChart(scores){
+  var el=document.getElementById('wealth-chart');
+  if(!el)return;
+  // 기본값 (로딩 중)
+  if(!scores){
+    scores=[50,60,70,65,75,80,85,80,75,70];
+  }
+  var currentYear=new Date().getFullYear();
+  var max=Math.max.apply(null,scores);
+  var min=Math.min.apply(null,scores);
+  var range=max-min||1;
+  
+  var w=300,h=160;
+  var points=scores.map(function(s,i){
+    var x=(i/(scores.length-1))*w;
+    var y=h-((s-min)/range)*h;
+    return x+','+y;
+  }).join(' ');
+  
+  var svg='<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:200px;">';
+  // 그리드
+  for(var i=0;i<5;i++){
+    var y=i*(h/4);
+    svg+='<line x1="0" y1="'+y+'" x2="'+w+'" y2="'+y+'" stroke="rgba(201,168,76,0.1)" stroke-dasharray="2,2"/>';
+  }
+  // 영역 채우기
+  svg+='<polygon points="0,'+h+' '+points+' '+w+','+h+'" fill="url(#wealthGrad)" opacity="0.3"/>';
+  // 라인
+  svg+='<polyline points="'+points+'" fill="none" stroke="#c9a84c" stroke-width="2"/>';
+  // 점
+  scores.forEach(function(s,i){
+    var x=(i/(scores.length-1))*w;
+    var y=h-((s-min)/range)*h;
+    svg+='<circle cx="'+x+'" cy="'+y+'" r="4" fill="#e8c96a"/>';
+  });
+  svg+='<defs><linearGradient id="wealthGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#e8c96a"/><stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/></linearGradient></defs>';
+  svg+='</svg>';
+  
+  var labels='<div class="chart-labels">';
+  for(var i=0;i<scores.length;i++){
+    labels+='<span>'+(currentYear+i)+'</span>';
+  }
+  labels+='</div>';
+  
+  el.innerHTML=svg+labels;
+}
+
+function renderWealthCalendar(months){
+  var el=document.getElementById('wealth-calendar');
+  if(!el)return;
+  if(!months){
+    months=['normal','normal','normal','normal','normal','normal','normal','normal','normal','normal','normal','normal'];
+  }
+  var monthNames=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  var html='<div class="cal-grid">';
+  for(var i=0;i<12;i++){
+    var status=months[i]||'normal';
+    var emoji=status==='good'?'⭐':status==='bad'?'⚠️':'·';
+    html+='<div class="cal-month '+status+'"><div>'+monthNames[i]+'</div><div style="font-size:14px;margin-top:4px;">'+emoji+'</div><span class="cal-label">'+(status==='good'?'좋음':status==='bad'?'주의':'보통')+'</span></div>';
+  }
+  html+='</div>';
+  el.innerHTML=html;
+}
+
 
 var CAREER_SECS=[
   {id:'c1',i:'💼',t:'나와 맞는 직업 TOP 10'},
