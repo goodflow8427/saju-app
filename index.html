@@ -448,21 +448,25 @@ async function loadCareer(){
     return '<div class="sec-item" id="si-'+s.id+'"><div class="sec-hd" onclick="togSec(\''+s.id+'\')"><span class="sec-icon">'+s.i+'</span><span class="sec-ttl">'+s.t+'</span><span class="sec-st" id="st-'+s.id+'">분석 중…</span></div><div class="sec-bd" id="sb-'+s.id+'"><div class="sec-txt" id="txt-'+s.id+'"></div></div></div>';
   }).join('');
   
-  for(var i=0;i<CAREER_SECS.length;i++){
-    var s=CAREER_SECS[i];
-    if(i>0)await new Promise(function(r){setTimeout(r,2000);});
-    await (async function(s){
-      try{
-        var currentYear=new Date().getFullYear();
-        var prompt='현재는 '+currentYear+'년입니다. 사주 명식: '+G.dc+'\n\n분석 항목: '+s.t+'\n\n위 사주를 바탕으로 "'+s.t+'"에 대해 명리적 근거와 함께 상세히 분석해주세요. 구체적인 직업명, 시기, 유형을 포함해주세요. 월별 분석 시 반드시 '+currentYear+'년 1월부터 12월까지 모두 포함해주세요.';
-        var t=await api(SYS,prompt);
-        document.getElementById('txt-'+s.id).textContent=t;
-        document.getElementById('st-'+s.id).textContent='완료';
-      }catch(e){
-        document.getElementById('txt-'+s.id).textContent='오류. 다시 시도해주세요.';
-        document.getElementById('st-'+s.id).textContent='오류';
-      }
-    })(s);
+  // 한 번의 API 호출로 모든 섹션 받기
+  try{
+    var currentYear=new Date().getFullYear();
+    var fullPrompt='현재는 '+currentYear+'년입니다. 사주 명식: '+G.dc+'\n\n아래 5가지 항목을 각각 상세히 분석해주세요. 각 항목 제목을 [[제목]] 형식으로 정확히 써주세요.\n\n[[c1]] 나와 맞는 직업 TOP 10 (구체적인 직업명 10개와 이유)\n\n[[c2]] 커리어 강점과 약점 (명리적 근거 포함)\n\n[[c3]] 이직 타이밍 월별 분석 ('+currentYear+'년 1월부터 12월까지 모두 포함)\n\n[[c4]] 승진·성공 시기 (대운 기반 분석)\n\n[[c5]] 조심할 동료·상사 유형 (십성 기반 분석)';
+    var fullText=await api(SYS,fullPrompt);
+    
+    // 결과를 각 섹션에 분배
+    CAREER_SECS.forEach(function(s){
+      var pattern=new RegExp('\\[\\['+s.id+'\\]\\]([\\s\\S]*?)(?=\\[\\[c\\d\\]\\]|$)');
+      var match=fullText.match(pattern);
+      var sectionText=match?match[1].trim():fullText;
+      document.getElementById('txt-'+s.id).textContent=sectionText;
+      document.getElementById('st-'+s.id).textContent='완료';
+    });
+  }catch(e){
+    CAREER_SECS.forEach(function(s){
+      document.getElementById('txt-'+s.id).textContent='오류. 다시 시도해주세요.';
+      document.getElementById('st-'+s.id).textContent='오류';
+    });
   }
   // 첫 섹션 자동 열기
   setTimeout(function(){var sb=document.getElementById('sb-c1');if(sb)sb.classList.add('open');},300);
