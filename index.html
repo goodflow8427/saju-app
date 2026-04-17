@@ -374,8 +374,9 @@ async function startAnalysis(){
     document.getElementById('mj-res').innerHTML=mjHTML(sj);
     initSecs();
     var done=0;
-    for(var i=0;i<SECS.length;i+=6){
-      var chunk=SECS.slice(i,i+6);
+    for(var i=0;i<SECS.length;i+=3){
+      if(i>0)await new Promise(r=>setTimeout(r,1500));
+      var chunk=SECS.slice(i,i+3);
       await Promise.all(chunk.map(async function(s){
         updSec(s.id,'run');
         try{
