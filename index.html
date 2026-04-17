@@ -68,6 +68,13 @@ select.form-inp option{background:#120e1c;}
 .code-msg.ok{color:#6db36d;}
 .code-msg.err{color:#e08080;}
 .sub-active{background:rgba(109,179,109,.08);border:1px solid rgba(109,179,109,.25);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#6db36d;}
+.tab-nav{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;}
+.tab-btn{flex:1;min-width:100px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.15);border-radius:10px;color:#9a8a6a;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.tab-btn:hover{background:rgba(201,168,76,.05);}
+.tab-btn.active{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.4);color:#f0e6d0;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.career-lock{padding:40px 20px;text-align:center;background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.15);border-radius:14px;margin-bottom:20px;}
 </style>
 </head>
 <body>
@@ -129,6 +136,12 @@ select.form-inp option{background:#120e1c;}
     <div class="result-meta" id="r-meta"></div>
   </div>
   <div class="mj-wrap"><div id="mj-res"></div></div>
+  
+  <!-- 탭 네비게이션 -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('analysis', this)">☯ 명반</button>
+    <button class="tab-btn" onclick="switchTab('career', this)">💼 커리어 <span style="font-size:9px;color:#c9a84c;">🔒</span></button>
+  </div>
   <div id="sub-status"></div>
   <div id="code-section" class="code-wrap">
     <div class="code-title">✦ 구독 코드 입력</div>
@@ -146,7 +159,14 @@ select.form-inp option{background:#120e1c;}
     <div class="prg-bar"><div class="prg-fill" id="prg-fill"></div></div>
     <div class="prg-txt" id="prg-txt">분석 준비 중…</div>
   </div>
-  <div id="sec-list"></div>
+  <div id="tab-analysis" class="tab-content active">
+    <div id="sec-list"></div>
+  </div>
+  
+  <div id="tab-career" class="tab-content">
+    <div id="career-content"></div>
+  </div>
+  
   <div style="margin-top:20px;text-align:center;">
     <button onclick="location.reload()" style="background:none;border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:10px 20px;color:#6a5a4a;font-size:12px;cursor:pointer;">새로 분석하기</button>
   </div>
@@ -397,6 +417,55 @@ async function startAnalysis(){
     show('s-form');
   }
 }
+
+function switchTab(tabId, btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('tab-'+tabId).classList.add('active');
+  if(tabId==='career')loadCareer();
+}
+
+var CAREER_SECS=[
+  {id:'c1',i:'💼',t:'나와 맞는 직업 TOP 10'},
+  {id:'c2',i:'💪',t:'커리어 강점과 약점'},
+  {id:'c3',i:'📅',t:'이직 타이밍 (월별)'},
+  {id:'c4',i:'🚀',t:'승진·성공 시기'},
+  {id:'c5',i:'👥',t:'조심할 동료·상사 유형'}
+];
+var careerLoaded=false;
+
+async function loadCareer(){
+  var el=document.getElementById('career-content');
+  if(!isSubscribed()){
+    el.innerHTML='<div class="career-lock"><div style="font-size:44px;margin-bottom:16px;">🔒</div><div style="font-size:17px;color:#f0e6d0;font-weight:600;margin-bottom:8px;">커리어 분석은 구독 후 이용</div><div style="font-size:13px;color:#9a8a6a;margin-bottom:20px;line-height:1.8;">월 5,000원으로<br>나에게 맞는 직업·이직 타이밍·<br>승진 시기 등 5가지 심층 분석</div><a class="lock-btn" href="'+KAKAO_URL+'" target="_blank">카카오페이로 구독하기 ₩5,000</a><div style="font-size:10px;color:#6a5a4a;margin-top:14px;">입금 후 카카오톡으로 입금자명을 보내주세요</div></div>';
+    return;
+  }
+  if(careerLoaded)return;
+  careerLoaded=true;
+  el.innerHTML=CAREER_SECS.map(function(s){
+    return '<div class="sec-item" id="si-'+s.id+'"><div class="sec-hd" onclick="togSec(\''+s.id+'\')"><span class="sec-icon">'+s.i+'</span><span class="sec-ttl">'+s.t+'</span><span class="sec-st" id="st-'+s.id+'">분석 중…</span></div><div class="sec-bd" id="sb-'+s.id+'"><div class="sec-txt" id="txt-'+s.id+'"></div></div></div>';
+  }).join('');
+  
+  for(var i=0;i<CAREER_SECS.length;i+=3){
+    if(i>0)await new Promise(function(r){setTimeout(r,1500);});
+    var chunk=CAREER_SECS.slice(i,i+3);
+    await Promise.all(chunk.map(async function(s){
+      try{
+        var prompt='사주 명식: '+G.dc+'\n\n분석 항목: '+s.t+'\n\n위 사주를 바탕으로 "'+s.t+'"에 대해 명리적 근거와 함께 상세히 분석해주세요. 구체적인 직업명, 시기, 유형을 포함해주세요.';
+        var t=await api(SYS,prompt);
+        document.getElementById('txt-'+s.id).textContent=t;
+        document.getElementById('st-'+s.id).textContent='완료';
+      }catch(e){
+        document.getElementById('txt-'+s.id).textContent='오류. 다시 시도해주세요.';
+        document.getElementById('st-'+s.id).textContent='오류';
+      }
+    }));
+  }
+  // 첫 섹션 자동 열기
+  setTimeout(function(){var sb=document.getElementById('sb-c1');if(sb)sb.classList.add('open');},300);
+}
+
 </script>
 </body>
 </html>
