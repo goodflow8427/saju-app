@@ -88,9 +88,20 @@ select.form-inp option{background:#120e1c;}
 .cal-month.bad{background:rgba(150,80,80,.1);border-color:rgba(200,100,100,.3);color:#c09090;}
 .cal-month.normal{background:rgba(255,255,255,.02);color:#9a8a6a;}
 .cal-label{font-size:9px;display:block;margin-top:2px;}
+.share-wrap{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:20px;margin:20px 0;text-align:center;}
+.share-title{font-size:13px;color:#f0e6d0;font-weight:600;margin-bottom:12px;}
+.share-desc{font-size:11px;color:#9a8a6a;margin-bottom:16px;line-height:1.6;}
+.share-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.share-btn{padding:12px 8px;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);border-radius:10px;color:#c9a84c;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
+.share-btn:hover{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.4);}
+.share-btn-icon{font-size:18px;display:block;margin-bottom:4px;}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#c9a84c;padding:12px 24px;border-radius:10px;font-size:12px;border:1px solid rgba(201,168,76,.3);z-index:1000;opacity:0;transition:opacity .3s;}
+.toast.show{opacity:1;}
 </style>
 </head>
 <body>
+<div id="toast" class="toast"></div>
+
 <div class="hdr">
   <div class="hdr-badge">SAJU봐</div>
   <div class="hdr-title">사주봐</div>
@@ -176,6 +187,20 @@ select.form-inp option{background:#120e1c;}
   </div>
   <div id="tab-analysis" class="tab-content active">
     <div id="sec-list"></div>
+    <div class="share-wrap">
+      <div class="share-title">✦ 친구에게 공유하기</div>
+      <div class="share-desc">내 사주 분석 결과를 친구들에게 공유해보세요</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="saveAsImage()">
+          <span class="share-btn-icon">📸</span>
+          이미지로 저장
+        </button>
+        <button class="share-btn" onclick="copyLink()">
+          <span class="share-btn-icon">🔗</span>
+          링크 복사
+        </button>
+      </div>
+    </div>
   </div>
   
   <div id="tab-career" class="tab-content">
@@ -675,6 +700,69 @@ function renderLoveChart(scores){
   for(var i=0;i<scores.length;i++){labels+='<span>'+(currentYear+i)+'</span>';}
   labels+='</div>';
   el.innerHTML=svg+labels;
+}
+
+function showToast(msg){
+  var toast=document.getElementById('toast');
+  toast.textContent=msg;
+  toast.classList.add('show');
+  setTimeout(function(){toast.classList.remove('show');},2500);
+}
+
+function copyLink(){
+  var url='https://sajubao.com';
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){
+      showToast('✓ 링크가 복사되었습니다');
+    });
+  } else {
+    var tempInput=document.createElement('input');
+    tempInput.value=url;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+    showToast('✓ 링크가 복사되었습니다');
+  }
+}
+
+async function saveAsImage(){
+  showToast('이미지 생성 중…');
+  try{
+    // 동적으로 html2canvas 로드
+    if(typeof html2canvas==='undefined'){
+      await new Promise(function(resolve,reject){
+        var script=document.createElement('script');
+        script.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        script.onload=resolve;
+        script.onerror=reject;
+        document.head.appendChild(script);
+      });
+    }
+    
+    // 명반 결과 영역 캡처 (공유 버튼 제외)
+    var target=document.getElementById('s-main');
+    var shareWrap=document.querySelector('.share-wrap');
+    if(shareWrap)shareWrap.style.display='none';
+    
+    var canvas=await html2canvas(target,{
+      backgroundColor:'#08080f',
+      scale:2
+    });
+    
+    if(shareWrap)shareWrap.style.display='block';
+    
+    // 이미지 다운로드
+    var link=document.createElement('a');
+    link.download='사주봐_'+(G.form.name||'결과')+'.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    showToast('✓ 이미지가 저장되었습니다');
+  }catch(e){
+    var shareWrap=document.querySelector('.share-wrap');
+    if(shareWrap)shareWrap.style.display='block';
+    showToast('오류: '+e.message);
+  }
 }
 
 function renderLoveCalendar(months){
