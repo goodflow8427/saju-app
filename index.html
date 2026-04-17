@@ -97,6 +97,11 @@ select.form-inp option{background:#120e1c;}
 .share-btn-icon{font-size:18px;display:block;margin-bottom:4px;}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#c9a84c;padding:12px 24px;border-radius:10px;font-size:12px;border:1px solid rgba(201,168,76,.3);z-index:1000;opacity:0;transition:opacity .3s;}
 .toast.show{opacity:1;}
+.footer{padding:30px 20px 20px;text-align:center;border-top:1px solid rgba(201,168,76,.08);margin-top:40px;}
+.footer-links{display:flex;justify-content:center;gap:16px;margin-bottom:12px;flex-wrap:wrap;}
+.footer-links a{font-size:11px;color:#6a5a4a;text-decoration:none;}
+.footer-links a:hover{color:#c9a84c;}
+.footer-info{font-size:10px;color:#4a3a2a;line-height:1.7;}
 </style>
 </head>
 <body>
@@ -871,5 +876,18 @@ async function loadCareer(){
 }
 
 </script>
+
+<div class="footer">
+  <div class="footer-links">
+    <a href="/terms.html">이용약관</a>
+    <a href="/privacy.html">개인정보처리방침</a>
+    <a href="/refund.html">환불 정책</a>
+  </div>
+  <div class="footer-info">
+    사주봐 · 연지타이어앤오피스 (사업자등록번호: 144-08-02847)<br>
+    대표: 이가영 · 문의: 카카오톡 @사주봐<br>
+    © 2026 사주봐. All rights reserved.
+  </div>
+</div>
 </body>
 </html>
