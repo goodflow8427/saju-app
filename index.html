@@ -205,14 +205,56 @@ select.form-inp option{background:#120e1c;}
   
   <div id="tab-career" class="tab-content">
     <div id="career-content"></div>
+    <div class="share-wrap">
+      <div class="share-title">✦ 친구에게 공유하기</div>
+      <div class="share-desc">분석 결과를 친구들에게 공유해보세요</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="saveAsImage()">
+          <span class="share-btn-icon">📸</span>
+          이미지로 저장
+        </button>
+        <button class="share-btn" onclick="copyLink()">
+          <span class="share-btn-icon">🔗</span>
+          링크 복사
+        </button>
+      </div>
+    </div>
   </div>
   
   <div id="tab-wealth" class="tab-content">
     <div id="wealth-content"></div>
+    <div class="share-wrap">
+      <div class="share-title">✦ 친구에게 공유하기</div>
+      <div class="share-desc">분석 결과를 친구들에게 공유해보세요</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="saveAsImage()">
+          <span class="share-btn-icon">📸</span>
+          이미지로 저장
+        </button>
+        <button class="share-btn" onclick="copyLink()">
+          <span class="share-btn-icon">🔗</span>
+          링크 복사
+        </button>
+      </div>
+    </div>
   </div>
   
   <div id="tab-love" class="tab-content">
     <div id="love-content"></div>
+    <div class="share-wrap">
+      <div class="share-title">✦ 친구에게 공유하기</div>
+      <div class="share-desc">분석 결과를 친구들에게 공유해보세요</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="saveAsImage()">
+          <span class="share-btn-icon">📸</span>
+          이미지로 저장
+        </button>
+        <button class="share-btn" onclick="copyLink()">
+          <span class="share-btn-icon">🔗</span>
+          링크 복사
+        </button>
+      </div>
+    </div>
   </div>
   
   <div style="margin-top:20px;text-align:center;">
@@ -729,7 +771,6 @@ function copyLink(){
 async function saveAsImage(){
   showToast('이미지 생성 중…');
   try{
-    // 동적으로 html2canvas 로드
     if(typeof html2canvas==='undefined'){
       await new Promise(function(resolve,reject){
         var script=document.createElement('script');
@@ -740,27 +781,30 @@ async function saveAsImage(){
       });
     }
     
-    // 명반 결과 영역 캡처 (공유 버튼 제외)
+    // 전체 결과 영역 캡처
     var target=document.getElementById('s-main');
-    var shareWrap=document.querySelector('.share-wrap');
-    if(shareWrap)shareWrap.style.display='none';
+    var shareWraps=document.querySelectorAll('.share-wrap');
+    shareWraps.forEach(function(el){el.style.display='none';});
+    
+    // 현재 탭 이름 가져오기
+    var activeTab=document.querySelector('.tab-btn.active');
+    var tabName=activeTab?activeTab.textContent.trim().split(' ')[1]||'결과':'결과';
     
     var canvas=await html2canvas(target,{
       backgroundColor:'#08080f',
       scale:2
     });
     
-    if(shareWrap)shareWrap.style.display='block';
+    shareWraps.forEach(function(el){el.style.display='block';});
     
-    // 이미지 다운로드
     var link=document.createElement('a');
-    link.download='사주봐_'+(G.form.name||'결과')+'.png';
+    link.download='사주봐_'+(G.form.name||'사용자')+'_'+tabName+'.png';
     link.href=canvas.toDataURL('image/png');
     link.click();
     showToast('✓ 이미지가 저장되었습니다');
   }catch(e){
-    var shareWrap=document.querySelector('.share-wrap');
-    if(shareWrap)shareWrap.style.display='block';
+    var shareWraps=document.querySelectorAll('.share-wrap');
+    shareWraps.forEach(function(el){el.style.display='block';});
     showToast('오류: '+e.message);
   }
 }
