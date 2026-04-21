@@ -24,7 +24,33 @@ function generateCode(email, days) {
   return code;
 }
 
+// 이벤트 코드 설정
+const EVENT_CODES = {
+  'OPEN100': { days: 30, limit: 100 },
+  'SAJUOPEN': { days: 30, limit: 100 },
+};
+
+// 이벤트 코드 사용 횟수 (메모리 기반 - 서버 재시작 시 초기화됨)
+// 실제 운영 시 Vercel KV 또는 외부 DB 사용 권장
+const eventUsage = {};
+
 function verifyCode(code, email) {
+  // 이벤트 코드 먼저 확인
+  if (EVENT_CODES[code]) {
+    const event = EVENT_CODES[code];
+    const used = eventUsage[code] || 0;
+    
+    if (used >= event.limit) {
+      return { valid: false, error: '이벤트가 종료되었습니다. (선착순 마감)' };
+    }
+    
+    // 사용 횟수 증가
+    eventUsage[code] = used + 1;
+    console.log(`이벤트 코드 ${code} 사용: ${eventUsage[code]}/${event.limit}`);
+    
+    return { valid: true, days: event.days, event: true, remaining: event.limit - eventUsage[code] };
+  }
+  
   // 오늘 날짜로 생성된 코드인지 확인 (7일 유효)
   const secret = process.env.CODE_SECRET || 'saju_secret_2024';
   
