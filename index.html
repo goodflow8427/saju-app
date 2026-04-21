@@ -257,14 +257,25 @@ function getHour(dg,h){
 function calcSaju(y,m,d,h){
   return {year:getYear(y),month:getMonth(y,m),day:getDay(y,m,d),time:getHour(getDay(y,m,d).g,h)};
 }
+var OHK={목:'🌳 나무',화:'🔥 불',토:'🌍 흙',금:'⚙️ 금',수:'💧 물'};
 function mjHTML(sj){
   var cols=[{l:'년주',d:sj.year},{l:'월주',d:sj.month},{l:'일주',d:sj.day},{l:'시주',d:sj.time}];
-  var h='<table class="mj-table"><tr>';
+  var h='<table class="mj-table"><tr><th></th>';
   cols.forEach(function(c){h+='<th>'+c.l+'</th>';});
-  h+='</tr><tr>';
-  cols.forEach(function(c){var o=OHT[c.d.g];h+='<td><span class="mj-char '+OHC[o]+'">'+TG[c.d.g]+'</span><span class="mj-name">'+TGN[c.d.g]+'</span><span class="mj-elem">'+o+'</span></td>';});
-  h+='</tr><tr>';
-  cols.forEach(function(c){var o=OHJ[c.d.j];h+='<td><span class="mj-char '+OHC[o]+'">'+JJ[c.d.j]+'</span><span class="mj-name">'+JJN[c.d.j]+'</span><span class="mj-elem">'+o+'</span></td>';});
+  h+='</tr><tr><td style="font-size:9px;color:#4a3a2a;padding:4px 2px;">천간</td>';
+  cols.forEach(function(c){
+    var o=OHT[c.d.g];
+    h+='<td><span class="mj-char '+OHC[o]+'">'+TG[c.d.g]+'</span>'
+      +'<span class="mj-name">'+TGN[c.d.g]+'</span>'
+      +'<span class="mj-elem">'+OHK[o]+'</span></td>';
+  });
+  h+='</tr><tr><td style="font-size:9px;color:#4a3a2a;padding:4px 2px;">지지</td>';
+  cols.forEach(function(c){
+    var o=OHJ[c.d.j];
+    h+='<td><span class="mj-char '+OHC[o]+'">'+JJ[c.d.j]+'</span>'
+      +'<span class="mj-name">'+JJN[c.d.j]+'</span>'
+      +'<span class="mj-elem">'+OHK[o]+'</span></td>';
+  });
   h+='</tr></table>';
   return h;
 }
@@ -354,7 +365,7 @@ function saveCache(k,v){try{localStorage.setItem('sc-'+k,JSON.stringify(v));}cat
 function loadCache(k){try{var d=localStorage.getItem('sc-'+k);return d?JSON.parse(d):null;}catch(e){return null;}}
 
 // ===== API =====
-var SYS='당신은 사주명리학 전문가입니다. 사주 명식은 절대 수정하지 마세요. 명리적 근거를 포함하고 한국어로 답하세요. 각 항목은 핵심만 600자 이내로 작성하세요.';
+var SYS='당신은 사주명리학 전문가입니다. 사주 명식은 절대 수정하지 마세요. 한자나 전문 용어 대신 누구나 이해할 수 있는 쉬운 말로 설명해주세요. 예를 들어 "丙火 일간" 대신 "태양처럼 밝고 따뜻한 에너지", "재성" 대신 "돈을 버는 힘" 처럼요. 명리적 근거는 포함하되 쉽게 풀어서 설명하세요. 각 항목은 핵심만 600자 이내로 작성하세요.';
 function callAPI(prompt){
   return fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:SYS,user:prompt})})
   .then(function(r){
