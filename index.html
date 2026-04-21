@@ -492,13 +492,21 @@ async function startAnalysis(){
     SECS.forEach(function(s){updSec(s.id,'run');});
     try{
       var currentYear=new Date().getFullYear();
-      var secList=SECS.map(function(s){return '[['+s.id+']] '+s.t;}).join('\n\n');
-      var fullPrompt='현재는 '+currentYear+'년입니다. 사주 명식: '+dc+'\n\n아래 항목을 각각 상세히 분석해주세요. 각 항목 앞에 [[s1]], [[s2]] 형식 태그를 반드시 써주세요.\n\n'+secList;
+      var secNames=SECS.map(function(s,i){return (i+1)+'. '+s.t;}).join('\n');
+      var fullPrompt='현재는 '+currentYear+'년입니다.\n사주 명식: '+dc+'\n\n아래 '+SECS.length+'가지 항목을 순서대로 분석해주세요.\n각 항목은 반드시 === 항목번호 === 형식으로 시작하세요.\n\n'+secNames;
       var fullText=await api(SYS,fullPrompt);
-      SECS.forEach(function(s){
-        var pattern=new RegExp('\\[\\['+s.id+'\\]\\]([\\s\\S]*?)(?=\\[\\[s\\d+\\]\\]|$)');
-        var match=fullText.match(pattern);
-        var text=match?match[1].trim():'분석 완료';
+      
+      // === 1 === 형식으로 분리
+      var parts=fullText.split(/===\s*(\d+)\s*===/);
+      var sections={};
+      for(var pi=1;pi<parts.length;pi+=2){
+        var num=parseInt(parts[pi]);
+        var text=parts[pi+1]?parts[pi+1].trim():'';
+        if(num>=1&&num<=SECS.length)sections[num]=text;
+      }
+      
+      SECS.forEach(function(s,i){
+        var text=sections[i+1]||fullText;
         G.secs[s.id]={t:text,done:true};
         updSec(s.id,'done',text);
         done++;updPrg(done,SECS.length);
@@ -692,14 +700,19 @@ async function loadLove(){
   
   try{
     var currentYear=new Date().getFullYear();
-    var fullPrompt='현재는 '+currentYear+'년입니다. 사주 명식: '+G.dc+'\n\n아래 5가지 연애·결혼 항목을 각각 상세히 분석해주세요. 각 항목 제목을 [[제목]] 형식으로 정확히 써주세요. 또한 마지막에 [[CHART]] 태그에 향후 10년간 연애운 점수를 쉼표로 구분해 써주세요 (1-100). [[CALENDAR]] 태그에 '+currentYear+'년 1월부터 12월까지 만남운을 good/normal/bad 중 하나로 쉼표 구분해 써주세요.\n\n[[l1]] 이상형과 나의 연애 스타일\n\n[[l2]] 배우자 특징과 만남 시기\n\n[[l3]] 결혼 적령기와 좋은 해\n\n[[l4]] 연애 주의사항\n\n[[l5]] 관계를 오래 유지하는 법\n\n[[CHART]] 예: 60,70,75,80,85,80,75,70,65,60\n\n[[CALENDAR]] 예: good,normal,good,bad,normal,good,good,normal,bad,good,normal,good';
+    var loveNames=LOVE_SECS.map(function(s,i){return (i+1)+'. '+s.t;}).join('\n');
+    var fullPrompt='현재는 '+currentYear+'년입니다.\n사주 명식: '+G.dc+'\n\n아래 5가지 연애·결혼 항목을 순서대로 분석해주세요.\n각 항목은 반드시 === 항목번호 === 형식으로 시작하세요.\n마지막에 === CHART === 다음 줄에 10년 연애운점수(1-100) 10개를 쉼표로 구분해 써주세요.\n=== CALENDAR === 다음 줄에 '+currentYear+'년 1-12월 만남운을 good/normal/bad로 쉼표 구분해 써주세요.\n\n'+loveNames;
     var fullText=await api(SYS,fullPrompt);
     
-    LOVE_SECS.forEach(function(s){
-      var pattern=new RegExp('\\[\\['+s.id+'\\]\\]([\\s\\S]*?)(?=\\[\\[l\\d\\]\\]|\\[\\[CHART\\]\\]|$)');
-      var match=fullText.match(pattern);
-      var sectionText=match?match[1].trim():'';
-      document.getElementById('txt-'+s.id).textContent=sectionText;
+    var parts=fullText.split(/===\s*([\w]+)\s*===/);
+    var sections={};
+    for(var pi=1;pi<parts.length;pi+=2){
+      sections[parts[pi].trim()]=parts[pi+1]?parts[pi+1].trim():'';
+    }
+    
+    LOVE_SECS.forEach(function(s,i){
+      var text=sections[String(i+1)]||'분석 완료';
+      document.getElementById('txt-'+s.id).textContent=text;
       document.getElementById('st-'+s.id).textContent='완료';
     });
     
@@ -863,15 +876,21 @@ async function loadCareer(){
   // 한 번의 API 호출로 모든 섹션 받기
   try{
     var currentYear=new Date().getFullYear();
-    var fullPrompt='현재는 '+currentYear+'년입니다. 사주 명식: '+G.dc+'\n\n아래 5가지 항목을 각각 상세히 분석해주세요. 각 항목 제목을 [[제목]] 형식으로 정확히 써주세요.\n\n[[c1]] 나와 맞는 직업 TOP 10 (구체적인 직업명 10개와 이유)\n\n[[c2]] 커리어 강점과 약점 (명리적 근거 포함)\n\n[[c3]] 이직 타이밍 월별 분석 ('+currentYear+'년 1월부터 12월까지 모두 포함)\n\n[[c4]] 승진·성공 시기 (대운 기반 분석)\n\n[[c5]] 조심할 동료·상사 유형 (십성 기반 분석)';
+    var careerNames=CAREER_SECS.map(function(s,i){return (i+1)+'. '+s.t;}).join('\n');
+    var fullPrompt='현재는 '+currentYear+'년입니다.\n사주 명식: '+G.dc+'\n\n아래 5가지 커리어 항목을 순서대로 분석해주세요.\n각 항목은 반드시 === 항목번호 === 형식으로 시작하세요.\n\n'+careerNames+'\n\n이직 타이밍 분석 시 '+currentYear+'년 1월부터 12월까지 모두 포함하세요.';
     var fullText=await api(SYS,fullPrompt);
     
-    // 결과를 각 섹션에 분배
-    CAREER_SECS.forEach(function(s){
-      var pattern=new RegExp('\\[\\['+s.id+'\\]\\]([\\s\\S]*?)(?=\\[\\[c\\d\\]\\]|$)');
-      var match=fullText.match(pattern);
-      var sectionText=match?match[1].trim():fullText;
-      document.getElementById('txt-'+s.id).textContent=sectionText;
+    var parts=fullText.split(/===\s*(\d+)\s*===/);
+    var sections={};
+    for(var pi=1;pi<parts.length;pi+=2){
+      var num=parseInt(parts[pi]);
+      var text=parts[pi+1]?parts[pi+1].trim():'';
+      if(num>=1&&num<=CAREER_SECS.length)sections[num]=text;
+    }
+    
+    CAREER_SECS.forEach(function(s,i){
+      var text=sections[i+1]||'분석 완료';
+      document.getElementById('txt-'+s.id).textContent=text;
       document.getElementById('st-'+s.id).textContent='완료';
     });
   }catch(e){
