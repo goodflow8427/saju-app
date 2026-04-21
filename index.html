@@ -446,10 +446,15 @@ function updSec(id,status,text){
   }
 }
 async function api(sys,msg){
-  var r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:sys,user:msg})});
-  if(!r.ok)throw new Error('API 오류');
-  var d=await r.json();
-  return d.text||'오류';
+  for(var i=0;i<3;i++){
+    if(i>0)await new Promise(function(res){setTimeout(res,3000*i);});
+    var r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:sys,user:msg})});
+    if(r.status===429)continue;
+    if(!r.ok)throw new Error('API 오류 '+r.status);
+    var d=await r.json();
+    return d.text||'오류';
+  }
+  throw new Error('API 요청 실패. 잠시 후 다시 시도해주세요.');
 }
 var SYS='당신은 사주명리학 전문가입니다. 사주 명식은 정확히 계산된 것이므로 절대 수정하지 마세요. 모든 분석에 명리적 근거를 포함하세요. 차분하고 신뢰감 있는 말투로 한국어로만 답하세요. 구조적으로 명확하게 답하되 코드블럭과 표는 사용하지 마세요.';
 function makePrompt(id,dc){
@@ -484,24 +489,28 @@ async function startAnalysis(){
     document.getElementById('mj-res').innerHTML=mjHTML(sj);
     initSecs();
     var done=0;
-    for(var i=0;i<SECS.length;i+=3){
-      if(i>0)await new Promise(r=>setTimeout(r,1500));
-      var chunk=SECS.slice(i,i+3);
-      await Promise.all(chunk.map(async function(s){
-        updSec(s.id,'run');
-        try{
-          var t=await api(SYS,makePrompt(s.id,dc));
-          G.secs[s.id]={t:t,done:true};
-          updSec(s.id,'done',t);
-        }catch(e){
-          G.secs[s.id]={t:'오류.',done:true};
-          updSec(s.id,'done','오류.');
-        }
-        done++;
-        updPrg(done,SECS.length);
-        if(done===1){setTimeout(function(){var sb=document.getElementById('sb-s1');if(sb)sb.classList.add('open');},200);}
-      }));
+    SECS.forEach(function(s){updSec(s.id,'run');});
+    try{
+      var currentYear=new Date().getFullYear();
+      var secList=SECS.map(function(s){return '[['+s.id+']] '+s.t;}).join('\n\n');
+      var fullPrompt='현재는 '+currentYear+'년입니다. 사주 명식: '+dc+'\n\n아래 항목을 각각 상세히 분석해주세요. 각 항목 앞에 [[s1]], [[s2]] 형식 태그를 반드시 써주세요.\n\n'+secList;
+      var fullText=await api(SYS,fullPrompt);
+      SECS.forEach(function(s){
+        var pattern=new RegExp('\\[\\['+s.id+'\\]\\]([\\s\\S]*?)(?=\\[\\[s\\d+\\]\\]|$)');
+        var match=fullText.match(pattern);
+        var text=match?match[1].trim():'분석 완료';
+        G.secs[s.id]={t:text,done:true};
+        updSec(s.id,'done',text);
+        done++;updPrg(done,SECS.length);
+      });
+    }catch(e){
+      SECS.forEach(function(s){
+        G.secs[s.id]={t:'오류. 새로고침 후 다시 시도해주세요.',done:true};
+        updSec(s.id,'done','오류. 새로고침 후 다시 시도해주세요.');
+        done++;updPrg(done,SECS.length);
+      });
     }
+    setTimeout(function(){var sb=document.getElementById('sb-s1');if(sb)sb.classList.add('open');},200);
   }catch(e){
     alert('오류: '+e.message);
     show('s-form');
