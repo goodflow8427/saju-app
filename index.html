@@ -239,7 +239,7 @@ function getYear(y){
 function getMonth(y,m){
   var yg=((y-4)%10+10)%10;
   var base=[2,4,6,8,0,2,4,6,8,0][yg];
-  var mg=(base+(m-2)+12)%10;
+  var mg=((base+(m-2))%10+10)%10;
   var mj={1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:0}[m];
   return {g:mg,j:mj};
 }
