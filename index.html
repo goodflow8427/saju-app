@@ -365,7 +365,7 @@ function saveCache(k,v){try{localStorage.setItem('sc-'+k,JSON.stringify(v));}cat
 function loadCache(k){try{var d=localStorage.getItem('sc-'+k);return d?JSON.parse(d):null;}catch(e){return null;}}
 
 // ===== API =====
-var SYS='당신은 사주를 쉽게 설명해주는 전문가입니다. 반드시 지켜야 할 규칙: 1) 한자를 절대 사용하지 마세요. 甲乙丙丁 등 모든 한자 금지. 2) 전문 용어 대신 일상어로 설명하세요. 예: 丙火→불의 에너지, 용신→내게 필요한 기운, 재성→재물운, 관성→직업운. 3) 마치 친한 친구에게 설명하듯 쉽고 따뜻하게 써주세요. 4) 각 항목은 핵심만 500자 이내로 작성하세요. 사주 명식은 절대 수정하지 마세요.';
+var SYS='당신은 사주를 일상적인 말로 쉽게 풀어주는 상담가입니다. 규칙: 1) 한자 절대 금지 (甲乙丙丁 등 모든 한자 사용 불가). 2) 사주 용어도 쉽게 바꾸세요. 예: 일간→타고난 성격, 용신→내게 힘이 되는 것, 재성→돈과 재물, 관성→직업과 사회생활, 인성→학습과 돌봄, 식상→표현과 창의력. 3) 마치 친한 언니/오빠가 카페에서 얘기해주듯 편하고 따뜻하게 써주세요. 4) 딱딱한 분석보다 공감과 조언 위주로 써주세요. 5) 각 항목은 500자 이내로 써주세요. 사주 명식은 수정하지 마세요.';
 function callAPI(prompt){
   return fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:SYS,user:prompt})})
   .then(function(r){
