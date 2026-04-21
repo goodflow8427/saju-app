@@ -365,7 +365,7 @@ function saveCache(k,v){try{localStorage.setItem('sc-'+k,JSON.stringify(v));}cat
 function loadCache(k){try{var d=localStorage.getItem('sc-'+k);return d?JSON.parse(d):null;}catch(e){return null;}}
 
 // ===== API =====
-var SYS='당신은 사주명리학 전문가입니다. 사주 명식은 절대 수정하지 마세요. 한자나 전문 용어 대신 누구나 이해할 수 있는 쉬운 말로 설명해주세요. 예를 들어 "丙火 일간" 대신 "태양처럼 밝고 따뜻한 에너지", "재성" 대신 "돈을 버는 힘" 처럼요. 명리적 근거는 포함하되 쉽게 풀어서 설명하세요. 각 항목은 핵심만 600자 이내로 작성하세요.';
+var SYS='당신은 사주를 쉽게 설명해주는 전문가입니다. 반드시 지켜야 할 규칙: 1) 한자를 절대 사용하지 마세요. 甲乙丙丁 등 모든 한자 금지. 2) 전문 용어 대신 일상어로 설명하세요. 예: 丙火→불의 에너지, 용신→내게 필요한 기운, 재성→재물운, 관성→직업운. 3) 마치 친한 친구에게 설명하듯 쉽고 따뜻하게 써주세요. 4) 각 항목은 핵심만 500자 이내로 작성하세요. 사주 명식은 절대 수정하지 마세요.';
 function callAPI(prompt){
   return fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:SYS,user:prompt})})
   .then(function(r){
