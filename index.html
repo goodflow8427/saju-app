@@ -417,7 +417,16 @@ function drawTimeline(data){
   var wealth=data.wealth;
   var love=data.love;
   var w=320,h=120,pad=10;
-  var maxV=100,minV=0;
+  // 실제 데이터 범위로 차이 극대화
+  var allVals=career.concat(wealth).concat(love);
+  var maxV=Math.max.apply(null,allVals);
+  var minV=Math.min.apply(null,allVals);
+  var range=maxV-minV;
+  // 차이가 너무 작으면 강제로 범위 확장
+  if(range<30){
+    maxV=Math.min(100,maxV+15);
+    minV=Math.max(0,minV-15);
+  }
 
   function getY(v){return h-pad-((v-minV)/(maxV-minV))*(h-pad*2);}
   function getX(i){return pad+(i/(years.length-1))*(w-pad*2);}
@@ -556,7 +565,7 @@ async function loadTimeline(){
     var cy=new Date().getFullYear();
     var years=[];
     for(var i=0;i<10;i++)years.push(cy+i);
-    var prompt='현재는 '+cy+'년입니다.\n사주 명식: '+G.dc+'\n\n향후 10년('+years.join(',')+') 동안의 커리어·재물·연애 운세 점수(1-100)를 분석해주세요.\n\n반드시 아래 형식으로만 답하세요:\nCARRER: 숫자10개,쉼표구분\nWEALTH: 숫자10개,쉼표구분\nLOVE: 숫자10개,쉼표구분';
+    var prompt='현재는 '+cy+'년입니다.\n사주 명식: '+G.dc+'\n\n향후 10년('+years.join(',')+') 동안의 커리어·재물·연애 운세 점수를 분석해주세요.\n\n중요: 점수 차이를 크게 해주세요. 좋은 해는 80-95, 보통은 50-65, 나쁜 해는 25-45로 구분해서 고저가 뚜렷하게 나오도록 해주세요.\n\n반드시 아래 형식으로만 답하세요:\nCARRER: 숫자10개,쉼표구분\nWEALTH: 숫자10개,쉼표구분\nLOVE: 숫자10개,쉼표구분';
 
     var text=await callAPI(prompt);
     function parseNums(key){
