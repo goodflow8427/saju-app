@@ -9,558 +9,897 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#08080f;color:#e8dcc8;font-family:'Noto Serif KR',serif;min-height:100vh;}
 .hidden{display:none!important;}
-
-/* 헤더 */
-.hdr{text-align:center;padding:30px 20px 20px;border-bottom:1px solid rgba(201,168,76,.1);}
-.hdr-badge{font-size:10px;letter-spacing:4px;color:#6a5a4a;margin-bottom:8px;}
-.hdr-title{font-size:32px;font-weight:700;color:#c9a84c;letter-spacing:4px;}
-.hdr-sub{font-size:12px;color:#6a5a4a;margin-top:8px;line-height:1.7;}
-
-/* 폼 */
-.form-wrap{padding:30px 20px;}
-.form-lbl{font-size:10px;letter-spacing:3px;color:#c9a84c;display:block;margin-bottom:6px;margin-top:16px;}
-.form-inp{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);border-radius:9px;padding:12px 14px;color:#f0e6d0;font-family:inherit;font-size:14px;outline:none;}
-.form-inp:focus{border-color:rgba(201,168,76,.5);}
-select.form-inp option{background:#120e1c;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.start-btn{width:100%;margin-top:24px;padding:16px;background:linear-gradient(135deg,#b8922a,#e8c96a);border:none;border-radius:12px;color:#08080f;font-family:inherit;font-size:15px;font-weight:700;letter-spacing:2px;cursor:pointer;}
-.start-btn:active{opacity:.85;}
-
-/* 로딩 */
-.loading-wrap{padding:80px 20px;text-align:center;}
-.spin{display:inline-block;width:40px;height:40px;border:3px solid rgba(201,168,76,.2);border-top-color:#c9a84c;border-radius:50%;animation:spin .8s linear infinite;}
+.hdr{text-align:center;padding:28px 20px 18px;border-bottom:1px solid rgba(201,168,76,.1);}
+.hdr-title{font-size:30px;font-weight:700;color:#c9a84c;letter-spacing:4px;}
+.hdr-sub{font-size:11px;color:#6a5a4a;margin-top:6px;}
+.form-wrap{padding:22px 20px;}
+.lbl{font-size:10px;letter-spacing:3px;color:#c9a84c;display:block;margin-bottom:5px;margin-top:13px;}
+.inp{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);border-radius:9px;padding:11px 14px;color:#f0e6d0;font-family:inherit;font-size:14px;outline:none;}
+.inp:focus{border-color:rgba(201,168,76,.5);}
+select.inp option{background:#120e1c;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.start-btn{width:100%;margin-top:18px;padding:15px;background:linear-gradient(135deg,#b8922a,#e8c96a);border:none;border-radius:11px;color:#08080f;font-family:inherit;font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;}
+.loading{padding:60px 20px;text-align:center;}
+.spin{display:inline-block;width:36px;height:36px;border:3px solid rgba(201,168,76,.2);border-top-color:#c9a84c;border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-txt{margin-top:20px;color:#6a5a4a;font-size:13px;letter-spacing:2px;}
+.loading-txt{margin-top:14px;color:#6a5a4a;font-size:12px;letter-spacing:2px;}
+.result{padding:16px 20px;}
+.result-hd{text-align:center;padding:14px 0 10px;}
+.result-name{font-size:22px;color:#f0e6d0;font-weight:600;}
+.result-meta{font-size:11px;color:#6a5a4a;margin-top:4px;}
+.mj-box{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.12);border-radius:11px;padding:14px;margin-bottom:14px;overflow-x:auto;}
+.mj-table{width:100%;border-collapse:collapse;min-width:240px;}
+.mj-table th{font-size:9px;color:#6a5a4a;padding:5px;text-align:center;letter-spacing:2px;}
+.mj-table td{text-align:center;padding:7px 3px;}
+.mj-char{font-size:24px;display:block;margin-bottom:2px;}
+.mj-name{font-size:10px;color:#9a8a6a;display:block;}
+.mj-elem{font-size:9px;color:#6a5a4a;display:block;}
+.wood{color:#4a9a4a!important;}.fire{color:#e85c4a!important;}.earth{color:#c9a84c!important;}.metal{color:#aaaaaa!important;}.water{color:#4a7aaa!important;}
+.tab-nav{display:flex;gap:5px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{flex-shrink:0;padding:8px 13px;background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.15);border-radius:9px;color:#6a5a4a;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.tab-btn.active{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.4);color:#f0e6d0;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
 
-/* 결과 */
-.result-wrap{padding:20px;}
-.result-hd{text-align:center;padding:20px 0;margin-bottom:16px;}
-.result-name{font-size:26px;color:#f0e6d0;font-weight:600;}
-.result-meta{font-size:12px;color:#6a5a4a;margin-top:6px;}
-
-/* 명식 테이블 */
-.mj-wrap{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:20px;margin-bottom:20px;}
-.mj-table{width:100%;border-collapse:collapse;}
-.mj-table th{font-size:10px;color:#6a5a4a;padding:8px;text-align:center;letter-spacing:2px;}
-.mj-table td{text-align:center;padding:8px;}
-.mj-char{font-size:28px;color:#c9a84c;display:block;}
-.mj-name{font-size:11px;color:#9a8a6a;display:block;margin-top:2px;}
-.mj-elem{font-size:10px;color:#6a5a4a;display:block;}
-
-/* 오행 색상 */
-.wood{color:#4a9a4a!important;}
-.fire{color:#e85c4a!important;}
-.earth{color:#c9a84c!important;}
-.metal{color:#aaaaaa!important;}
-.water{color:#4a7aaa!important;}
-
-/* 프로그레스 */
-.prg-wrap{margin-bottom:20px;}
-.prg-bar{height:4px;background:rgba(201,168,76,.15);border-radius:2px;overflow:hidden;}
-.prg-fill{height:100%;background:linear-gradient(90deg,#b8922a,#e8c96a);width:0%;transition:width .3s;}
-.prg-txt{font-size:10px;color:#6a5a4a;margin-top:6px;text-align:right;}
-
-/* 섹션 */
-.sec-item{margin-bottom:10px;border:1px solid rgba(201,168,76,.1);border-radius:12px;overflow:hidden;}
-.sec-hd{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;background:rgba(255,255,255,.01);}
+/* 명반 섹션 */
+.sec-item{margin-bottom:7px;border:1px solid rgba(201,168,76,.1);border-radius:10px;overflow:hidden;}
+.sec-hd{display:flex;align-items:center;gap:8px;padding:12px 13px;cursor:pointer;background:rgba(255,255,255,.01);}
 .sec-hd:hover{background:rgba(201,168,76,.04);}
-.sec-icon{font-size:18px;}
+.sec-icon{font-size:15px;}
 .sec-ttl{flex:1;font-size:13px;font-weight:600;}
-.sec-tag{font-size:10px;padding:2px 7px;border-radius:6px;}
-.tag-free{color:#6db36d;background:rgba(109,179,109,.1);border:1px solid rgba(109,179,109,.2);}
-.tag-lock{color:#c9a84c;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);}
-.sec-st{font-size:10px;color:#6a5a4a;margin-left:8px;}
-.sec-bd{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+.sec-st{font-size:10px;color:#6a5a4a;}
+.sec-bd{max-height:0;overflow:hidden;transition:max-height .4s;}
 .sec-bd.open{max-height:2000px;}
-.sec-txt{padding:16px;font-size:13px;line-height:1.9;color:#c8b88a;white-space:pre-wrap;}
-.sec-txt h2{color:#c9a84c;font-size:15px;margin:14px 0 8px;border-left:3px solid #c9a84c;padding-left:10px;}
-.sec-txt h3{color:#b8a07a;font-size:13px;margin:10px 0 6px;}
-.sec-txt strong{color:#f0e6d0;}
-.sec-txt ul{padding-left:16px;margin:8px 0;}
-.sec-txt li{margin-bottom:4px;}
+.sec-txt{padding:13px;font-size:13px;line-height:1.9;color:#c8b88a;white-space:pre-wrap;}
 
-/* 잠금 */
-.lock-wrap{padding:30px 20px;text-align:center;}
-.lock-icon{font-size:40px;margin-bottom:16px;}
-.lock-title{font-size:16px;color:#f0e6d0;font-weight:600;margin-bottom:8px;}
-.lock-desc{font-size:12px;color:#9a8a6a;margin-bottom:20px;line-height:1.8;}
-.lock-btn{display:inline-block;padding:13px 28px;background:linear-gradient(135deg,#b8922a,#e8c96a);border-radius:24px;color:#08080f;text-decoration:none;font-weight:700;font-size:13px;letter-spacing:1px;}
-.lock-notice{font-size:10px;color:#6a5a4a;margin-top:12px;line-height:1.6;}
+/* 운세 타임라인 */
+.timeline-wrap{margin-bottom:16px;}
+.timeline-title{font-size:10px;letter-spacing:3px;color:#c9a84c;margin-bottom:12px;}
+.timeline-chart{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.12);border-radius:11px;padding:16px;margin-bottom:8px;cursor:pointer;position:relative;overflow:hidden;}
+.timeline-chart svg{width:100%;display:block;}
+.timeline-years{display:flex;justify-content:space-between;padding:0 4px;margin-bottom:12px;}
+.timeline-year{font-size:10px;color:#6a5a4a;cursor:pointer;padding:4px 6px;border-radius:5px;text-align:center;transition:all .2s;}
+.timeline-year:hover{color:#c9a84c;background:rgba(201,168,76,.1);}
+.timeline-year.selected{color:#f0e6d0;background:rgba(201,168,76,.2);border:1px solid rgba(201,168,76,.4);}
+.timeline-legend{display:flex;gap:12px;justify-content:center;margin-bottom:14px;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#9a8a6a;}
+.legend-dot{width:8px;height:8px;border-radius:50%;}
 
-/* 구독 코드 입력 */
-.code-wrap{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:16px;margin-bottom:16px;}
-.code-title{font-size:10px;letter-spacing:3px;color:#c9a84c;margin-bottom:10px;}
-.code-row{display:flex;gap:8px;margin-bottom:8px;}
-.code-inp{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:10px 12px;color:#f0e6d0;font-family:inherit;font-size:13px;outline:none;letter-spacing:2px;text-transform:uppercase;}
-.code-inp:focus{border-color:rgba(201,168,76,.5);}
-.email-inp{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:10px 12px;color:#f0e6d0;font-family:inherit;font-size:13px;outline:none;margin-bottom:8px;}
-.email-inp:focus{border-color:rgba(201,168,76,.5);}
-.code-btn{padding:10px 16px;background:linear-gradient(135deg,#b8922a,#e8c96a);border:none;border-radius:8px;color:#08080f;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
-.code-msg{font-size:11px;text-align:center;}
-.code-msg.ok{color:#6db36d;}
-.code-msg.err{color:#e08080;}
-.sub-active{background:rgba(109,179,109,.08);border:1px solid rgba(109,179,109,.25);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;font-size:12px;color:#6db36d;}
+/* 연도별 세부 내용 */
+.year-detail{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.2);border-radius:11px;padding:16px;margin-bottom:14px;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+.year-detail-title{font-size:14px;color:#c9a84c;font-weight:600;margin-bottom:12px;text-align:center;}
+.year-scores{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.score-card{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.1);border-radius:8px;padding:10px;text-align:center;}
+.score-label{font-size:9px;color:#6a5a4a;margin-bottom:5px;letter-spacing:1px;}
+.score-value{font-size:20px;font-weight:700;}
+.score-stars{font-size:10px;margin-top:3px;}
+.year-desc{font-size:13px;color:#c8b88a;line-height:1.8;white-space:pre-wrap;}
+.year-loading{text-align:center;padding:20px;color:#6a5a4a;font-size:12px;}
+
+/* 구독 */
+.sub-box{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:11px;padding:14px;margin-bottom:14px;}
+.sub-box-title{font-size:10px;letter-spacing:3px;color:#c9a84c;margin-bottom:8px;}
+.sub-email{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.18);border-radius:8px;padding:9px 12px;color:#f0e6d0;font-family:inherit;font-size:13px;outline:none;margin-bottom:7px;}
+.sub-row{display:flex;gap:7px;}
+.sub-inp{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.18);border-radius:8px;padding:9px 12px;color:#f0e6d0;font-family:inherit;font-size:13px;outline:none;text-transform:uppercase;letter-spacing:2px;}
+.sub-btn{padding:9px 14px;background:linear-gradient(135deg,#b8922a,#e8c96a);border:none;border-radius:8px;color:#08080f;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;}
+.sub-msg{font-size:11px;text-align:center;margin-top:6px;}
+.sub-msg.ok{color:#6db36d;}.sub-msg.err{color:#e08080;}
+.sub-active{background:rgba(109,179,109,.08);border:1px solid rgba(109,179,109,.25);border-radius:9px;padding:9px 14px;margin-bottom:12px;font-size:12px;color:#6db36d;}
+.lock-box{padding:26px 20px;text-align:center;}
+.lock-btn{display:inline-block;padding:12px 22px;background:linear-gradient(135deg,#b8922a,#e8c96a);border-radius:22px;color:#08080f;text-decoration:none;font-weight:700;font-size:13px;}
+
+/* 커리어/재물/연애 섹션 */
+.viz-box{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.12);border-radius:11px;padding:14px;margin-bottom:11px;}
+.viz-title{font-size:10px;letter-spacing:3px;color:#c9a84c;margin-bottom:10px;text-align:center;}
+.cal-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;}
+.cal-month{padding:7px 3px;text-align:center;border-radius:6px;font-size:10px;border:1px solid rgba(201,168,76,.1);}
+.cal-month.good{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.35);color:#f0e6d0;font-weight:600;}
+.cal-month.bad{background:rgba(150,80,80,.1);border-color:rgba(200,100,100,.25);color:#c09090;}
+.cal-month.normal{color:#6a5a4a;}
+.chart-labels{display:flex;justify-content:space-between;margin-top:5px;font-size:9px;color:#6a5a4a;}
+.retry-btn{padding:10px 20px;background:linear-gradient(135deg,#b8922a,#e8c96a);border:none;border-radius:8px;color:#08080f;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;margin-top:12px;}
+.share-box{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);border-radius:11px;padding:14px;margin-top:14px;text-align:center;}
+.share-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px;}
+.share-btn{padding:10px;background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.18);border-radius:8px;color:#c9a84c;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#c9a84c;padding:10px 20px;border-radius:8px;font-size:12px;border:1px solid rgba(201,168,76,.3);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast.show{opacity:1;}
+.reset-btn{background:none;border:1px solid rgba(201,168,76,.15);border-radius:8px;padding:8px 16px;color:#4a3a2a;font-size:11px;cursor:pointer;margin-top:12px;font-family:inherit;}
+.footer{padding:22px 20px;text-align:center;border-top:1px solid rgba(201,168,76,.07);margin-top:28px;}
+.footer a{font-size:10px;color:#3a2a1a;text-decoration:none;margin:0 7px;}
+.footer a:hover{color:#c9a84c;}
+.footer-info{font-size:9px;color:#2a1a0a;margin-top:7px;line-height:1.7;}
+.prg-wrap{margin-bottom:12px;}
+.prg-bar{height:3px;background:rgba(201,168,76,.1);border-radius:2px;overflow:hidden;}
+.prg-fill{height:100%;background:linear-gradient(90deg,#b8922a,#e8c96a);width:0%;transition:width .3s;}
+.prg-txt{font-size:10px;color:#6a5a4a;margin-top:4px;text-align:right;}
 </style>
 </head>
 <body>
-
-<!-- 헤더 -->
+<div id="toast" class="toast"></div>
 <div class="hdr">
-  <div class="hdr-badge">SAJU봐</div>
   <div class="hdr-title">사주봐</div>
-  <div class="hdr-sub">생년월일시만 입력하면<br>AI가 당신의 사주를 깊이 분석합니다</div>
+  <div class="hdr-sub">생년월일시만 입력하면 AI가 사주를 분석합니다</div>
 </div>
 
-<!-- 폼 화면 -->
+<!-- 폼 -->
 <div id="s-form" class="form-wrap">
-  <label class="form-lbl">이름 (선택)</label>
-  <input class="form-inp" type="text" id="f-name" placeholder="예: 홍길동">
-
-  <div class="form-row" style="margin-top:0;">
-    <div>
-      <label class="form-lbl">태어난 해</label>
-      <input class="form-inp" type="number" id="f-year" placeholder="예: 1990" min="1900" max="2025">
-    </div>
-    <div>
-      <label class="form-lbl">성별</label>
-      <select class="form-inp" id="f-gender">
-        <option value="female">여성</option>
-        <option value="male">남성</option>
-      </select>
-    </div>
+  <label class="lbl">이름 (선택)</label>
+  <input class="inp" type="text" id="f-name" placeholder="예: 홍길동">
+  <div class="row2">
+    <div><label class="lbl">태어난 해</label><input class="inp" type="number" id="f-year" placeholder="예: 1990" min="1900" max="2025"></div>
+    <div><label class="lbl">성별</label><select class="inp" id="f-gender"><option value="female">여성</option><option value="male">남성</option></select></div>
   </div>
-
-  <div class="form-row">
-    <div>
-      <label class="form-lbl">월</label>
-      <input class="form-inp" type="number" id="f-month" placeholder="예: 3" min="1" max="12">
-    </div>
-    <div>
-      <label class="form-lbl">일</label>
-      <input class="form-inp" type="number" id="f-day" placeholder="예: 15" min="1" max="31">
-    </div>
+  <div class="row2">
+    <div><label class="lbl">월</label><input class="inp" type="number" id="f-month" placeholder="예: 3" min="1" max="12"></div>
+    <div><label class="lbl">일</label><input class="inp" type="number" id="f-day" placeholder="예: 15" min="1" max="31"></div>
   </div>
-
-  <div class="form-row">
-    <div>
-      <label class="form-lbl">시 (24시간)</label>
-      <input class="form-inp" type="number" id="f-hour" placeholder="예: 10" min="0" max="23">
-    </div>
-    <div>
-      <label class="form-lbl">분</label>
-      <input class="form-inp" type="number" id="f-minute" placeholder="예: 30" min="0" max="59">
-    </div>
+  <div class="row2">
+    <div><label class="lbl">시 (24시간)</label><input class="inp" type="number" id="f-hour" placeholder="예: 10" min="0" max="23"></div>
+    <div><label class="lbl">분</label><input class="inp" type="number" id="f-minute" placeholder="예: 30" min="0" max="59"></div>
   </div>
-
   <button class="start-btn" onclick="startAnalysis()">내 사주 분석하기</button>
 </div>
 
-<!-- 로딩 화면 -->
-<div id="s-loading" class="hidden">
-  <div class="loading-wrap">
-    <div class="spin"></div>
-    <div class="loading-txt">명반을 읽고 있습니다…</div>
-  </div>
+<!-- 로딩 -->
+<div id="s-loading" class="hidden loading">
+  <div class="spin"></div>
+  <div class="loading-txt">명반을 읽고 있습니다…</div>
 </div>
 
-<!-- 결과 화면 -->
-<div id="s-main" class="hidden result-wrap">
+<!-- 결과 -->
+<div id="s-main" class="hidden result">
   <div class="result-hd">
     <div class="result-name" id="r-name"></div>
     <div class="result-meta" id="r-meta"></div>
   </div>
-
-  <!-- 명식 -->
-  <div class="mj-wrap">
-    <div id="mj-res"></div>
-  </div>
+  <div class="mj-box"><div id="mj-res"></div></div>
 
   <!-- 구독 상태 -->
   <div id="sub-status"></div>
-
-  <!-- 구독 코드 입력 -->
-  <div id="code-section" class="code-wrap">
-    <div class="code-title">✦ 구독 코드 입력</div>
-    <input class="email-inp" type="email" id="email-input" placeholder="이메일 주소">
-    <div class="code-row">
-      <input class="code-inp" id="code-input" placeholder="코드 8자리" maxlength="8">
-      <button class="code-btn" onclick="submitCode()">적용</button>
+  <div id="sub-code-box" class="sub-box">
+    <div class="sub-box-title">✦ 구독 코드 입력</div>
+    <input class="sub-email" type="email" id="code-email" placeholder="이메일 주소">
+    <div class="sub-row">
+      <input class="sub-inp" id="code-input" placeholder="코드 8자리" maxlength="8">
+      <button class="sub-btn" onclick="applyCode()">적용</button>
     </div>
-    <div class="code-msg" id="code-msg"></div>
-    <div style="margin-top:10px;font-size:10px;color:#6a5a4a;text-align:center;">
+    <div class="sub-msg" id="code-msg"></div>
+    <div style="margin-top:8px;font-size:10px;color:#4a3a2a;text-align:center;">
       구독 후 이메일로 코드를 받으세요 · <a href="https://qr.kakaopay.com/Ej8YEKUhZ9c403436" target="_blank" style="color:#c9a84c;">구독하기 ₩5,000</a>
     </div>
   </div>
 
-  <!-- 프로그레스 -->
-  <div class="prg-wrap">
-    <div class="prg-bar"><div class="prg-fill" id="prg-fill"></div></div>
-    <div class="prg-txt" id="prg-txt">분석 준비 중…</div>
+  <!-- 탭 -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('analysis',this)">☯ 명반</button>
+    <button class="tab-btn" onclick="switchTab('timeline',this)">📊 운세흐름</button>
+    <button class="tab-btn" onclick="switchTab('career',this)">💼 커리어 🔒</button>
+    <button class="tab-btn" onclick="switchTab('wealth',this)">💰 재물 🔒</button>
+    <button class="tab-btn" onclick="switchTab('love',this)">💕 연애 🔒</button>
   </div>
 
-  <!-- 섹션 목록 -->
-  <div id="sec-list"></div>
+  <!-- 명반 탭 -->
+  <div id="tab-analysis" class="tab-content active">
+    <div class="prg-wrap">
+      <div class="prg-bar"><div class="prg-fill" id="prg-fill"></div></div>
+      <div class="prg-txt" id="prg-txt">분석 준비 중…</div>
+    </div>
+    <div id="sec-list"></div>
+    <div class="share-box">
+      <div style="font-size:12px;color:#f0e6d0;font-weight:600;">✦ 친구에게 공유하기</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="copyLink()">🔗 링크 복사</button>
+        <button class="share-btn" onclick="saveImage()">📸 이미지 저장</button>
+      </div>
+    </div>
+  </div>
 
-  <div style="margin-top:20px;text-align:center;">
-    <button onclick="location.reload()" style="background:none;border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:10px 20px;color:#6a5a4a;font-size:12px;cursor:pointer;">새로 분석하기</button>
+  <!-- 운세 흐름 탭 -->
+  <div id="tab-timeline" class="tab-content">
+    <div id="timeline-content"></div>
+    <div class="share-box">
+      <div style="font-size:12px;color:#f0e6d0;font-weight:600;">✦ 친구에게 공유하기</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="copyLink()">🔗 링크 복사</button>
+        <button class="share-btn" onclick="saveImage()">📸 이미지 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 커리어 탭 -->
+  <div id="tab-career" class="tab-content">
+    <div id="career-content"></div>
+    <div class="share-box">
+      <div style="font-size:12px;color:#f0e6d0;font-weight:600;">✦ 친구에게 공유하기</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="copyLink()">🔗 링크 복사</button>
+        <button class="share-btn" onclick="saveImage()">📸 이미지 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 재물 탭 -->
+  <div id="tab-wealth" class="tab-content">
+    <div id="wealth-content"></div>
+    <div class="share-box">
+      <div style="font-size:12px;color:#f0e6d0;font-weight:600;">✦ 친구에게 공유하기</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="copyLink()">🔗 링크 복사</button>
+        <button class="share-btn" onclick="saveImage()">📸 이미지 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 연애 탭 -->
+  <div id="tab-love" class="tab-content">
+    <div id="love-content"></div>
+    <div class="share-box">
+      <div style="font-size:12px;color:#f0e6d0;font-weight:600;">✦ 친구에게 공유하기</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="copyLink()">🔗 링크 복사</button>
+        <button class="share-btn" onclick="saveImage()">📸 이미지 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:12px;">
+    <button class="reset-btn" onclick="location.reload()">새로 분석하기</button>
   </div>
 </div>
 
+<div class="footer">
+  <div><a href="/terms.html">이용약관</a><a href="/privacy.html">개인정보처리방침</a><a href="/refund.html">환불정책</a></div>
+  <div class="footer-info">사주봐 · 연지타이어앤오피스 · 사업자 144-08-02847 · 대표: 이가영 · © 2026</div>
+</div>
+
 <script>
-// ============ 사주 계산 ============
-const 천간 = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
-const 지지 = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
-const 천간명 = ['갑','을','병','정','무','기','경','신','임','계'];
-const 지지명 = ['자','축','인','묘','진','사','오','미','신','유','술','해'];
-const 오행천간 = ['목','목','화','화','토','토','금','금','수','수'];
-const 오행지지 = ['수','토','목','목','토','화','화','토','금','금','토','수'];
-const 오행색 = {목:'wood',화:'fire',토:'earth',금:'metal',수:'water'};
+// ===== 사주 계산 =====
+var TG=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+var JJ=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+var TGN=['갑','을','병','정','무','기','경','신','임','계'];
+var JJN=['자','축','인','묘','진','사','오','미','신','유','술','해'];
+var OHT=['목','목','화','화','토','토','금','금','수','수'];
+var OHJ=['수','토','목','목','토','화','화','토','금','금','토','수'];
+var OHC={목:'wood',화:'fire',토:'earth',금:'metal',수:'water'};
 
-function getGanjiYear(year) {
-  const g = (year - 4) % 10;
-  const j = (year - 4) % 12;
-  return {
-    c: 천간[(g+10)%10] + 지지[(j+12)%12],
-    cn: 천간명[(g+10)%10] + 지지명[(j+12)%12],
-    g: (g+10)%10, j: (j+12)%12
-  };
+function getYear(y){return {g:((y-4)%10+10)%10,j:((y-4)%12+12)%12};}
+// 절기 기준일 (각 월의 절입일 근사값)
+var JEOLGI_DAY=[6,4,6,5,6,6,7,8,8,8,7,7];
+// 월 → 절기 이후 월지
+var MON_TO_JJ={1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:0};
+// 월 → 절기 이전 월지 (전달)
+var MON_TO_JJ_PREV={1:0,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
+function getMonth(y,m,d){
+  var jday=JEOLGI_DAY[m-1];
+  var mj=d>=jday?MON_TO_JJ[m]:MON_TO_JJ_PREV[m];
+  var yg=((y-4)%10+10)%10;
+  var base=[2,4,6,8,0,2,4,6,8,0][yg];
+  var offset=(mj-2+12)%12;
+  var mg=((base+offset)%10+10)%10;
+  return {g:mg,j:mj};
+}
+function getDay(y,m,d){
+  var diff=Math.round((new Date(y,m-1,d)-new Date(1900,0,1))/86400000);
+  var idx=(10+diff)%60;
+  return {g:((idx%10)+10)%10,j:((idx%12)+12)%12};
+}
+function getHour(dg,h){
+  var hj=Math.floor((h+1)/2)%12;
+  return {g:([0,2,4,6,8,0,2,4,6,8][dg]+hj)%10,j:hj};
+}
+function calcSaju(y,m,d,h){
+  return {year:getYear(y),month:getMonth(y,m,d),day:getDay(y,m,d),time:getHour(getDay(y,m,d).g,h)};
+}
+var OHK={목:'🌳 나무',화:'🔥 불',토:'🌍 흙',금:'⚙️ 금',수:'💧 물'};
+function mjHTML(sj){
+  var cols=[{l:'년주',d:sj.year},{l:'월주',d:sj.month},{l:'일주',d:sj.day},{l:'시주',d:sj.time}];
+  var h='<table class="mj-table"><tr><th></th>';
+  cols.forEach(function(c){h+='<th>'+c.l+'</th>';});
+  h+='</tr><tr><td style="font-size:9px;color:#4a3a2a;padding:4px 2px;">천간</td>';
+  cols.forEach(function(c){
+    var o=OHT[c.d.g];
+    h+='<td><span class="mj-char '+OHC[o]+'">'+TG[c.d.g]+'</span>'
+      +'<span class="mj-name">'+TGN[c.d.g]+'</span>'
+      +'<span class="mj-elem">'+OHK[o]+'</span></td>';
+  });
+  h+='</tr><tr><td style="font-size:9px;color:#4a3a2a;padding:4px 2px;">지지</td>';
+  cols.forEach(function(c){
+    var o=OHJ[c.d.j];
+    h+='<td><span class="mj-char '+OHC[o]+'">'+JJ[c.d.j]+'</span>'
+      +'<span class="mj-name">'+JJN[c.d.j]+'</span>'
+      +'<span class="mj-elem">'+OHK[o]+'</span></td>';
+  });
+  h+='</tr></table>';
+  return h;
+}
+function descSaju(sj){
+  return TG[sj.year.g]+JJ[sj.year.j]+' '+TG[sj.month.g]+JJ[sj.month.j]+' '+TG[sj.day.g]+JJ[sj.day.j]+' '+TG[sj.time.g]+JJ[sj.time.j];
 }
 
-function getGanjiMonth(year, month) {
-  // 월간 계산 (연간 기반)
-  const yg = (year - 4) % 10;
-  const baseG = ((Math.floor(((yg+10)%10)/2)) * 2 + 2) % 10;
-  const mg = (baseG + month - 1) % 10;
-  const mj = (month + 1) % 12;
-  return {
-    c: 천간[mg] + 지지[mj],
-    cn: 천간명[mg] + 지지명[mj],
-    g: mg, j: mj
-  };
-}
-
-function getGanjiDay(year, month, day) {
-  // 갑자일 기준 계산
-  const base = new Date(2000, 0, 7); // 2000년 1월 7일 = 甲子일
-  const target = new Date(year, month - 1, day);
-  const diff = Math.round((target - base) / 86400000);
-  const g = ((diff % 10) + 10) % 10;
-  const j = ((diff % 12) + 12) % 12;
-  return {
-    c: 천간[g] + 지지[j],
-    cn: 천간명[g] + 지지명[j],
-    g: g, j: j
-  };
-}
-
-function getGanjiHour(dayG, hour) {
-  // 시간 → 지지 (2시간 단위)
-  const hj = Math.floor((hour + 1) / 2) % 12;
-  // 일간 기반 시간 천간
-  const baseG = (dayG % 5) * 2;
-  const hg = (baseG + hj) % 10;
-  return {
-    c: 천간[hg] + 지지[hj],
-    cn: 천간명[hg] + 지지명[hj],
-    g: hg, j: hj
-  };
-}
-
-function calcSaju(year, month, day, hour) {
-  const yr = getGanjiYear(year);
-  const mo = getGanjiMonth(year, month);
-  const dy = getGanjiDay(year, month, day);
-  const hr = getGanjiHour(dy.g, hour);
-  return { year: yr, month: mo, day: dy, time: hr };
-}
-
-function mjHTML(sj) {
-  const cols = [
-    {label:'년주', data:sj.year},
-    {label:'월주', data:sj.month},
-    {label:'일주', data:sj.day},
-    {label:'시주', data:sj.time}
-  ];
-  return `<table class="mj-table">
-    <tr>
-      ${cols.map(c=>`<th>${c.label}</th>`).join('')}
-    </tr>
-    <tr>
-      ${cols.map(c=>{
-        const g=c.data.g;
-        const 오=오행천간[g];
-        return`<td><span class="mj-char ${오행색[오]}">${천간[g]}</span><span class="mj-name">${천간명[g]}</span><span class="mj-elem">${오}</span></td>`;
-      }).join('')}
-    </tr>
-    <tr>
-      ${cols.map(c=>{
-        const j=c.data.j;
-        const 오=오행지지[j];
-        return`<td><span class="mj-char ${오행색[오]}">${지지[j]}</span><span class="mj-name">${지지명[j]}</span><span class="mj-elem">${오}</span></td>`;
-      }).join('')}
-    </tr>
-  </table>`;
-}
-
-// ============ 섹션 정의 ============
-const SECS = [
-  {id:'s1', i:'✨', t:'일간 성격과 기질'},
-  {id:'s2', i:'⚖️', t:'오행 구조와 용신'},
-  {id:'s3', i:'🎯', t:'핵심 재능 키워드'},
-  {id:'s4', i:'💼', t:'직업·커리어 방향'},
-  {id:'s5', i:'💰', t:'재물운 구조'},
-  {id:'s6', i:'❤️', t:'연애·결혼 에너지'},
-  {id:'s7', i:'🏃', t:'현재 대운 분석'},
-  {id:'s8', i:'⚡', t:'주의할 점'},
-  {id:'s9', i:'🌟', t:'강점과 재능'},
-  {id:'s10', i:'⏳', t:'생애 흐름 현재~40대'},
-  {id:'s11', i:'🎯', t:'생애 흐름 40대~70대'},
-  {id:'s12', i:'🗺️', t:'종합 정리'}
+// ===== 섹션 =====
+var SECS=[
+  {id:'s1',i:'✨',t:'일간 성격과 기질'},
+  {id:'s2',i:'⚖️',t:'오행 구조와 용신'},
+  {id:'s3',i:'🎯',t:'핵심 재능 키워드'},
+  {id:'s4',i:'🌟',t:'강점과 주의할 점'}
+];
+var CAREER_SECS=[
+  {id:'c1',i:'💼',t:'나와 맞는 직업 TOP 10'},
+  {id:'c2',i:'💪',t:'커리어 강점과 약점'},
+  {id:'c3',i:'📅',t:'이직 타이밍 월별 분석'},
+  {id:'c4',i:'🚀',t:'승진·성공 시기'},
+  {id:'c5',i:'👥',t:'조심할 동료·상사 유형'}
+];
+var WEALTH_SECS=[
+  {id:'w1',i:'💎',t:'평생 재물 총량'},
+  {id:'w2',i:'🏦',t:'돈 버는 패턴'},
+  {id:'w3',i:'📈',t:'투자 타이밍'},
+  {id:'w4',i:'⚠️',t:'재물 위험 시기'},
+  {id:'w5',i:'💰',t:'재물 불리는 전략'}
+];
+var LOVE_SECS=[
+  {id:'l1',i:'💝',t:'이상형과 연애 스타일'},
+  {id:'l2',i:'💕',t:'배우자 특징과 만남 시기'},
+  {id:'l3',i:'💒',t:'결혼 적령기와 좋은 해'},
+  {id:'l4',i:'⚡',t:'연애 주의사항'},
+  {id:'l5',i:'🌹',t:'관계 유지하는 법'}
 ];
 
-const FREE_SECS = ['s1','s2','s3'];
-const KAKAO_URL = 'https://qr.kakaopay.com/Ej8YEKUhZ9c403436';
+var KAKAO='https://qr.kakaopay.com/Ej8YEKUhZ9c403436';
+var G={form:{},saju:{},dc:''};
+var careerLoaded=false,wealthLoaded=false,loveLoaded=false,timelineLoaded=false;
+var timelineData=null;
+var selectedYear=null;
+var yearDetailCache={};
 
-let G = {form:{}, saju:{}, secs:{}, dc:''};
-
-// ============ 구독 관리 ============
-function isSubscribed() {
-  const exp = localStorage.getItem('saju-sub-exp');
-  if (!exp) return false;
-  return new Date().getTime() < parseInt(exp);
+// ===== 구독 =====
+function isSubscribed(){
+  var exp=localStorage.getItem('saju-sub-exp');
+  return exp&&new Date().getTime()<parseInt(exp);
 }
-
-function getSubDays() {
-  const exp = localStorage.getItem('saju-sub-exp');
-  if (!exp) return 0;
-  const ms = parseInt(exp) - new Date().getTime();
-  return Math.max(0, Math.ceil(ms / 86400000));
+function getSubDays(){
+  var exp=localStorage.getItem('saju-sub-exp');
+  if(!exp)return 0;
+  return Math.max(0,Math.ceil((parseInt(exp)-new Date().getTime())/86400000));
 }
-
-function updateSubUI() {
-  const statusEl = document.getElementById('sub-status');
-  const codeEl = document.getElementById('code-section');
-  if (isSubscribed()) {
-    const days = getSubDays();
-    if (statusEl) statusEl.innerHTML = `<div class="sub-active">✅ 구독 중 · 잔여 ${days}일</div>`;
-    if (codeEl) codeEl.style.display = 'none';
+function updateSubUI(){
+  var st=document.getElementById('sub-status');
+  var cb=document.getElementById('sub-code-box');
+  if(isSubscribed()){
+    st.innerHTML='<div class="sub-active">✅ 구독 중 · 잔여 '+getSubDays()+'일</div>';
+    cb.style.display='none';
   } else {
-    if (statusEl) statusEl.innerHTML = '';
-    if (codeEl) codeEl.style.display = 'block';
+    st.innerHTML='';
+    cb.style.display='block';
   }
 }
-
-async function submitCode() {
-  const code = document.getElementById('code-input').value.trim().toUpperCase();
-  const email = document.getElementById('email-input').value.trim().toLowerCase();
-  const msg = document.getElementById('code-msg');
-  if (!email) { msg.className='code-msg err'; msg.textContent='이메일을 입력해주세요.'; return; }
-  if (!code || code.length < 6) { msg.className='code-msg err'; msg.textContent='코드를 입력해주세요.'; return; }
-  msg.className='code-msg'; msg.textContent='확인 중…';
-  try {
-    const res = await fetch('/api/admin', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({action:'verify', code, email})
-    });
-    const data = await res.json();
-    if (data.valid) {
-      const exp = new Date().getTime() + (data.days * 24 * 60 * 60 * 1000);
-      localStorage.setItem('saju-sub-exp', exp.toString());
-      localStorage.setItem('saju-sub-email', email);
-      msg.className='code-msg ok';
-      msg.textContent=`✓ 구독 활성화! ${data.days}일 이용 가능합니다.`;
-      setTimeout(() => {
-        updateSubUI();
-        SECS.forEach(s => {
-          if (!FREE_SECS.includes(s.id) && G.secs[s.id] && G.secs[s.id].t) {
-            updSec(s.id, 'done', G.secs[s.id].t);
-          }
-        });
-      }, 1000);
+function applyCode(){
+  var code=document.getElementById('code-input').value.trim().toUpperCase();
+  var email=document.getElementById('code-email').value.trim().toLowerCase();
+  var msg=document.getElementById('code-msg');
+  if(!email){msg.className='sub-msg err';msg.textContent='이메일을 입력해주세요.';return;}
+  if(code.length<6){msg.className='sub-msg err';msg.textContent='코드를 입력해주세요.';return;}
+  msg.className='sub-msg';msg.textContent='확인 중…';
+  fetch('/api/admin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'verify',code:code,email:email})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.valid){
+      localStorage.setItem('saju-sub-exp',String(new Date().getTime()+(d.days*86400000)));
+      msg.className='sub-msg ok';msg.textContent='✓ 구독 활성화! '+d.days+'일 이용 가능';
+      setTimeout(function(){updateSubUI();careerLoaded=false;wealthLoaded=false;loveLoaded=false;},1000);
     } else {
-      msg.className='code-msg err';
-      msg.textContent = data.error || '유효하지 않은 코드입니다.';
+      msg.className='sub-msg err';msg.textContent=d.error||'유효하지 않은 코드입니다.';
     }
-  } catch(e) {
-    msg.className='code-msg err';
-    msg.textContent='서버 오류. 잠시 후 다시 시도해주세요.';
-  }
+  }).catch(function(){msg.className='sub-msg err';msg.textContent='서버 오류. 다시 시도해주세요.';});
 }
 
-// ============ 섹션 UI ============
-function initSecs() {
-  const l = document.getElementById('sec-list');
-  l.innerHTML = SECS.map(s => {
-    const isFree = FREE_SECS.includes(s.id);
-    const tag = isFree
-      ? '<span class="sec-tag tag-free">무료</span>'
-      : '<span class="sec-tag tag-lock">🔒 구독</span>';
-    return `<div class="sec-item" id="si-${s.id}">
-      <div class="sec-hd" onclick="togSec('${s.id}')">
-        <span class="sec-icon">${s.i}</span>
-        <span class="sec-ttl">${s.t} ${tag}</span>
-        <span class="sec-st" id="st-${s.id}">대기</span>
-      </div>
-      <div class="sec-bd" id="sb-${s.id}">
-        <div class="sec-txt" id="txt-${s.id}"></div>
-      </div>
-    </div>`;
+// ===== 캐시 =====
+function saveCache(k,v){try{localStorage.setItem('sc-'+k,JSON.stringify(v));}catch(e){}}
+function loadCache(k){try{var d=localStorage.getItem('sc-'+k);return d?JSON.parse(d):null;}catch(e){return null;}}
+
+// ===== API =====
+var SYS='당신은 사주를 일상적인 말로 쉽게 풀어주는 상담가입니다. 규칙: 1) 한자 절대 금지 (甲乙丙丁 등 모든 한자 사용 불가). 2) 사주 용어도 쉽게 바꾸세요. 예: 일간→타고난 성격, 용신→내게 힘이 되는 것, 재성→돈과 재물, 관성→직업과 사회생활, 인성→학습과 돌봄, 식상→표현과 창의력. 3) 마치 친한 언니/오빠가 카페에서 얘기해주듯 편하고 따뜻하게 써주세요. 4) 딱딱한 분석보다 공감과 조언 위주로 써주세요. 5) 각 항목은 500자 이내로 써주세요. 사주 명식은 수정하지 마세요.';
+function callAPI(prompt){
+  return fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:SYS,user:prompt})})
+  .then(function(r){
+    if(r.status===429)throw new Error('잠시 후 다시 시도해주세요.');
+    if(!r.ok)throw new Error('API 오류 '+r.status);
+    return r.json();
+  }).then(function(d){return d.text||'';});
+}
+
+function parseResp(text,secs){
+  var result={};
+  var parts=text.split(/===\s*(\d+)\s*===/);
+  if(parts.length>1){
+    for(var i=1;i<parts.length;i+=2){
+      var n=parseInt(parts[i]);
+      if(n>=1&&n<=secs.length)result[n-1]=parts[i+1]?parts[i+1].trim():'';
+    }
+  } else {
+    secs.forEach(function(s,i){result[i]=text;});
+  }
+  return result;
+}
+
+// ===== 섹션 빌더 =====
+function buildSecs(secs,done){
+  return secs.map(function(s){
+    return '<div class="sec-item" id="si-'+s.id+'">'
+      +'<div class="sec-hd" data-id="'+s.id+'" onclick="togSec(this)">'
+      +'<span class="sec-icon">'+s.i+'</span>'
+      +'<span class="sec-ttl">'+s.t+'</span>'
+      +'<span class="sec-st" id="st-'+s.id+'">'+(done?'완료':'분석 중…')+'</span>'
+      +'</div>'
+      +'<div class="sec-bd" id="sb-'+s.id+'">'
+      +'<div class="sec-txt" id="txt-'+s.id+'"></div>'
+      +'</div></div>';
   }).join('');
 }
+function togSec(el){
+  var id=el.dataset.id;
+  var b=document.getElementById('sb-'+id);
+  var open=b.classList.contains('open');
+  document.querySelectorAll('.sec-bd').forEach(function(x){x.classList.remove('open');});
+  if(!open)b.classList.add('open');
+}
+function lockHTML(t){
+  return '<div class="lock-box">'
+    +'<div style="font-size:38px;margin-bottom:12px;">🔒</div>'
+    +'<div style="font-size:15px;color:#f0e6d0;font-weight:600;margin-bottom:7px;">'+t+'</div>'
+    +'<div style="font-size:12px;color:#9a8a6a;margin-bottom:16px;line-height:1.8;">월 5,000원으로<br>커리어·재물·연애 분석 무제한</div>'
+    +'<a class="lock-btn" href="'+KAKAO+'" target="_blank">카카오페이로 구독하기 ₩5,000</a>'
+    +'<div style="font-size:10px;color:#4a3a2a;margin-top:10px;">입금 후 카카오톡으로 입금자명을 보내주세요</div>'
+    +'</div>';
+}
 
-function togSec(id) {
-  const b = document.getElementById('sb-' + id);
-  const open = b.classList.contains('open');
-  document.querySelectorAll('.sec-bd').forEach(x => x.classList.remove('open'));
-  if (!open) {
-    if (!FREE_SECS.includes(id) && !isSubscribed()) {
-      b.classList.add('open');
-      const tx = document.getElementById('txt-' + id);
-      if (!tx.dataset.locked) {
-        tx.dataset.locked = '1';
-        tx.innerHTML = `<div class="lock-wrap">
-          <div class="lock-icon">🔒</div>
-          <div class="lock-title">구독 후 전체 내용을 확인하세요</div>
-          <div class="lock-desc">월 5,000원으로 12개 섹션 전체 무제한</div>
-          <a class="lock-btn" href="${KAKAO_URL}" target="_blank">카카오페이로 구독하기 ₩5,000</a>
-          <div class="lock-notice">입금 후 카카오톡으로 입금자명을 보내주세요</div>
-        </div>`;
-      }
-    } else {
-      b.classList.add('open');
-    }
+// ===== 운세 흐름 타임라인 =====
+function drawTimeline(data){
+  var years=data.years;
+  var career=data.career;
+  var wealth=data.wealth;
+  var love=data.love;
+
+  // 범위 계산
+  var allVals=career.concat(wealth).concat(love);
+  var maxV=Math.min(100,Math.max.apply(null,allVals)+5);
+  var minV=Math.max(0,Math.min.apply(null,allVals)-5);
+  if(maxV-minV<30){maxV=Math.min(100,maxV+10);minV=Math.max(0,minV-10);}
+
+  // 가로 스크롤용 크기 (연도당 80px)
+  var colW=80;
+  var w=years.length*colW;
+  var h=200;
+  var padTop=10,padBot=30;
+
+  function getY(v){return padTop+((maxV-v)/(maxV-minV))*(h-padTop-padBot);}
+  function getX(i){return i*colW+colW/2;}
+
+  function makePath(vals,color){
+    var pts=vals.map(function(v,i){return getX(i)+','+getY(v);}).join(' ');
+    var first=getX(0)+','+getY(vals[0]);
+    var last=getX(vals.length-1)+','+getY(vals[vals.length-1]);
+    var area=getX(0)+','+(h-padBot)+' '+pts+' '+last+','+(h-padBot);
+    return '<polygon points="'+area+'" fill="'+color+'" opacity="0.12"/>'
+      +'<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2.5"/>'
+      +vals.map(function(v,i){
+        var cx=getX(i),cy=getY(v);
+        var isSel=(years[i]===selectedYear);
+        return '<g onclick="selectYear('+years[i]+')" style="cursor:pointer">'
+          +'<circle cx="'+cx+'" cy="'+cy+'" r="'+(isSel?7:4)+'" fill="'+color+'" stroke="'+(isSel?'#fff':'none')+'" stroke-width="'+(isSel?2:0)+'"/>'
+          +'<text x="'+cx+'" y="'+(cy-10)+'" text-anchor="middle" font-size="10" fill="'+color+'" opacity="'+(isSel?1:0.7)+'">'+v+'</text>'
+          +'</g>';
+      }).join('');
   }
-}
 
-function updPrg(done, total) {
-  const pct = Math.round(done * 100 / total);
-  document.getElementById('prg-fill').style.width = pct + '%';
-  document.getElementById('prg-txt').textContent = done + ' / ' + total + ' 완료';
-}
-
-function updSec(id, status, text) {
-  const st = document.getElementById('st-' + id);
-  if (!st) return;
-  st.textContent = status === 'done' ? '완료' : status === 'run' ? '분석 중…' : '대기';
-  if (text) {
-    const tx = document.getElementById('txt-' + id);
-    if (!FREE_SECS.includes(id) && !isSubscribed()) {
-      // 유료 섹션 — 잠금 표시
-      if (!tx.dataset.locked) {
-        tx.dataset.locked = '1';
-        const preview = text.slice(0, 50) + '…';
-        tx.innerHTML = `<p style="color:#4a3a2a;font-size:12px;margin-bottom:12px;filter:blur(3px);">${preview}</p>
-        <div class="lock-wrap">
-          <div class="lock-icon">🔒</div>
-          <div class="lock-title">구독 후 전체 내용을 확인하세요</div>
-          <div class="lock-desc">월 5,000원으로 12개 섹션 전체 무제한</div>
-          <a class="lock-btn" href="${KAKAO_URL}" target="_blank">카카오페이로 구독하기 ₩5,000</a>
-          <div class="lock-notice">입금 후 카카오톡으로 입금자명을 보내주세요</div>
-        </div>`;
-      }
-    } else {
-      tx.textContent = text;
-    }
-  }
-}
-
-// ============ API 호출 ============
-async function api(sys, msg) {
-  const r = await fetch('/api/analyze', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({system: sys, user: msg})
+  // 가로선
+  var gridLines='';
+  [maxV,Math.round((maxV+minV)/2),minV].forEach(function(v){
+    var y=getY(v);
+    gridLines+='<line x1="0" y1="'+y+'" x2="'+w+'" y2="'+y+'" stroke="rgba(201,168,76,0.08)" stroke-dasharray="4,4"/>';
+    gridLines+='<text x="4" y="'+(y-3)+'" font-size="9" fill="rgba(201,168,76,0.4)">'+v+'</text>';
   });
-  if (!r.ok) throw new Error('API 오류');
-  const d = await r.json();
-  return d.text || '오류';
-}
 
-const SYS = `당신은 사주명리학 전문가입니다.
-1. 사주 명식은 정확히 계산된 것이므로 절대 수정하지 마세요.
-2. 모든 분석에 반드시 명리적 근거(어떤 기둥, 어떤 오행, 어떤 십성)를 포함하세요.
-3. 긍정적인 면과 주의할 점을 균형 있게 서술하세요.
-4. 차분하고 신뢰감 있는 말투로, 한국어로만 답하세요.
-5. 구조적으로 명확하게 답하되, 코드블럭과 표는 사용하지 마세요.`;
-
-function makePrompt(id, dc) {
-  const sec = SECS.find(x => x.id === id);
-  return `사주 명식: ${dc}\n\n분석 항목: ${sec.t}\n\n위 사주를 바탕으로 "${sec.t}"에 대해 상세히 분석해주세요.`;
-}
-
-// ============ 분석 시작 ============
-function show(id) {
-  ['s-form','s-loading','s-main'].forEach(s => {
-    document.getElementById(s).classList.toggle('hidden', s !== id);
+  // 연도 라벨 + 세로선
+  var yearLabels='';
+  years.forEach(function(y,i){
+    var cx=getX(i);
+    var isSel=y===selectedYear;
+    yearLabels+='<rect x="'+(cx-colW/2+2)+'" y="0" width="'+(colW-4)+'" height="'+(h-padBot)+'" fill="'+(isSel?'rgba(201,168,76,0.06)':'transparent')+'" onclick="selectYear('+y+')" style="cursor:pointer"/>';
+    yearLabels+='<text x="'+cx+'" y="'+(h-padBot+14)+'" text-anchor="middle" font-size="11" fill="'+(isSel?'#f0e6d0':'#6a5a4a')+'" font-weight="'+(isSel?'bold':'normal')+'" onclick="selectYear('+y+')" style="cursor:pointer">'+y+'</text>';
   });
-  if (id === 's-main') setTimeout(updateSubUI, 100);
+
+  var svg='<svg viewBox="0 0 '+w+' '+h+'" style="width:'+w+'px;height:220px;min-width:'+w+'px;">';
+  svg+=gridLines+yearLabels;
+  svg+=makePath(career,'#c9a84c');
+  svg+=makePath(wealth,'#6db36d');
+  svg+=makePath(love,'#e85c8a');
+  svg+='</svg>';
+
+  // 범례
+  var legend='<div class="timeline-legend">'
+    +'<div class="legend-item"><div class="legend-dot" style="background:#c9a84c"></div>커리어</div>'
+    +'<div class="legend-item"><div class="legend-dot" style="background:#6db36d"></div>재물</div>'
+    +'<div class="legend-item"><div class="legend-dot" style="background:#e85c8a"></div>연애</div>'
+    +'</div>';
+
+  var el=document.getElementById('timeline-content');
+  el.innerHTML='<div class="timeline-title">✦ 운세 흐름 — 연도를 클릭하면 세부 내용</div>'
+    +legend
+    +'<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;margin-bottom:12px;background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.12);border-radius:11px;padding:14px;">'
+    +svg
+    +'</div>'
+    +'<div id="year-detail"></div>';
 }
 
-async function startAnalysis() {
-  const nm = document.getElementById('f-name').value.trim();
-  const yr = parseInt(document.getElementById('f-year').value);
-  const mo = parseInt(document.getElementById('f-month').value);
-  const dy = parseInt(document.getElementById('f-day').value);
-  const hr = parseInt(document.getElementById('f-hour').value);
-  const mn = parseInt(document.getElementById('f-minute').value);
-  const gd = document.getElementById('f-gender').value;
+async function selectYear(y){
+  selectedYear=y;
+  if(timelineData)drawTimeline(timelineData);
+  var detailEl=document.getElementById('year-detail');
+  if(!detailEl)return;
 
-  if (!yr || !mo || !dy || isNaN(hr) || isNaN(mn)) {
-    alert('생년월일시를 모두 입력해주세요.');
+  // 캐시 확인
+  if(yearDetailCache[y]){
+    showYearDetail(y,yearDetailCache[y]);
     return;
   }
 
-  show('s-loading');
+  detailEl.innerHTML='<div class="year-loading"><div class="spin" style="width:24px;height:24px;border-width:2px;"></div><div style="margin-top:8px;">'+y+'년 분석 중…</div></div>';
 
-  try {
-    // 사주 계산
-    const sj = calcSaju(yr, mo, dy, hr);
-    const dc = `${sj.year.c} ${sj.month.c} ${sj.day.c} ${sj.time.c} (${yr}년 ${mo}월 ${dy}일 ${hr}시, ${gd === 'female' ? '여성' : '남성'})`;
-
-    G.form = {name:nm, year:yr, month:mo, day:dy, hour:hr, minute:mn, gender:gd};
-    G.saju = sj;
-    G.dc = dc;
-
-    show('s-main');
-    document.getElementById('r-name').textContent = nm || '명반 분석 결과';
-    document.getElementById('r-meta').textContent =
-      yr + '.' + mo + '.' + dy + ' ' +
-      String(hr).padStart(2,'0') + ':' + String(mn).padStart(2,'0') +
-      ' · ' + (gd === 'female' ? '여성' : '남성');
-    document.getElementById('mj-res').innerHTML = mjHTML(sj);
-    initSecs();
-
-    let done = 0;
-    for (let i = 0; i < SECS.length; i += 6) {
-      const chunk = SECS.slice(i, i + 6);
-      await Promise.all(chunk.map(async s => {
-        updSec(s.id, 'run');
-        try {
-          const t = await api(SYS, makePrompt(s.id, dc));
-          G.secs[s.id] = {t, done: true};
-          updSec(s.id, 'done', t);
-        } catch(e) {
-          G.secs[s.id] = {t:'오류.', done: true};
-          updSec(s.id, 'done', '오류.');
-        }
-        done++;
-        updPrg(done, SECS.length);
-        if (done === 1) {
-          setTimeout(() => {
-            const sb = document.getElementById('sb-s1');
-            if (sb) sb.classList.add('open');
-          }, 200);
-        }
-      }));
-    }
-  } catch(e) {
-    alert('오류가 발생했습니다: ' + e.message);
-    show('s-form');
+  try{
+    var cy=new Date().getFullYear();
+    var idx=timelineData.years.indexOf(y);
+    var prompt='현재는 '+cy+'년입니다.\n사주 명식: '+G.dc+'\n\n'+y+'년의 운세를 분석해주세요.\n커리어 점수: '+timelineData.career[idx]+'/100\n재물 점수: '+timelineData.wealth[idx]+'/100\n연애 점수: '+timelineData.love[idx]+'/100\n\n=== 커리어 === \n('+y+'년 커리어 주요 흐름과 조언 200자 이내)\n=== 재물 ===\n('+y+'년 재물 주요 흐름과 조언 200자 이내)\n=== 연애 ===\n('+y+'년 연애 주요 흐름과 조언 200자 이내)\n=== 핵심 조언 ===\n('+y+'년 가장 중요한 한 마디 50자 이내)';
+    var text=await callAPI(prompt);
+    var result={};
+    ['커리어','재물','연애','핵심 조언'].forEach(function(k){
+      var re=new RegExp('===\\s*'+k+'\\s*===([\\s\\S]*?)(?===|$)');
+      var m=text.match(re);
+      result[k]=m?m[1].trim():'';
+    });
+    yearDetailCache[y]=result;
+    showYearDetail(y,result);
+  }catch(e){
+    detailEl.innerHTML='<div style="padding:16px;text-align:center;color:#e08080;font-size:13px;">'+e.message+'<br><button class="retry-btn" onclick="selectYear('+y+')">다시 시도</button></div>';
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {});
+function showYearDetail(y,data){
+  var detailEl=document.getElementById('year-detail');
+  if(!detailEl)return;
+  var idx=timelineData.years.indexOf(y);
+  var cs=timelineData.career[idx];
+  var ws=timelineData.wealth[idx];
+  var ls=timelineData.love[idx];
+
+  function stars(v){
+    var n=Math.round(v/20);
+    return '★'.repeat(n)+'☆'.repeat(5-n);
+  }
+  function scoreColor(v){
+    return v>=70?'#6db36d':v>=50?'#c9a84c':'#e08080';
+  }
+
+  var html='<div class="year-detail">'
+    +'<div class="year-detail-title">'+y+'년 운세</div>'
+    +'<div class="year-scores">'
+    +'<div class="score-card"><div class="score-label">커리어</div><div class="score-value" style="color:'+scoreColor(cs)+'">'+cs+'</div><div class="score-stars" style="color:'+scoreColor(cs)+'">'+stars(cs)+'</div></div>'
+    +'<div class="score-card"><div class="score-label">재물</div><div class="score-value" style="color:'+scoreColor(ws)+'">'+ws+'</div><div class="score-stars" style="color:'+scoreColor(ws)+'">'+stars(ws)+'</div></div>'
+    +'<div class="score-card"><div class="score-label">연애</div><div class="score-value" style="color:'+scoreColor(ls)+'">'+ls+'</div><div class="score-stars" style="color:'+scoreColor(ls)+'">'+stars(ls)+'</div></div>'
+    +'</div>';
+
+  if(data['핵심 조언']){
+    html+='<div style="background:rgba(201,168,76,.08);border-left:3px solid #c9a84c;padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13px;color:#f0e6d0;">💡 '+data['핵심 조언']+'</div>';
+  }
+  ['커리어','재물','연애'].forEach(function(k){
+    if(data[k]){
+      var color=k==='커리어'?'#c9a84c':k==='재물'?'#6db36d':'#e85c8a';
+      html+='<div style="margin-bottom:10px;">'
+        +'<div style="font-size:10px;letter-spacing:2px;color:'+color+';margin-bottom:4px;">'+k+'</div>'
+        +'<div class="year-desc">'+data[k]+'</div>'
+        +'</div>';
+    }
+  });
+  html+='</div>';
+  detailEl.innerHTML=html;
+}
+
+async function loadTimeline(){
+  if(timelineLoaded)return;
+  var el=document.getElementById('timeline-content');
+  el.innerHTML='<div class="loading"><div class="spin"></div><div class="loading-txt">운세 흐름을 분석하는 중…</div></div>';
+
+  var cached=loadCache('tl-'+G.dc.slice(0,15));
+  if(cached){
+    timelineLoaded=true;
+    timelineData=cached;
+    drawTimeline(cached);
+    return;
+  }
+
+  try{
+    var cy=new Date().getFullYear();
+    var years=[];
+    for(var i=0;i<10;i++)years.push(cy+i);
+    var prompt='현재는 '+cy+'년입니다.\n사주 명식: '+G.dc+'\n\n향후 10년('+years.join(',')+') 동안의 커리어·재물·연애 운세 점수를 분석해주세요.\n\n중요: 점수 차이를 크게 해주세요. 좋은 해는 80-95, 보통은 50-65, 나쁜 해는 25-45로 구분해서 고저가 뚜렷하게 나오도록 해주세요.\n\n반드시 아래 형식으로만 답하세요:\nCARRER: 숫자10개,쉼표구분\nWEALTH: 숫자10개,쉼표구분\nLOVE: 숫자10개,쉼표구분';
+
+    var text=await callAPI(prompt);
+    function parseNums(key){
+      var m=text.match(new RegExp(key+':\\s*([\\d,\\s]+)','i'));
+      if(!m)return years.map(function(){return 60;});
+      return m[1].split(',').map(function(x){return Math.min(100,Math.max(1,parseInt(x.trim())||60));}).slice(0,10);
+    }
+    var data={years:years,career:parseNums('CARRER'),wealth:parseNums('WEALTH'),love:parseNums('LOVE')};
+    timelineLoaded=true;
+    timelineData=data;
+    saveCache('tl-'+G.dc.slice(0,15),data);
+    drawTimeline(data);
+  }catch(e){
+    el.innerHTML='<div style="padding:24px;text-align:center;"><div style="color:#e08080;font-size:13px;margin-bottom:12px;">'+e.message+'</div><button class="retry-btn" onclick="timelineLoaded=false;loadTimeline()">다시 시도하기</button></div>';
+  }
+}
+
+// ===== 명반 분석 =====
+function initSecs(){
+  document.getElementById('sec-list').innerHTML=SECS.map(function(s){
+    return '<div class="sec-item" id="si-'+s.id+'">'
+      +'<div class="sec-hd" data-id="'+s.id+'" onclick="togSec(this)">'
+      +'<span class="sec-icon">'+s.i+'</span>'
+      +'<span class="sec-ttl">'+s.t+' <span style="font-size:9px;color:#6db36d;background:rgba(109,179,109,.1);border:1px solid rgba(109,179,109,.2);padding:1px 5px;border-radius:4px;">무료</span></span>'
+      +'<span class="sec-st" id="st-'+s.id+'">분석 중…</span>'
+      +'</div>'
+      +'<div class="sec-bd" id="sb-'+s.id+'">'
+      +'<div class="sec-txt" id="txt-'+s.id+'"></div>'
+      +'</div></div>';
+  }).join('');
+}
+function show(id){
+  ['s-form','s-loading','s-main'].forEach(function(s){document.getElementById(s).classList.toggle('hidden',s!==id);});
+  if(id==='s-main')setTimeout(updateSubUI,100);
+}
+function updPrg(d,t){
+  document.getElementById('prg-fill').style.width=Math.round(d*100/t)+'%';
+  document.getElementById('prg-txt').textContent=d+'/'+t+' 완료';
+}
+
+async function startAnalysis(){
+  var nm=document.getElementById('f-name').value.trim();
+  var yr=parseInt(document.getElementById('f-year').value);
+  var mo=parseInt(document.getElementById('f-month').value);
+  var dy=parseInt(document.getElementById('f-day').value);
+  var hr=parseInt(document.getElementById('f-hour').value);
+  var mn=parseInt(document.getElementById('f-minute').value);
+  var gd=document.getElementById('f-gender').value;
+  if(!yr||!mo||!dy||isNaN(hr)||isNaN(mn)){alert('생년월일시를 모두 입력해주세요.');return;}
+  show('s-loading');
+  try{
+    var sj=calcSaju(yr,mo,dy,hr);
+    var dc=descSaju(sj)+' ('+yr+'년 '+mo+'월 '+dy+'일 '+hr+'시 '+(gd==='female'?'여성':'남성')+')';
+    G={form:{name:nm,year:yr,month:mo,day:dy,hour:hr,minute:mn,gender:gd},saju:sj,dc:dc};
+    show('s-main');
+    document.getElementById('r-name').textContent=nm||'명반 분석 결과';
+    document.getElementById('r-meta').textContent=yr+'.'+mo+'.'+dy+' '+String(hr).padStart(2,'0')+':'+String(mn).padStart(2,'0')+' · '+(gd==='female'?'여성':'남성');
+    document.getElementById('mj-res').innerHTML=mjHTML(sj);
+    initSecs();
+    var cached=loadCache('an-'+dc.slice(0,15));
+    if(cached){
+      SECS.forEach(function(s,i){
+        document.getElementById('txt-'+s.id).textContent=cached[i]||'';
+        document.getElementById('st-'+s.id).textContent='완료';
+        updPrg(i+1,SECS.length);
+      });
+      setTimeout(function(){var sb=document.getElementById('sb-s1');if(sb)sb.classList.add('open');},200);
+      return;
+    }
+    var cy=new Date().getFullYear();
+    var names=SECS.map(function(s,i){return (i+1)+'. '+s.t;}).join('\n');
+    var prompt='현재는 '+cy+'년입니다.\n사주 명식: '+dc+'\n\n아래 '+SECS.length+'가지 항목을 순서대로 분석해주세요.\n각 항목은 === 항목번호 === 형식으로 시작하세요.\n\n'+names;
+    var text=await callAPI(prompt);
+    var parsed=parseResp(text,SECS);
+    SECS.forEach(function(s,i){
+      var t=parsed[i]||text;
+      document.getElementById('txt-'+s.id).textContent=t;
+      document.getElementById('st-'+s.id).textContent='완료';
+      updPrg(i+1,SECS.length);
+    });
+    saveCache('an-'+dc.slice(0,15),parsed);
+    setTimeout(function(){var sb=document.getElementById('sb-s1');if(sb)sb.classList.add('open');},200);
+  }catch(e){alert('오류: '+e.message);show('s-form');}
+}
+
+// ===== 탭 전환 =====
+function switchTab(tabId,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('tab-'+tabId).classList.add('active');
+  if(tabId==='timeline')loadTimeline();
+  if(tabId==='career')loadCareer();
+  if(tabId==='wealth')loadWealth();
+  if(tabId==='love')loadLove();
+}
+
+// ===== 커리어 =====
+async function loadCareer(){
+  if(careerLoaded)return;
+  var el=document.getElementById('career-content');
+  if(!isSubscribed()){el.innerHTML=lockHTML('커리어 분석은 구독 후 이용');return;}
+  if(!G.dc){el.innerHTML='<div style="padding:20px;text-align:center;color:#6a5a4a;">먼저 명반을 분석해주세요.</div>';return;}
+  var cached=loadCache('ca-'+G.dc.slice(0,15));
+  if(cached){
+    careerLoaded=true;
+    el.innerHTML=buildSecs(CAREER_SECS,true);
+    CAREER_SECS.forEach(function(s,i){var tx=document.getElementById('txt-'+s.id);if(tx)tx.textContent=cached[i]||'';});
+    setTimeout(function(){var sb=document.getElementById('sb-c1');if(sb)sb.classList.add('open');},200);
+    return;
+  }
+  careerLoaded=true;
+  el.innerHTML=buildSecs(CAREER_SECS,false);
+  try{
+    var cy=new Date().getFullYear();
+    var names=CAREER_SECS.map(function(s,i){return (i+1)+'. '+s.t;}).join('\n');
+    var prompt='현재는 '+cy+'년입니다.\n사주 명식: '+G.dc+'\n\n아래 5가지 커리어 항목을 순서대로 분석해주세요.\n각 항목은 === 항목번호 === 형식으로 시작하세요.\n이직 타이밍은 '+cy+'년 1-12월 모두 포함하세요.\n\n'+names;
+    var text=await callAPI(prompt);
+    var parsed=parseResp(text,CAREER_SECS);
+    CAREER_SECS.forEach(function(s,i){
+      var t=parsed[i]||'분석 완료';
+      document.getElementById('txt-'+s.id).textContent=t;
+      document.getElementById('st-'+s.id).textContent='완료';
+    });
+    saveCache('ca-'+G.dc.slice(0,15),parsed);
+    setTimeout(function(){var sb=document.getElementById('sb-c1');if(sb)sb.classList.add('open');},200);
+  }catch(e){
+    careerLoaded=false;
+    el.innerHTML='<div style="padding:22px;text-align:center;"><div style="color:#e08080;font-size:13px;margin-bottom:12px;">'+e.message+'</div><button class="retry-btn" onclick="careerLoaded=false;loadCareer()">다시 시도하기</button></div>';
+  }
+}
+
+// ===== 재물 =====
+function drawChart(elId,scores,color){
+  var el=document.getElementById(elId);if(!el)return;
+  var cy=new Date().getFullYear();
+  var max=Math.max.apply(null,scores),min=Math.min.apply(null,scores),range=max-min||1;
+  var w=300,h=120;
+  var pts=scores.map(function(s,i){return (i/(scores.length-1))*w+','+(h-((s-min)/range)*h);}).join(' ');
+  var svg='<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:130px;">';
+  svg+='<polygon points="0,'+h+' '+pts+' '+w+','+h+'" fill="'+color+'" opacity="0.15"/>';
+  svg+='<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2"/>';
+  scores.forEach(function(s,i){var x=(i/(scores.length-1))*w,y=h-((s-min)/range)*h;svg+='<circle cx="'+x+'" cy="'+y+'" r="3" fill="'+color+'"/>';});
+  svg+='</svg>';
+  var labels='<div class="chart-labels">';
+  scores.forEach(function(s,i){labels+='<span>'+(cy+i)+'</span>';});
+  labels+='</div>';
+  el.innerHTML=svg+labels;
+}
+function drawCal(elId,months,emoji){
+  var el=document.getElementById(elId);if(!el)return;
+  var mn=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  var h='<div class="cal-grid">';
+  for(var i=0;i<12;i++){
+    var s=months[i]||'normal';
+    h+='<div class="cal-month '+s+'"><div>'+mn[i]+'</div><div style="font-size:12px;margin-top:2px;">'+(s==='good'?emoji:s==='bad'?'⚠️':'·')+'</div><div style="font-size:9px;">'+(s==='good'?'좋음':s==='bad'?'주의':'보통')+'</div></div>';
+  }
+  h+='</div>';
+  el.innerHTML=h;
+}
+
+async function loadWealth(){
+  if(wealthLoaded)return;
+  var el=document.getElementById('wealth-content');
+  if(!isSubscribed()){el.innerHTML=lockHTML('재물 분석은 구독 후 이용');return;}
+  if(!G.dc){el.innerHTML='<div style="padding:20px;text-align:center;color:#6a5a4a;">먼저 명반을 분석해주세요.</div>';return;}
+  var cached=loadCache('we-'+G.dc.slice(0,15));
+  if(cached){
+    wealthLoaded=true;
+    var cy=new Date().getFullYear();
+    el.innerHTML='<div class="viz-box"><div class="viz-title">✦ 10년 재물 흐름</div><div id="w-chart"></div></div>'
+      +'<div class="viz-box"><div class="viz-title">✦ '+cy+'년 월별 재물운</div><div id="w-cal"></div></div>'
+      +buildSecs(WEALTH_SECS,true);
+    drawChart('w-chart',cached.chart||[60,62,65,68,72,70,68,72,75,78],'#c9a84c');
+    drawCal('w-cal',cached.cal||[],'⭐');
+    WEALTH_SECS.forEach(function(s,i){var tx=document.getElementById('txt-'+s.id);if(tx)tx.textContent=cached.secs[i]||'';});
+    setTimeout(function(){var sb=document.getElementById('sb-w1');if(sb)sb.classList.add('open');},200);
+    return;
+  }
+  wealthLoaded=true;
+  var cy2=new Date().getFullYear();
+  el.innerHTML='<div class="viz-box"><div class="viz-title">✦ 10년 재물 흐름</div><div id="w-chart"><div style="text-align:center;padding:20px;color:#6a5a4a;font-size:12px;">분석 중…</div></div></div>'
+    +'<div class="viz-box"><div class="viz-title">✦ '+cy2+'년 월별 재물운</div><div id="w-cal"><div style="text-align:center;padding:12px;color:#6a5a4a;font-size:12px;">분석 중…</div></div></div>'
+    +buildSecs(WEALTH_SECS,false);
+  try{
+    var names=WEALTH_SECS.map(function(s,i){return (i+1)+'. '+s.t;}).join('\n');
+    var prompt='현재는 '+cy2+'년입니다.\n사주 명식: '+G.dc+'\n\n아래 5가지 재물 항목을 순서대로 분석해주세요.\n각 항목은 === 항목번호 === 형식으로 시작하세요.\n마지막에 === CHART === 다음줄에 향후 10년 재물점수(1-100) 10개를 쉼표 구분해 쓰세요.\n=== CALENDAR === 다음줄에 '+cy2+'년 1-12월 재물운을 good/normal/bad로 쉼표 구분해 쓰세요.\n\n'+names;
+    var text=await callAPI(prompt);
+    var parsed=parseResp(text,WEALTH_SECS);
+    var cm=text.match(/===\s*CHART\s*===\s*([\d,\s]+)/i);
+    var cal=text.match(/===\s*CALENDAR\s*===\s*([a-z,\s]+)/i);
+    var cd=cm?cm[1].split(',').map(function(x){return parseInt(x.trim());}).filter(function(x){return !isNaN(x);}):[60,62,65,68,72,70,68,72,75,78];
+    var calD=cal?cal[1].split(',').map(function(x){return x.trim().toLowerCase();}).filter(function(x){return x;}):[]; 
+    drawChart('w-chart',cd,'#c9a84c');
+    drawCal('w-cal',calD,'⭐');
+    WEALTH_SECS.forEach(function(s,i){var t=parsed[i]||'분석 완료';document.getElementById('txt-'+s.id).textContent=t;document.getElementById('st-'+s.id).textContent='완료';});
+    saveCache('we-'+G.dc.slice(0,15),{secs:parsed,chart:cd,cal:calD});
+    setTimeout(function(){var sb=document.getElementById('sb-w1');if(sb)sb.classList.add('open');},200);
+  }catch(e){
+    wealthLoaded=false;
+    el.innerHTML='<div style="padding:22px;text-align:center;"><div style="color:#e08080;font-size:13px;margin-bottom:12px;">'+e.message+'</div><button class="retry-btn" onclick="wealthLoaded=false;loadWealth()">다시 시도하기</button></div>';
+  }
+}
+
+// ===== 연애 =====
+async function loadLove(){
+  if(loveLoaded)return;
+  var el=document.getElementById('love-content');
+  if(!isSubscribed()){el.innerHTML=lockHTML('연애 분석은 구독 후 이용');return;}
+  if(!G.dc){el.innerHTML='<div style="padding:20px;text-align:center;color:#6a5a4a;">먼저 명반을 분석해주세요.</div>';return;}
+  var cached=loadCache('lo-'+G.dc.slice(0,15));
+  if(cached){
+    loveLoaded=true;
+    var cy=new Date().getFullYear();
+    el.innerHTML='<div class="viz-box"><div class="viz-title">✦ 10년 연애운 흐름</div><div id="l-chart"></div></div>'
+      +'<div class="viz-box"><div class="viz-title">✦ '+cy+'년 월별 만남운</div><div id="l-cal"></div></div>'
+      +buildSecs(LOVE_SECS,true);
+    drawChart('l-chart',cached.chart||[60,65,70,72,75,70,68,72,76,74],'#e85c8a');
+    drawCal('l-cal',cached.cal||[],'💕');
+    LOVE_SECS.forEach(function(s,i){var tx=document.getElementById('txt-'+s.id);if(tx)tx.textContent=cached.secs[i]||'';});
+    setTimeout(function(){var sb=document.getElementById('sb-l1');if(sb)sb.classList.add('open');},200);
+    return;
+  }
+  loveLoaded=true;
+  var cy3=new Date().getFullYear();
+  el.innerHTML='<div class="viz-box"><div class="viz-title">✦ 10년 연애운 흐름</div><div id="l-chart"><div style="text-align:center;padding:20px;color:#6a5a4a;font-size:12px;">분석 중…</div></div></div>'
+    +'<div class="viz-box"><div class="viz-title">✦ '+cy3+'년 월별 만남운</div><div id="l-cal"><div style="text-align:center;padding:12px;color:#6a5a4a;font-size:12px;">분석 중…</div></div></div>'
+    +buildSecs(LOVE_SECS,false);
+  try{
+    var names=LOVE_SECS.map(function(s,i){return (i+1)+'. '+s.t;}).join('\n');
+    var prompt='현재는 '+cy3+'년입니다.\n사주 명식: '+G.dc+'\n\n아래 5가지 연애·결혼 항목을 순서대로 분석해주세요.\n각 항목은 === 항목번호 === 형식으로 시작하세요.\n마지막에 === CHART === 다음줄에 향후 10년 연애운점수(1-100) 10개를 쉼표 구분해 쓰세요.\n=== CALENDAR === 다음줄에 '+cy3+'년 1-12월 만남운을 good/normal/bad로 쉼표 구분해 쓰세요.\n\n'+names;
+    var text=await callAPI(prompt);
+    var parsed=parseResp(text,LOVE_SECS);
+    var cm=text.match(/===\s*CHART\s*===\s*([\d,\s]+)/i);
+    var cal=text.match(/===\s*CALENDAR\s*===\s*([a-z,\s]+)/i);
+    var cd=cm?cm[1].split(',').map(function(x){return parseInt(x.trim());}).filter(function(x){return !isNaN(x);}):[60,65,70,72,75,70,68,72,76,74];
+    var calD=cal?cal[1].split(',').map(function(x){return x.trim().toLowerCase();}).filter(function(x){return x;}):[]; 
+    drawChart('l-chart',cd,'#e85c8a');
+    drawCal('l-cal',calD,'💕');
+    LOVE_SECS.forEach(function(s,i){var t=parsed[i]||'분석 완료';document.getElementById('txt-'+s.id).textContent=t;document.getElementById('st-'+s.id).textContent='완료';});
+    saveCache('lo-'+G.dc.slice(0,15),{secs:parsed,chart:cd,cal:calD});
+    setTimeout(function(){var sb=document.getElementById('sb-l1');if(sb)sb.classList.add('open');},200);
+  }catch(e){
+    loveLoaded=false;
+    el.innerHTML='<div style="padding:22px;text-align:center;"><div style="color:#e08080;font-size:13px;margin-bottom:12px;">'+e.message+'</div><button class="retry-btn" onclick="loveLoaded=false;loadLove()">다시 시도하기</button></div>';
+  }
+}
+
+// ===== 공유 =====
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
+function copyLink(){
+  if(navigator.clipboard)navigator.clipboard.writeText('https://sajubao.com').then(function(){showToast('✓ 링크가 복사되었습니다');});
+  else showToast('sajubao.com');
+}
+async function saveImage(){
+  showToast('이미지 생성 중…');
+  try{
+    if(typeof html2canvas==='undefined'){
+      await new Promise(function(r,j){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';s.onload=r;s.onerror=j;document.head.appendChild(s);});
+    }
+    var shares=document.querySelectorAll('.share-box');
+    shares.forEach(function(el){el.style.display='none';});
+    var canvas=await html2canvas(document.getElementById('s-main'),{backgroundColor:'#08080f',scale:2});
+    shares.forEach(function(el){el.style.display='block';});
+    var a=document.createElement('a');
+    a.download='사주봐_'+(G.form.name||'결과')+'.png';
+    a.href=canvas.toDataURL('image/png');a.click();
+    showToast('✓ 이미지가 저장되었습니다');
+  }catch(e){
+    document.querySelectorAll('.share-box').forEach(function(el){el.style.display='block';});
+    showToast('이미지 저장 실패');
+  }
+}
+
+window.addEventListener('DOMContentLoaded',function(){});
 </script>
 </body>
 </html>
