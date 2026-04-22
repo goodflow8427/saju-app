@@ -547,12 +547,17 @@ async function selectYear(y){
     return;
   }
 
+  if(!G.dc){
+    detailEl.innerHTML='<div style="padding:16px;text-align:center;color:#6a5a4a;font-size:13px;">먼저 명반을 분석해주세요.</div>';
+    return;
+  }
+
   detailEl.innerHTML='<div class="year-loading"><div class="spin" style="width:24px;height:24px;border-width:2px;"></div><div style="margin-top:8px;">'+y+'년 분석 중…</div></div>';
 
   try{
     var cy=new Date().getFullYear();
     var idx=timelineData.years.indexOf(y);
-    var prompt='현재는 '+cy+'년입니다.\n사주 명식: '+G.dc+'\n\n'+y+'년의 운세를 분석해주세요.\n커리어 점수: '+timelineData.career[idx]+'/100\n재물 점수: '+timelineData.wealth[idx]+'/100\n연애 점수: '+timelineData.love[idx]+'/100\n\n=== 커리어 === \n('+y+'년 커리어 주요 흐름과 조언 200자 이내)\n=== 재물 ===\n('+y+'년 재물 주요 흐름과 조언 200자 이내)\n=== 연애 ===\n('+y+'년 연애 주요 흐름과 조언 200자 이내)\n=== 핵심 조언 ===\n('+y+'년 가장 중요한 한 마디 50자 이내)';
+    var prompt='현재는 '+cy+'년입니다.\n사주 명식: '+G.dc+'\n\n'+y+'년 운세를 아래 형식으로 분석해주세요.\n한자 사용 금지, 쉬운 말로 써주세요.\n\n=== 커리어 ===\n'+y+'년 커리어 흐름과 조언 (200자 이내)\n=== 재물 ===\n'+y+'년 재물 흐름과 조언 (200자 이내)\n=== 연애 ===\n'+y+'년 연애 흐름과 조언 (200자 이내)\n=== 핵심 조언 ===\n'+y+'년 가장 중요한 한 마디 (50자 이내)';
     var text=await callAPI(prompt);
     var result={};
     ['커리어','재물','연애','핵심 조언'].forEach(function(k){
