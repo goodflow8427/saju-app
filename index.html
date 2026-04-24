@@ -946,6 +946,8 @@ async function startAnalysis(){
     var dc=descSaju(sj)+' ('+yr+'년 '+mo+'월 '+dy+'일 '+hr+'시 '+(gd==='female'?'여성':'남성')+')';
     G={form:{name:nm,year:yr,month:mo,day:dy,hour:hr,minute:mn,gender:gd},saju:sj,dc:dc};
     stopLoadingMsg();show('s-main');
+    var tsb=document.getElementById('top-share-box');
+    if(tsb)tsb.style.display='block';
     var dispName=nm||'나의 사주';
     document.getElementById('r-name').textContent=dispName;
     document.getElementById('r-meta').textContent=yr+'.'+mo+'.'+dy+' '+String(hr).padStart(2,'0')+':'+String(mn).padStart(2,'0')+' · '+(gd==='female'?'여성':'남성');
