@@ -1206,7 +1206,7 @@ function showShareCard(){
     return '<div class="sc-rank-row">'
       +'<div class="sc-rank-label">'+r.label+'</div>'
       +'<div class="sc-rank-bar"><div class="sc-rank-fill" style="width:'+r.pct+'%;background:'+r.color+'"></div></div>'
-      +'<div class="sc-rank-pct">상위<br>'+(100-r.pct)+'%</div>'
+      +'<div class="sc-rank-pct">상위 '+(100-r.pct)+'%'+(r.pct>=90?'<br><span style="font-size:9px;color:#c9a84c;background:rgba(201,168,76,.15);padding:1px 4px;border-radius:4px;">TOP'+(100-r.pct)+'%</span>':'')+'</div>'
       +'</div>';
   }).join('');
   document.getElementById('sc-top-msg').textContent=topRank.label+' 상위 '+(100-topRank.pct)+'% 🔥';
