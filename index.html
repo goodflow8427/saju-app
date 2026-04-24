@@ -1353,12 +1353,10 @@ function showRanking(sj){
   var topRank=ranks.reduce(function(a,b){return a.pct>b.pct?a:b;});
 
   items.innerHTML=ranks.map(function(r){
-    var isTop=r.pct>=90;
-    var badge=isTop?'<span class="rank-badge rank-top">TOP '+Math.round(100-r.pct)+'%</span>':'';
     return '<div class="rank-item">'
       +'<div class="rank-label">'+r.label+'</div>'
       +'<div class="rank-bar-wrap"><div class="rank-bar" style="width:0%;background:'+r.color+'" data-width="'+r.pct+'%"></div></div>'
-      +'<div class="rank-pct">상위 '+(100-r.pct)+'%'+badge+'</div>'
+      +'<div class="rank-pct">상위 '+(100-r.pct)+'%</div>'
       +'</div>';
   }).join('');
 
