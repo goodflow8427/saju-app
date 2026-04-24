@@ -861,6 +861,11 @@ function renderJourney(data){
   html+='</div>';
 
   el.innerHTML=html;
+  // 첫 연도 자동 선택 (약간 딜레이 후)
+  setTimeout(function(){
+    var cy=data.year||new Date().getFullYear();
+    selectJourneyYear(cy);
+  },100);
 }
 
 // 연도별 운세 지도 선택
