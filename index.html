@@ -282,7 +282,7 @@ select.inp option{background:#120e1c;}
   <button class="hero-btn" onclick="scrollToForm()">
     지금 무료로 확인하기 →
   </button>
-  <div class="hero-free">✓ 완전 무료 &nbsp;·&nbsp; ✓ 가입 불필요 &nbsp;·&nbsp; ✓ 30초면 완성</div>
+  <div class="hero-free">✓ 완전 무료 &nbsp;·&nbsp; ✓ 가입 불필요 &nbsp;·&nbsp; ✓ 입력은 30초!</div>
 
   <!-- 신뢰 지표 -->
   <div class="trust-wrap">
@@ -375,7 +375,7 @@ select.inp option{background:#120e1c;}
 
   <!-- 구독 상태 -->
   <div id="sub-status"></div>
-  <div id="sub-code-box" class="sub-box">
+  <div id="sub-code-box" class="sub-box" style="display:none;">
     <div class="sub-box-title">✦ 구독 코드 입력</div>
     <input class="sub-email" type="email" id="code-email" placeholder="이메일 주소">
     <div class="sub-row">
@@ -622,6 +622,10 @@ function updateSubUI(){
   } else {
     st.innerHTML='';
     cb.style.display='block';
+  }
+  // 분석 완료 후에만 구독 박스 표시
+  if(G.dc){
+    cb.style.display=isSubscribed()?'none':'block';
   }
 }
 function applyCode(){
