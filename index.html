@@ -836,9 +836,7 @@ function renderJourney(data){
   html+='<div class="path-card path-b"><div class="path-icon">❄️</div><div class="path-label">갈래 B</div><div class="path-name">'+bName+'</div><div class="path-desc">'+data.갈래B설명+'</div><div class="path-tags">'+bTags.map(function(t){return '<span class="path-tag">'+t.trim()+'</span>';}).join('')+'</div></div>';
   html+='</div></div>';
 
-  // 6. 잠금 힌트
-  html+='<div class="lock-hint"><div class="lock-hint-icon">🔐</div><div class="lock-hint-txt"><strong>갈래별 재물·커리어 상세 분석</strong>이 잠겨 있어요.<br>각 갈래에서 돈이 풀리는 시기, 직업 환경을 확인하세요.</div><button class="unlock-btn" onclick="window.open(\''+KAKAO+'\',\'_blank\')">₩2,000 열기</button></div>';
-
+  // 6. 잠금 힌트 제거
   // 7. 핵심 메시지
   html+='<div style="text-align:center;padding:20px 0;"><div style="font-family:Nanum Myeongjo,serif;font-size:14px;color:var(--muted);line-height:1.9;">운은 고정된 것이 아닙니다.<br><span style="color:var(--gold);">어느 계절에 있든, 그 계절을 어떻게 사느냐</span>가<br>다음 계절을 만듭니다.</div>';
   if(data.핵심메시지){html+='<div style="margin-top:16px;padding:16px 20px;background:var(--gold-light);border:1.5px solid rgba(196,135,58,.2);border-radius:14px;font-family:Nanum Myeongjo,serif;font-size:15px;font-weight:700;color:var(--gold);">✦ '+(data.핵심메시지||'')+'</div>';}
@@ -906,7 +904,12 @@ function switchTab(tabId,btn){
   document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
   btn.classList.add('active');
   document.getElementById('tab-'+tabId).classList.add('active');
-  if(tabId==='journey')loadJourney();
+  if(tabId==='journey'){
+    // 구독 상태 변경 반영을 위해 항상 재렌더
+    var jcache=loadCache('jn-'+(G.dc||'').slice(0,15));
+    if(jcache&&journeyLoaded){renderJourney(jcache);}
+    else{loadJourney();}
+  }
   if(tabId==='career')loadCareer();
   if(tabId==='wealth')loadWealth();
   if(tabId==='love')loadLove();
