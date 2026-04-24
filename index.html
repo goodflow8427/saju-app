@@ -200,7 +200,8 @@ select.inp option{background:#120e1c;}
 .sc-rank-label{font-size:10px;color:#6a5a4a;width:36px;text-align:right;flex-shrink:0;}
 .sc-rank-bar{flex:1;height:5px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden;min-width:0;}
 .sc-rank-fill{height:100%;border-radius:3px;}
-.sc-rank-pct{font-size:10px;color:#f0e6d0;font-weight:700;width:40px;flex-shrink:0;text-align:right;}
+.sc-rank-pct{font-size:10px;color:#f0e6d0;font-weight:700;width:44px;flex-shrink:0;text-align:right;line-height:1.4;}
+.sc-rank-top-badge{display:block;font-size:8px;color:#c9a84c;background:rgba(201,168,76,.15);padding:1px 3px;border-radius:3px;margin-top:2px;white-space:nowrap;}
 .sc-top-msg{font-size:12px;color:#c9a84c;font-weight:700;margin-top:8px;}
 /* 하단 */
 .sc-footer{font-size:10px;color:#3a2a1a;margin-bottom:12px;}
@@ -1206,7 +1207,7 @@ function showShareCard(){
     return '<div class="sc-rank-row">'
       +'<div class="sc-rank-label">'+r.label+'</div>'
       +'<div class="sc-rank-bar"><div class="sc-rank-fill" style="width:'+r.pct+'%;background:'+r.color+'"></div></div>'
-      +'<div class="sc-rank-pct">상위 '+(100-r.pct)+'%'+(r.pct>=90?'<br><span style="font-size:9px;color:#c9a84c;background:rgba(201,168,76,.15);padding:1px 4px;border-radius:4px;">TOP'+(100-r.pct)+'%</span>':'')+'</div>'
+      +'<div class="sc-rank-pct">상위 '+(100-r.pct)+'%'+(r.pct>=90?'<span class="sc-rank-top-badge">TOP '+(100-r.pct)+'%</span>':'')+'</div>'
       +'</div>';
   }).join('');
   document.getElementById('sc-top-msg').textContent=topRank.label+' 상위 '+(100-topRank.pct)+'% 🔥';
