@@ -347,6 +347,7 @@ select.inp option{background:#120e1c;}
 
 <!-- 결과 -->
 <div id="s-main" class="hidden result">
+  <!-- 결과 헤더 -->
   <div class="result-hd">
     <div class="result-badge">✦ 사주 분석 결과</div>
     <div class="result-name" id="r-name"></div>
@@ -354,36 +355,20 @@ select.inp option{background:#120e1c;}
     <div class="result-daymaster" id="r-daymaster"></div>
   </div>
 
-  <!-- 공유 카드 인라인 -->
-  <div class="share-card-inline" id="share-card-inline">
-    <div class="share-card-inline-top">
-      <div class="share-card-brand-inline">☯ SAJUBAO</div>
-    </div>
-    <div class="sc-daymaster">
-      <div class="sc-dm-char" id="sc-dm-char"></div>
-      <div class="sc-dm-name" id="sc-dm-name"></div>
-      <div class="sc-dm-desc" id="sc-dm-desc"></div>
-    </div>
-    <div class="sc-info">
-      <div class="sc-name" id="sc-name"></div>
-      <div class="sc-meta" id="sc-meta"></div>
-    </div>
-    <div class="sc-mj" id="sc-mj"></div>
-    <div class="sc-rank">
-      <div class="sc-rank-title">✦ 나의 사주 랭킹</div>
-      <div id="sc-rank-rows"></div>
-      <div class="sc-top-msg" id="sc-top-msg"></div>
-    </div>
-    <div class="sc-footer">나도 확인하기 → <b>sajubao.com</b></div>
-    <div class="share-card-inline-btns">
-      <button class="share-card-btn" onclick="saveShareCard()">📸 이미지 저장</button>
-      <button class="share-card-btn2" onclick="copyLink()">🔗 링크 복사</button>
-    </div>
+  <!-- 랭킹 -->
+  <div class="rank-wrap" id="rank-wrap" style="display:none;">
+    <div class="rank-title">✦ 나의 사주 랭킹</div>
+    <div class="rank-items" id="rank-items"></div>
+    <div class="rank-share-txt" id="rank-share-txt"></div>
   </div>
 
-  <div class="mj-box">
-    <div class="mj-box-title">✦ 나의 사주 명식</div>
-    <div id="mj-res"></div>
+  <!-- 공유 버튼 -->
+  <div class="share-box" id="top-share-box" style="display:none;margin-bottom:14px;">
+    <div style="font-size:12px;color:#f0e6d0;font-weight:600;">✦ 친구에게 공유하기</div>
+    <div class="share-btns" style="margin-top:8px;">
+      <button class="share-btn" onclick="showShareCard()">🎴 공유 카드 만들기</button>
+      <button class="share-btn" onclick="copyLink()">🔗 링크 복사</button>
+    </div>
   </div>
 
   <!-- 사주 랭킹 -->
@@ -419,18 +404,15 @@ select.inp option{background:#120e1c;}
 
   <!-- 명반 탭 -->
   <div id="tab-analysis" class="tab-content active">
+    <div class="mj-box">
+      <div class="mj-box-title">✦ 나의 사주 명식</div>
+      <div id="mj-res"></div>
+    </div>
     <div class="prg-wrap">
       <div class="prg-bar"><div class="prg-fill" id="prg-fill"></div></div>
       <div class="prg-txt" id="prg-txt">분석 준비 중…</div>
     </div>
     <div id="sec-list"></div>
-    <div class="share-box">
-      <div style="font-size:12px;color:#f0e6d0;font-weight:600;">✦ 친구에게 공유하기</div>
-      <div class="share-btns">
-        <button class="share-btn" onclick="showShareCard()">🎴 공유 카드 만들기</button>
-        <button class="share-btn" onclick="copyLink()">🔗 링크 복사</button>
-      </div>
-    </div>
   </div>
 
   <!-- 운세 흐름 탭 -->
@@ -971,8 +953,7 @@ async function startAnalysis(){
     document.getElementById('mj-res').innerHTML=mjHTML(sj);
     // 랭킹 표시
     showRanking(sj);
-    // 공유 카드 업데이트
-    showShareCard();
+
     // 일간 키워드 표시
     var dayMasters={
       0:'나무처럼 곧고 성장하는 사람',
@@ -1259,8 +1240,10 @@ function showShareCard(){
   document.getElementById('sc-rank-rows').innerHTML=rows;
   document.getElementById('sc-top-msg').textContent=topRank.label+' 상위 '+(100-topRank.pct)+'% 🔥';
 
-  // 인라인 카드는 자동 업데이트됨 (모달 불필요)
-  showToast('✓ 공유 카드가 업데이트됐어요!');
+  // 모달 표시
+  var scw=document.getElementById('share-card-wrap');
+  scw.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;';
+  document.body.style.overflow='hidden';
 }
 function closeShareCard(){
   document.getElementById('share-card-wrap').style.display='none';
