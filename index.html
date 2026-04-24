@@ -148,8 +148,14 @@ select.inp option{background:#120e1c;}
 .sub-msg{font-size:11px;text-align:center;margin-top:6px;}
 .sub-msg.ok{color:#6db36d;}.sub-msg.err{color:#e08080;}
 .sub-active{background:rgba(109,179,109,.08);border:1px solid rgba(109,179,109,.25);border-radius:9px;padding:9px 14px;margin-bottom:12px;font-size:12px;color:#6db36d;}
-.lock-box{padding:26px 20px;text-align:center;}
-.lock-btn{display:inline-block;padding:12px 22px;background:linear-gradient(135deg,#b8922a,#e8c96a);border-radius:22px;color:#08080f;text-decoration:none;font-weight:700;font-size:13px;}
+.lock-box{padding:30px 20px;text-align:center;}
+.lock-btn{display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#b8922a,#e8c96a);border-radius:24px;color:#08080f;text-decoration:none;font-weight:700;font-size:14px;box-shadow:0 4px 20px rgba(201,168,76,.3);transition:all .2s;}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(201,168,76,.4);}
+.lock-features{display:flex;flex-direction:column;gap:8px;margin:16px 0;text-align:left;}
+.lock-feature{display:flex;align-items:center;gap:10px;font-size:13px;color:#9a8a6a;}
+.lock-feature-icon{font-size:16px;width:24px;text-align:center;}
+.lock-price{font-size:11px;color:#4a3a2a;margin-top:10px;line-height:1.8;}
+.lock-price b{color:#c9a84c;}
 
 /* 커리어/재물/연애 섹션 */
 .viz-box{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.12);border-radius:11px;padding:14px;margin-bottom:11px;}
@@ -622,13 +628,22 @@ function togSec(el){
   document.querySelectorAll('.sec-bd').forEach(function(x){x.classList.remove('open');});
   if(!open)b.classList.add('open');
 }
-function lockHTML(t){
+function lockHTML(t,features){
+  var defaultFeatures=features||[
+    {icon:'💼',txt:'나와 딱 맞는 직업 TOP 10'},
+    {icon:'📅',txt:'이직하기 좋은 달은 언제?'},
+    {icon:'🚀',txt:'승진·성공하는 시기'},
+  ];
+  var featureHTML=defaultFeatures.map(function(f){
+    return '<div class="lock-feature"><span class="lock-feature-icon">'+f.icon+'</span><span>'+f.txt+'</span></div>';
+  }).join('');
   return '<div class="lock-box">'
-    +'<div style="font-size:38px;margin-bottom:12px;">🔒</div>'
-    +'<div style="font-size:15px;color:#f0e6d0;font-weight:600;margin-bottom:7px;">'+t+'</div>'
-    +'<div style="font-size:12px;color:#9a8a6a;margin-bottom:16px;line-height:1.8;">월 5,000원으로<br>커리어·재물·연애 분석 무제한</div>'
-    +'<a class="lock-btn" href="'+KAKAO+'" target="_blank">카카오페이로 구독하기 ₩5,000</a>'
-    +'<div style="font-size:10px;color:#4a3a2a;margin-top:10px;">입금 후 카카오톡으로 입금자명을 보내주세요</div>'
+    +'<div style="font-size:42px;margin-bottom:10px;">🔒</div>'
+    +'<div style="font-size:16px;color:#f0e6d0;font-weight:700;margin-bottom:6px;">'+t+'</div>'
+    +'<div style="font-size:12px;color:#6a5a4a;margin-bottom:14px;">이런 내용을 볼 수 있어요:</div>'
+    +'<div class="lock-features">'+featureHTML+'</div>'
+    +'<a class="lock-btn" href="'+KAKAO+'" target="_blank">카카오페이로 구독하기 ₩5,000/월</a>'
+    +'<div class="lock-price">커리어 · 재물 · 연애 <b>3개 탭 모두 포함</b><br>입금 후 카카오톡으로 이메일을 보내주세요</div>'
     +'</div>';
 }
 
@@ -923,7 +938,13 @@ function switchTab(tabId,btn){
 async function loadCareer(){
   if(careerLoaded)return;
   var el=document.getElementById('career-content');
-  if(!isSubscribed()){el.innerHTML=lockHTML('커리어 분석은 구독 후 이용');return;}
+  if(!isSubscribed()){el.innerHTML=lockHTML('커리어 분석은 구독 후 이용',[
+    {icon:'💼',txt:'나와 딱 맞는 직업 TOP 10'},
+    {icon:'💪',txt:'커리어 강점과 약점 분석'},
+    {icon:'📅',txt:'이직하기 좋은 달은 언제?'},
+    {icon:'🚀',txt:'승진·성공하는 시기'},
+    {icon:'👥',txt:'조심해야 할 동료 유형'}
+  ]);return;}
   if(!G.dc){el.innerHTML='<div style="padding:20px;text-align:center;color:#6a5a4a;">먼저 명반을 분석해주세요.</div>';return;}
   var cached=loadCache('ca-'+G.dc.slice(0,15));
   if(cached){
@@ -986,7 +1007,13 @@ function drawCal(elId,months,emoji){
 async function loadWealth(){
   if(wealthLoaded)return;
   var el=document.getElementById('wealth-content');
-  if(!isSubscribed()){el.innerHTML=lockHTML('재물 분석은 구독 후 이용');return;}
+  if(!isSubscribed()){el.innerHTML=lockHTML('재물 분석은 구독 후 이용',[
+    {icon:'💎',txt:'나의 평생 재물 그릇은?'},
+    {icon:'🏦',txt:'월급 vs 사업 vs 투자 뭐가 맞나?'},
+    {icon:'📈',txt:'투자하기 좋은 시기'},
+    {icon:'⚠️',txt:'돈 나가는 위험한 시기'},
+    {icon:'💰',txt:'재물 불리는 나만의 전략'}
+  ]);return;}
   if(!G.dc){el.innerHTML='<div style="padding:20px;text-align:center;color:#6a5a4a;">먼저 명반을 분석해주세요.</div>';return;}
   var cached=loadCache('we-'+G.dc.slice(0,15));
   if(cached){
@@ -1030,7 +1057,13 @@ async function loadWealth(){
 async function loadLove(){
   if(loveLoaded)return;
   var el=document.getElementById('love-content');
-  if(!isSubscribed()){el.innerHTML=lockHTML('연애 분석은 구독 후 이용');return;}
+  if(!isSubscribed()){el.innerHTML=lockHTML('연애 분석은 구독 후 이용',[
+    {icon:'💝',txt:'나의 이상형은 어떤 사람?'},
+    {icon:'💕',txt:'배우자 특징과 만남 시기'},
+    {icon:'💒',txt:'결혼하기 좋은 나이와 해'},
+    {icon:'⚡',txt:'연애할 때 주의할 점'},
+    {icon:'🌹',txt:'관계를 오래 유지하는 법'}
+  ]);return;}
   if(!G.dc){el.innerHTML='<div style="padding:20px;text-align:center;color:#6a5a4a;">먼저 명반을 분석해주세요.</div>';return;}
   var cached=loadCache('lo-'+G.dc.slice(0,15));
   if(cached){
