@@ -196,13 +196,15 @@ select.inp option{background:#120e1c;}
 /* 랭킹 */
 .sc-rank{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.12);border-radius:12px;padding:12px;margin-bottom:12px;}
 .sc-rank-title{font-size:9px;letter-spacing:3px;color:#c9a84c;margin-bottom:10px;}
-.sc-rank-row{margin-bottom:8px;}
-.sc-rank-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
-.sc-rank-label{font-size:10px;color:#6a5a4a;}
-.sc-rank-pct-wrap{display:flex;align-items:center;gap:4px;}
-.sc-rank-pct{font-size:10px;color:#f0e6d0;font-weight:700;}
-.sc-rank-top-badge{font-size:9px;color:#c9a84c;background:rgba(201,168,76,.15);padding:1px 5px;border-radius:4px;border:1px solid rgba(201,168,76,.2);}
-.sc-rank-bar{width:100%;height:5px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden;}
+.sc-rank-row{margin-bottom:10px;}
+.sc-rank-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.sc-rank-label{font-size:11px;color:#9a8a6a;font-weight:600;}
+.sc-rank-sticker{display:inline-block;font-size:10px;font-weight:800;padding:3px 8px;border-radius:20px;letter-spacing:.5px;}
+.sc-rank-sticker.gold{background:linear-gradient(135deg,#c9a84c,#e8c96a);color:#08080f;}
+.sc-rank-sticker.silver{background:linear-gradient(135deg,#7a7a8a,#b0b0c0);color:#fff;}
+.sc-rank-sticker.bronze{background:linear-gradient(135deg,#8a6a4a,#b08060);color:#fff;}
+.sc-rank-sticker.normal{background:rgba(255,255,255,.07);color:#6a5a4a;border:1px solid rgba(255,255,255,.1);}
+.sc-rank-bar{width:100%;height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden;}
 .sc-rank-fill{height:100%;border-radius:3px;}
 .sc-top-msg{font-size:12px;color:#c9a84c;font-weight:700;margin-top:8px;}
 /* 하단 */
@@ -1205,8 +1207,8 @@ function showShareCard(){
   // 랭킹
   var ranks=calcRanking(sj);
   var topRank=ranks.reduce(function(a,b){return a.pct>b.pct?a:b;});
-  document.getElementById('sc-rank-rows').innerHTML=ranks.map(function(r){
-    return '<div class="sc-rank-row">'
+  var rows='';
+  ranks.forEach(function(r){
       +'<div class="sc-rank-label">'+r.label+'</div>'
       +'<div class="sc-rank-bar"><div class="sc-rank-fill" style="width:'+r.pct+'%;background:'+r.color+'"></div></div>'
       +'<div class="sc-rank-pct">상위 '+(100-r.pct)+'%'+(r.pct>=90?'<span class="sc-rank-top-badge">TOP '+(100-r.pct)+'%</span>':'')+'</div>'
