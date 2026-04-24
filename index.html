@@ -1209,11 +1209,18 @@ function showShareCard(){
   var topRank=ranks.reduce(function(a,b){return a.pct>b.pct?a:b;});
   var rows='';
   ranks.forEach(function(r){
+    var pct2=100-r.pct;
+    var stickerClass=pct2<=5?'gold':pct2<=15?'silver':pct2<=30?'bronze':'normal';
+    var stickerTxt=pct2<=5?'🏆 TOP '+pct2+'%':pct2<=15?'🥈 TOP '+pct2+'%':pct2<=30?'🥉 TOP '+pct2+'%':'TOP '+pct2+'%';
+    rows+='<div class="sc-rank-row">'
+      +'<div class="sc-rank-top">'
       +'<div class="sc-rank-label">'+r.label+'</div>'
+      +'<div class="sc-rank-sticker '+stickerClass+'">'+stickerTxt+'</div>'
+      +'</div>'
       +'<div class="sc-rank-bar"><div class="sc-rank-fill" style="width:'+r.pct+'%;background:'+r.color+'"></div></div>'
-      +'<div class="sc-rank-pct">상위 '+(100-r.pct)+'%'+(r.pct>=90?'<span class="sc-rank-top-badge">TOP '+(100-r.pct)+'%</span>':'')+'</div>'
       +'</div>';
-  }).join('');
+  });
+  document.getElementById('sc-rank-rows').innerHTML=rows;
   document.getElementById('sc-top-msg').textContent=topRank.label+' 상위 '+(100-topRank.pct)+'% 🔥';
 
   // 모달 표시
