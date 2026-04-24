@@ -193,6 +193,17 @@ select.inp option{background:#120e1c;}
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#c9a84c;padding:10px 20px;border-radius:8px;font-size:12px;border:1px solid rgba(201,168,76,.3);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
 .toast.show{opacity:1;}
 .reset-btn{background:none;border:1px solid rgba(201,168,76,.15);border-radius:8px;padding:8px 16px;color:#4a3a2a;font-size:11px;cursor:pointer;margin-top:12px;font-family:inherit;}
+.rank-wrap{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:18px;margin-bottom:14px;animation:fadeUp .5s ease .3s both;}
+.rank-title{font-size:11px;letter-spacing:3px;color:#c9a84c;margin-bottom:14px;text-align:center;}
+.rank-items{display:flex;flex-direction:column;gap:10px;}
+.rank-item{display:flex;align-items:center;gap:12px;}
+.rank-label{font-size:12px;color:#9a8a6a;width:60px;flex-shrink:0;}
+.rank-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;}
+.rank-bar{height:100%;border-radius:4px;transition:width 1s ease;}
+.rank-pct{font-size:12px;font-weight:700;color:#f0e6d0;width:60px;text-align:right;flex-shrink:0;}
+.rank-badge{font-size:10px;padding:2px 8px;border-radius:10px;margin-left:4px;}
+.rank-top{background:rgba(201,168,76,.2);color:#c9a84c;border:1px solid rgba(201,168,76,.3);}
+.rank-share-txt{text-align:center;margin-top:14px;font-size:12px;color:#6a5a4a;line-height:1.7;}
 .footer{padding:22px 20px;text-align:center;border-top:1px solid rgba(201,168,76,.07);margin-top:28px;}
 .footer a{font-size:10px;color:#3a2a1a;text-decoration:none;margin:0 7px;}
 .footer a:hover{color:#c9a84c;}
@@ -318,6 +329,13 @@ select.inp option{background:#120e1c;}
     <div id="mj-res"></div>
   </div>
 
+  <!-- 사주 랭킹 -->
+  <div class="rank-wrap" id="rank-wrap" style="display:none;">
+    <div class="rank-title">✦ 나의 사주 랭킹</div>
+    <div class="rank-items" id="rank-items"></div>
+    <div class="rank-share-txt" id="rank-share-txt"></div>
+  </div>
+
   <!-- 구독 상태 -->
   <div id="sub-status"></div>
   <div id="sub-code-box" class="sub-box">
@@ -424,6 +442,7 @@ select.inp option{background:#120e1c;}
       <div style="font-size:10px;color:#c9a84c;letter-spacing:2px;margin-bottom:8px;">✦ 나의 타고난 기질</div>
       <div id="sc-summary-txt">분석 결과를 불러오는 중…</div>
     </div>
+    <div id="sc-ranking" style="margin-bottom:14px;"></div>
     <div class="share-card-footer">나도 확인하기 → <b>sajubao.com</b></div>
     <div class="share-card-btns">
       <button class="share-card-btn" onclick="saveShareCard()">📸 이미지 저장</button>
@@ -880,6 +899,8 @@ async function startAnalysis(){
     document.getElementById('r-name').textContent=dispName;
     document.getElementById('r-meta').textContent=yr+'.'+mo+'.'+dy+' '+String(hr).padStart(2,'0')+':'+String(mn).padStart(2,'0')+' · '+(gd==='female'?'여성':'남성');
     document.getElementById('mj-res').innerHTML=mjHTML(sj);
+    // 랭킹 표시
+    showRanking(sj);
     // 일간 키워드 표시
     var dayMasters={
       0:'나무처럼 곧고 성장하는 사람',
@@ -1132,6 +1153,25 @@ function showShareCard(){
     summary='생년월일시로 분석한 나만의 사주 이야기';
   }
   document.getElementById('sc-summary-txt').textContent=summary;
+
+  // 랭킹 카드에 추가
+  var ranks=calcRanking(G.saju);
+  var topRank=ranks.reduce(function(a,b){return a.pct>b.pct?a:b;});
+  var rankHTML='<div style="background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:12px;">';
+  rankHTML+='<div style="font-size:9px;letter-spacing:3px;color:#c9a84c;margin-bottom:10px;text-align:center;">✦ 나의 사주 랭킹</div>';
+  ranks.forEach(function(r){
+    var pct=100-r.pct;
+    rankHTML+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">';
+    rankHTML+='<div style="font-size:10px;color:#6a5a4a;width:44px;">'+r.label+'</div>';
+    rankHTML+='<div style="flex:1;height:5px;background:rgba(255,255,255,.05);border-radius:3px;">';
+    rankHTML+='<div style="width:'+r.pct+'%;height:100%;background:'+r.color+';border-radius:3px;"></div></div>';
+    rankHTML+='<div style="font-size:10px;color:#f0e6d0;width:44px;text-align:right;">상위 '+pct+'%</div>';
+    rankHTML+='</div>';
+  });
+  rankHTML+='<div style="text-align:center;margin-top:8px;font-size:11px;color:#c9a84c;">'+topRank.label+' 상위 '+(100-topRank.pct)+'%! 🔥</div>';
+  rankHTML+='</div>';
+  document.getElementById('sc-ranking').innerHTML=rankHTML;
+
   // 모달 표시
   var wrap=document.getElementById('share-card-wrap');
   wrap.style.display='flex';
@@ -1186,6 +1226,102 @@ async function saveImage(){
     document.querySelectorAll('.share-box').forEach(function(el){el.style.display='block';});
     showToast('이미지 저장 실패');
   }
+}
+
+// 사주 랭킹 계산
+function calcRanking(sj){
+  // 오행 카운트
+  var ohCount={목:0,화:0,토:0,금:0,수:0};
+  var pillars=[sj.year,sj.month,sj.day,sj.time];
+  pillars.forEach(function(p){
+    ohCount[OHT[p.g]]++;
+    ohCount[OHJ[p.j]]++;
+  });
+
+  // 일간 강도 (뿌리 계산 - 같은 오행 지지)
+  var dayOh=OHT[sj.day.g];
+  var dayStrength=0;
+  pillars.forEach(function(p){if(OHJ[p.j]===dayOh)dayStrength++;});
+  if(OHT[sj.day.g]===dayOh)dayStrength+=2;
+
+  // 재성 강도 (일간 극하는 오행)
+  var chukeMap={목:'토',화:'금',토:'수',금:'목',수:'화'};
+  var jaeOh=chukeMap[dayOh];
+  var jaeStrength=ohCount[jaeOh]||0;
+
+  // 관성 강도 (일간을 극하는 오행)
+  var gwanOh=chukeMap[jaeOh];
+  var gwanStrength=ohCount[gwanOh]||0;
+
+  // 식상 강도 (일간이 생하는 오행)
+  var saengMap={목:'화',화:'토',토:'금',금:'수',수:'목'};
+  var sikOh=saengMap[dayOh];
+  var sikStrength=ohCount[sikOh]||0;
+
+  // 퍼센트 계산 (희귀할수록 높은 % → 상위)
+  function toPercent(val, max, isRare){
+    var base=Math.round((val/max)*60)+20;
+    if(isRare)base=100-base+10;
+    return Math.min(99,Math.max(1,base));
+  }
+
+  var ranks=[
+    {
+      label:'재물운',
+      pct:Math.min(99,Math.max(1,20+jaeStrength*18+(ohCount[jaeOh]||0)*8)),
+      color:'#c9a84c'
+    },
+    {
+      label:'리더십',
+      pct:Math.min(99,Math.max(1,15+dayStrength*20+gwanStrength*5)),
+      color:'#6db36d'
+    },
+    {
+      label:'창의력',
+      pct:Math.min(99,Math.max(1,20+sikStrength*18+(ohCount['화']||0)*8)),
+      color:'#e85c8a'
+    },
+    {
+      label:'직관력',
+      pct:Math.min(99,Math.max(1,20+(ohCount['수']||0)*18+sikStrength*6)),
+      color:'#4a7aaa'
+    }
+  ];
+
+  return ranks;
+}
+
+function showRanking(sj){
+  var ranks=calcRanking(sj);
+  var wrap=document.getElementById('rank-wrap');
+  var items=document.getElementById('rank-items');
+  var shareTxt=document.getElementById('rank-share-txt');
+  if(!wrap)return;
+
+  // 최고 랭킹 찾기
+  var topRank=ranks.reduce(function(a,b){return a.pct>b.pct?a:b;});
+
+  items.innerHTML=ranks.map(function(r){
+    var isTop=r.pct>=90;
+    var badge=isTop?'<span class="rank-badge rank-top">TOP '+Math.round(100-r.pct)+'%</span>':'';
+    return '<div class="rank-item">'
+      +'<div class="rank-label">'+r.label+'</div>'
+      +'<div class="rank-bar-wrap"><div class="rank-bar" style="width:0%;background:'+r.color+'" data-width="'+r.pct+'%"></div></div>'
+      +'<div class="rank-pct">상위 '+(100-r.pct)+'%'+badge+'</div>'
+      +'</div>';
+  }).join('');
+
+  shareTxt.innerHTML='✦ '+topRank.label+'이 상위 <b style="color:#c9a84c;">'+(100-topRank.pct)+'%</b>예요!<br>'
+    +'<span style="font-size:11px;">결과가 놀라우신가요? sajubao.com 에서 확인해보세요</span>';
+
+  wrap.style.display='block';
+
+  // 바 애니메이션
+  setTimeout(function(){
+    wrap.querySelectorAll('.rank-bar').forEach(function(bar){
+      bar.style.width=bar.dataset.width;
+    });
+  },300);
 }
 
 function scrollToForm(){
