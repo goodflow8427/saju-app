@@ -172,24 +172,42 @@ select.inp option{background:#120e1c;}
 .share-btn{padding:10px;background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.18);border-radius:8px;color:#c9a84c;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
 .share-btn:hover{background:rgba(201,168,76,.1);transform:translateY(-1px);}
 /* 공유 카드 */
-#share-card-wrap{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease;}
-.share-card{background:linear-gradient(135deg,#0d0a1a,#12091f);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:28px 24px;width:100%;max-width:360px;text-align:center;position:relative;}
-.share-card-logo{font-size:28px;margin-bottom:4px;}
-.share-card-brand{font-size:11px;letter-spacing:4px;color:#c9a84c;margin-bottom:20px;}
-.share-card-name{font-size:22px;color:#f0e6d0;font-weight:700;margin-bottom:4px;}
-.share-card-meta{font-size:11px;color:#6a5a4a;margin-bottom:18px;}
-.share-card-mj{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
-.share-card-col{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:10px 4px;}
-.share-card-label{font-size:9px;color:#4a3a2a;margin-bottom:6px;letter-spacing:1px;}
-.share-card-char{font-size:22px;font-weight:700;margin-bottom:2px;}
-.share-card-elem{font-size:9px;color:#6a5a4a;}
-.share-card-summary{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:14px;margin-bottom:16px;font-size:12px;color:#c8b88a;line-height:1.8;text-align:left;}
-.share-card-footer{font-size:10px;color:#3a2a1a;}
-.share-card-footer b{color:#c9a84c;}
-.share-card-close{position:absolute;top:12px;right:14px;background:none;border:none;color:#4a3a2a;font-size:18px;cursor:pointer;padding:4px;}
-.share-card-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
-.share-card-btn{padding:12px;background:linear-gradient(135deg,#b8922a,#e8c96a);border:none;border-radius:10px;color:#08080f;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;}
-.share-card-btn2{padding:12px;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);border-radius:10px;color:#c9a84c;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;}
+#share-card-wrap{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeIn .2s ease;overflow-y:auto;}
+.share-card{background:linear-gradient(160deg,#110d20 0%,#0a0812 50%,#13091e 100%);border:1px solid rgba(201,168,76,.25);border-radius:24px;padding:24px 20px;width:100%;max-width:340px;text-align:center;position:relative;overflow:hidden;}
+.share-card::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(201,168,76,.12),transparent 70%);pointer-events:none;}
+.share-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.share-card-brand{font-size:10px;letter-spacing:4px;color:#c9a84c;}
+.share-card-close{background:rgba(255,255,255,.05);border:none;color:#6a5a4a;font-size:14px;cursor:pointer;padding:5px 8px;border-radius:6px;}
+/* 일간 빅 디스플레이 */
+.sc-daymaster{margin-bottom:16px;}
+.sc-dm-char{font-size:64px;font-weight:700;line-height:1;margin-bottom:4px;filter:drop-shadow(0 0 20px currentColor);}
+.sc-dm-name{font-size:13px;color:#f0e6d0;font-weight:600;margin-bottom:2px;}
+.sc-dm-desc{font-size:11px;color:#6a5a4a;}
+/* 이름/날짜 */
+.sc-info{margin-bottom:14px;}
+.sc-name{font-size:18px;color:#f0e6d0;font-weight:700;margin-bottom:3px;}
+.sc-meta{font-size:10px;color:#4a3a2a;}
+/* 명식 */
+.sc-mj{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:14px;}
+.sc-mj-col{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.12);border-radius:8px;padding:8px 3px;}
+.sc-mj-lbl{font-size:8px;color:#3a2a1a;margin-bottom:4px;letter-spacing:1px;}
+.sc-mj-char{font-size:18px;font-weight:700;margin-bottom:1px;}
+.sc-mj-elem{font-size:8px;color:#4a3a2a;}
+/* 랭킹 */
+.sc-rank{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.12);border-radius:12px;padding:12px;margin-bottom:12px;}
+.sc-rank-title{font-size:9px;letter-spacing:3px;color:#c9a84c;margin-bottom:10px;}
+.sc-rank-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.sc-rank-label{font-size:10px;color:#6a5a4a;width:40px;text-align:right;}
+.sc-rank-bar{flex:1;height:5px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden;}
+.sc-rank-fill{height:100%;border-radius:3px;}
+.sc-rank-pct{font-size:10px;color:#f0e6d0;font-weight:700;width:48px;}
+.sc-top-msg{font-size:12px;color:#c9a84c;font-weight:700;margin-top:8px;}
+/* 하단 */
+.sc-footer{font-size:10px;color:#3a2a1a;margin-bottom:12px;}
+.sc-footer b{color:#6a5a4a;}
+.share-card-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.share-card-btn{padding:11px;background:linear-gradient(135deg,#b8922a,#e8c96a);border:none;border-radius:10px;color:#08080f;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;}
+.share-card-btn2{padding:11px;background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.2);border-radius:10px;color:#c9a84c;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;}
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#c9a84c;padding:10px 20px;border-radius:8px;font-size:12px;border:1px solid rgba(201,168,76,.3);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
 .toast.show{opacity:1;}
 .reset-btn{background:none;border:1px solid rgba(201,168,76,.15);border-radius:8px;padding:8px 16px;color:#4a3a2a;font-size:11px;cursor:pointer;margin-top:12px;font-family:inherit;}
@@ -432,18 +450,31 @@ select.inp option{background:#120e1c;}
 <!-- 공유 카드 모달 -->
 <div id="share-card-wrap" style="display:none;">
   <div class="share-card" id="share-card">
-    <button class="share-card-close" onclick="closeShareCard()">✕</button>
-    <div class="share-card-logo">☯</div>
-    <div class="share-card-brand">SAJUBAO · 사주봐</div>
-    <div class="share-card-name" id="sc-name"></div>
-    <div class="share-card-meta" id="sc-meta"></div>
-    <div class="share-card-mj" id="sc-mj"></div>
-    <div class="share-card-summary" id="sc-summary">
-      <div style="font-size:10px;color:#c9a84c;letter-spacing:2px;margin-bottom:8px;">✦ 나의 타고난 기질</div>
-      <div id="sc-summary-txt">분석 결과를 불러오는 중…</div>
+    <div class="share-card-top">
+      <div class="share-card-brand">☯ SAJUBAO</div>
+      <button class="share-card-close" onclick="closeShareCard()">✕</button>
     </div>
-    <div id="sc-ranking" style="margin-bottom:14px;"></div>
-    <div class="share-card-footer">나도 확인하기 → <b>sajubao.com</b></div>
+    <!-- 일간 빅 디스플레이 -->
+    <div class="sc-daymaster">
+      <div class="sc-dm-char" id="sc-dm-char"></div>
+      <div class="sc-dm-name" id="sc-dm-name"></div>
+      <div class="sc-dm-desc" id="sc-dm-desc"></div>
+    </div>
+    <!-- 이름/날짜 -->
+    <div class="sc-info">
+      <div class="sc-name" id="sc-name"></div>
+      <div class="sc-meta" id="sc-meta"></div>
+    </div>
+    <!-- 명식 -->
+    <div class="sc-mj" id="sc-mj"></div>
+    <!-- 랭킹 -->
+    <div class="sc-rank">
+      <div class="sc-rank-title">✦ 나의 사주 랭킹</div>
+      <div id="sc-rank-rows"></div>
+      <div class="sc-top-msg" id="sc-top-msg"></div>
+    </div>
+    <!-- 하단 -->
+    <div class="sc-footer">나도 확인하기 → <b>sajubao.com</b></div>
     <div class="share-card-btns">
       <button class="share-card-btn" onclick="saveShareCard()">📸 이미지 저장</button>
       <button class="share-card-btn2" onclick="copyLink();closeShareCard()">🔗 링크 복사</button>
@@ -1129,52 +1160,59 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
 function showShareCard(){
   if(!G.form.year){showToast('먼저 사주를 분석해주세요.');return;}
   var sj=G.saju;
+
+  // 일간 빅 디스플레이
+  var dayMasterData={
+    0:{desc:'나무처럼 곧고 성장하는 사람'},
+    1:{desc:'부드럽게 피어나는 감성적인 사람'},
+    2:{desc:'태양처럼 따뜻하고 밝은 사람'},
+    3:{desc:'촛불처럼 세심하고 따뜻한 사람'},
+    4:{desc:'대지처럼 든든하고 믿음직한 사람'},
+    5:{desc:'흙처럼 포용력이 넓은 사람'},
+    6:{desc:'금속처럼 강하고 원칙적인 사람'},
+    7:{desc:'보석처럼 섬세하고 완벽한 사람'},
+    8:{desc:'큰 강처럼 지혜롭고 깊은 사람'},
+    9:{desc:'이슬처럼 맑고 유연한 사람'}
+  };
+  var dg=sj.day.g;
+  var oh=OHT[dg];
+  var dmEl=document.getElementById('sc-dm-char');
+  var dmName=document.getElementById('sc-dm-name');
+  var dmDesc=document.getElementById('sc-dm-desc');
+  dmEl.textContent=TG[dg];
+  dmEl.className='sc-dm-char '+OHC[oh];
+  dmName.textContent=TGN[dg]+'일간 · '+OHK[oh];
+  dmDesc.textContent=dayMasterData[dg].desc;
+
   // 이름/메타
   document.getElementById('sc-name').textContent=G.form.name||'나의 사주';
-  document.getElementById('sc-meta').textContent=G.form.year+'.'+G.form.month+'.'+G.form.day+' '+String(G.form.hour).padStart(2,'0')+'시 · '+(G.form.gender==='female'?'여성':'남성');
+  document.getElementById('sc-meta').textContent=G.form.year+'.'+G.form.month+'.'+G.form.day+' '+(G.form.gender==='female'?'여성':'남성');
+
   // 명식
   var cols=[{l:'년주',d:sj.year},{l:'월주',d:sj.month},{l:'일주',d:sj.day},{l:'시주',d:sj.time}];
   document.getElementById('sc-mj').innerHTML=cols.map(function(c){
     var o=OHT[c.d.g];
-    return '<div class="share-card-col">'
-      +'<div class="share-card-label">'+c.l+'</div>'
-      +'<div class="share-card-char '+OHC[o]+'">'+TG[c.d.g]+'</div>'
-      +'<div class="share-card-elem">'+OHK[o]+'</div>'
+    return '<div class="sc-mj-col">'
+      +'<div class="sc-mj-lbl">'+c.l+'</div>'
+      +'<div class="sc-mj-char '+OHC[o]+'">'+TG[c.d.g]+'</div>'
+      +'<div class="sc-mj-elem">'+OHK[o]+'</div>'
       +'</div>';
   }).join('');
-  // 요약 (첫 번째 섹션 내용)
-  var cached=loadCache('an-'+G.dc.slice(0,15));
-  var summary='';
-  if(cached&&cached[0]){
-    summary=cached[0].slice(0,120)+'…';
-  } else if(G.secs&&G.secs.s1&&G.secs.s1.t){
-    summary=G.secs.s1.t.slice(0,120)+'…';
-  } else {
-    summary='생년월일시로 분석한 나만의 사주 이야기';
-  }
-  document.getElementById('sc-summary-txt').textContent=summary;
 
-  // 랭킹 카드에 추가
-  var ranks=calcRanking(G.saju);
+  // 랭킹
+  var ranks=calcRanking(sj);
   var topRank=ranks.reduce(function(a,b){return a.pct>b.pct?a:b;});
-  var rankHTML='<div style="background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:12px;">';
-  rankHTML+='<div style="font-size:9px;letter-spacing:3px;color:#c9a84c;margin-bottom:10px;text-align:center;">✦ 나의 사주 랭킹</div>';
-  ranks.forEach(function(r){
-    var pct=100-r.pct;
-    rankHTML+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">';
-    rankHTML+='<div style="font-size:10px;color:#6a5a4a;width:44px;">'+r.label+'</div>';
-    rankHTML+='<div style="flex:1;height:5px;background:rgba(255,255,255,.05);border-radius:3px;">';
-    rankHTML+='<div style="width:'+r.pct+'%;height:100%;background:'+r.color+';border-radius:3px;"></div></div>';
-    rankHTML+='<div style="font-size:10px;color:#f0e6d0;width:44px;text-align:right;">상위 '+pct+'%</div>';
-    rankHTML+='</div>';
-  });
-  rankHTML+='<div style="text-align:center;margin-top:8px;font-size:11px;color:#c9a84c;">'+topRank.label+' 상위 '+(100-topRank.pct)+'%! 🔥</div>';
-  rankHTML+='</div>';
-  document.getElementById('sc-ranking').innerHTML=rankHTML;
+  document.getElementById('sc-rank-rows').innerHTML=ranks.map(function(r){
+    return '<div class="sc-rank-row">'
+      +'<div class="sc-rank-label">'+r.label+'</div>'
+      +'<div class="sc-rank-bar"><div class="sc-rank-fill" style="width:'+r.pct+'%;background:'+r.color+'"></div></div>'
+      +'<div class="sc-rank-pct">상위'+(100-r.pct)+'%</div>'
+      +'</div>';
+  }).join('');
+  document.getElementById('sc-top-msg').textContent=topRank.label+' 상위 '+(100-topRank.pct)+'% 🔥';
 
   // 모달 표시
-  var wrap=document.getElementById('share-card-wrap');
-  wrap.style.display='flex';
+  document.getElementById('share-card-wrap').style.display='flex';
   document.body.style.overflow='hidden';
 }
 function closeShareCard(){
