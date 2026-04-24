@@ -615,10 +615,10 @@ async function loadJourney(){
       '현재는 '+cy+'년입니다. 나이 '+age+'세.',
       '사주 명식: '+G.dc,
       '',
-      '아래 형식으로 분석해주세요. 한자 절대 금지. 쉬운 말로.',
+      '아래 형식으로 상세하게 분석해주세요. 한자 절대 금지. 쉬운 말로. 각 항목을 구체적이고 풍부하게 써주세요.',
       '',
       '=== 기질 ===',
-      '타고난 기질을 커리어/재물과 연결해서 200자 설명',
+      '타고난 기질을 커리어/재물과 연결해서 300자 이상 상세 설명',
       '',
       '=== 기질키워드 ===',
       '성격 키워드 3개를 쉼표로 구분 (예: 추진력, 직관적, 카리스마)',
@@ -627,7 +627,7 @@ async function loadJourney(){
       '봄/여름/가을/겨울 중 한 단어만',
       '',
       '=== 계절설명 ===',
-      '지금 계절의 의미와 해야 할 일 150자',
+      '지금 계절의 의미와 해야 할 일 200자 이상 상세 설명',
       '',
       '=== 봄기간 ===',
       '봄 시기 (예: 25~30세)',
@@ -642,22 +642,22 @@ async function loadJourney(){
       '겨울 시기 (예: 46~52세)',
       '',
       '=== 봄설명 ===',
-      '봄 시기 커리어/재물 성장기 설명 120자',
+      '봄 시기 커리어/재물 성장기를 150자 이상 상세 설명',
       '',
       '=== 여름설명 ===',
-      '여름 시기 전성기 설명 120자',
+      '여름 시기 전성기를 150자 이상 상세 설명',
       '',
       '=== 가을설명 ===',
-      '가을 시기 수확기 설명 120자',
+      '가을 시기 수확기를 150자 이상 상세 설명',
       '',
       '=== 겨울설명 ===',
-      '겨울 시기 준비기 설명 120자',
+      '겨울 시기 준비기를 150자 이상 상세 설명',
       '',
       '=== 갈래A이름 ===',
       '다시 상승하는 갈래 이름 (10자 이내)',
       '',
       '=== 갈래A설명 ===',
-      '갈래A 설명 100자',
+      '갈래A를 150자 이상 구체적으로 설명',
       '',
       '=== 갈래A태그 ===',
       '갈래A 키워드 3개 쉼표 구분',
@@ -666,13 +666,13 @@ async function loadJourney(){
       '안으로 채우는 갈래 이름 (10자 이내)',
       '',
       '=== 갈래B설명 ===',
-      '갈래B 설명 100자',
+      '갈래B를 150자 이상 구체적으로 설명',
       '',
       '=== 갈래B태그 ===',
       '갈래B 키워드 3개 쉼표 구분',
       '',
       '=== 핵심메시지 ===',
-      '이 사람에게 가장 중요한 한 마디 50자'
+      '이 사람에게 가장 중요한 핵심 메시지 70자 이상'
     ];
     var text=await callAPI(promptParts.join('\n'));
     var data={
@@ -735,7 +735,7 @@ function renderJourney(data){
 
   // 1. 기질 카드
   var traits=(data.기질키워드||'').split(',').map(function(t){return t.trim();}).filter(function(t){return t;});
-  html+='<div class="temp-card"><div class="temp-label">✦ 타고난 기질</div><div class="temp-desc">'+data.기질+'</div>';
+  html+='<div class="temp-card"><div class="temp-label">✦ 타고난 기질</div><div class="temp-desc">'+(data.기질||'')+'</div>';
   if(traits.length){html+='<div class="temp-traits">'+traits.map(function(t){return '<span class="temp-trait">'+t+'</span>';}).join('')+'</div>';}
   html+='</div>';
 
@@ -786,7 +786,7 @@ function renderJourney(data){
   html+='</div></div>';
 
   // 3. 현재 위치 박스
-  html+='<div class="now-box '+sm.cls+'"><div class="now-label">'+sm.icon+' 지금 이 순간</div><div class="now-title">'+sm.label+' — '+data.계절설명.slice(0,30)+'</div><div class="now-desc">'+data.계절설명+'</div></div>';
+  var 계절desc=data.계절설명||'';html+='<div class="now-box '+sm.cls+'"><div class="now-label">'+sm.icon+' 지금 이 순간</div><div class="now-title">'+sm.label+(계절desc?' — '+계절desc.slice(0,30):'')+'</div><div class="now-desc">'+계절desc+'</div></div>';
 
   // 4. 각 계절 상세
   html+='<div style="margin-bottom:16px;">';
@@ -821,7 +821,7 @@ function renderJourney(data){
 
   // 7. 핵심 메시지
   html+='<div style="text-align:center;padding:20px 0;"><div style="font-family:Nanum Myeongjo,serif;font-size:14px;color:var(--muted);line-height:1.9;">운은 고정된 것이 아닙니다.<br><span style="color:var(--gold);">어느 계절에 있든, 그 계절을 어떻게 사느냐</span>가<br>다음 계절을 만듭니다.</div>';
-  if(data.핵심메시지){html+='<div style="margin-top:16px;padding:16px 20px;background:var(--gold-light);border:1.5px solid rgba(196,135,58,.2);border-radius:14px;font-family:Nanum Myeongjo,serif;font-size:15px;font-weight:700;color:var(--gold);">✦ '+data.핵심메시지+'</div>';}
+  if(data.핵심메시지){html+='<div style="margin-top:16px;padding:16px 20px;background:var(--gold-light);border:1.5px solid rgba(196,135,58,.2);border-radius:14px;font-family:Nanum Myeongjo,serif;font-size:15px;font-weight:700;color:var(--gold);">✦ '+(data.핵심메시지||'')+'</div>';}
   html+='</div>';
 
   el.innerHTML=html;
