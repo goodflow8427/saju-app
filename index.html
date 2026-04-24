@@ -171,7 +171,13 @@ select.inp option{background:#120e1c;}
 .share-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px;}
 .share-btn{padding:10px;background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.18);border-radius:8px;color:#c9a84c;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
 .share-btn:hover{background:rgba(201,168,76,.1);transform:translateY(-1px);}
-/* 공유 카드 */
+/* 공유 카드 인라인 */
+.share-card-inline{background:linear-gradient(160deg,#110d20 0%,#0a0812 50%,#13091e 100%);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:20px 18px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden;animation:fadeUp .5s ease .1s both;}
+.share-card-inline::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:160px;height:160px;background:radial-gradient(circle,rgba(201,168,76,.1),transparent 70%);pointer-events:none;}
+.share-card-inline-top{display:flex;justify-content:center;margin-bottom:12px;}
+.share-card-brand-inline{font-size:10px;letter-spacing:4px;color:#c9a84c;}
+.share-card-inline-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;}
+/* 공유 카드 모달 */
 #share-card-wrap{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;}
 .share-card{background:linear-gradient(160deg,#110d20 0%,#0a0812 50%,#13091e 100%);border:1px solid rgba(201,168,76,.25);border-radius:24px;padding:24px 20px;width:100%;max-width:340px;text-align:center;position:relative;overflow:hidden;}
 .share-card::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(201,168,76,.12),transparent 70%);pointer-events:none;}
@@ -347,6 +353,34 @@ select.inp option{background:#120e1c;}
     <div class="result-meta" id="r-meta"></div>
     <div class="result-daymaster" id="r-daymaster"></div>
   </div>
+
+  <!-- 공유 카드 인라인 -->
+  <div class="share-card-inline" id="share-card-inline">
+    <div class="share-card-inline-top">
+      <div class="share-card-brand-inline">☯ SAJUBAO</div>
+    </div>
+    <div class="sc-daymaster">
+      <div class="sc-dm-char" id="sc-dm-char"></div>
+      <div class="sc-dm-name" id="sc-dm-name"></div>
+      <div class="sc-dm-desc" id="sc-dm-desc"></div>
+    </div>
+    <div class="sc-info">
+      <div class="sc-name" id="sc-name"></div>
+      <div class="sc-meta" id="sc-meta"></div>
+    </div>
+    <div class="sc-mj" id="sc-mj"></div>
+    <div class="sc-rank">
+      <div class="sc-rank-title">✦ 나의 사주 랭킹</div>
+      <div id="sc-rank-rows"></div>
+      <div class="sc-top-msg" id="sc-top-msg"></div>
+    </div>
+    <div class="sc-footer">나도 확인하기 → <b>sajubao.com</b></div>
+    <div class="share-card-inline-btns">
+      <button class="share-card-btn" onclick="saveShareCard()">📸 이미지 저장</button>
+      <button class="share-card-btn2" onclick="copyLink()">🔗 링크 복사</button>
+    </div>
+  </div>
+
   <div class="mj-box">
     <div class="mj-box-title">✦ 나의 사주 명식</div>
     <div id="mj-res"></div>
@@ -937,6 +971,8 @@ async function startAnalysis(){
     document.getElementById('mj-res').innerHTML=mjHTML(sj);
     // 랭킹 표시
     showRanking(sj);
+    // 공유 카드 업데이트
+    showShareCard();
     // 일간 키워드 표시
     var dayMasters={
       0:'나무처럼 곧고 성장하는 사람',
@@ -1223,10 +1259,8 @@ function showShareCard(){
   document.getElementById('sc-rank-rows').innerHTML=rows;
   document.getElementById('sc-top-msg').textContent=topRank.label+' 상위 '+(100-topRank.pct)+'% 🔥';
 
-  // 모달 표시
-  var scw=document.getElementById('share-card-wrap');
-  scw.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;';
-  document.body.style.overflow='hidden';
+  // 인라인 카드는 자동 업데이트됨 (모달 불필요)
+  showToast('✓ 공유 카드가 업데이트됐어요!');
 }
 function closeShareCard(){
   document.getElementById('share-card-wrap').style.display='none';
