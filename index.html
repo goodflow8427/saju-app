@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -117,7 +116,6 @@ select.inp option{background:#120e1c;}
 .prg-fill{height:100%;background:linear-gradient(90deg,#b8922a,#e8c96a);width:0%;transition:width .3s;}
 .prg-txt{font-size:10px;color:#6a5a4a;margin-top:4px;text-align:right;}
 </style>
-
 </head>
 <body>
 <div id="toast" class="toast"></div>
@@ -127,7 +125,6 @@ select.inp option{background:#120e1c;}
 </div>
 
 <!-- 폼 -->
-
 <div id="s-form" class="form-wrap">
   <label class="lbl">이름 (선택)</label>
   <input class="inp" type="text" id="f-name" placeholder="예: 홍길동">
@@ -147,14 +144,12 @@ select.inp option{background:#120e1c;}
 </div>
 
 <!-- 로딩 -->
-
 <div id="s-loading" class="hidden loading">
   <div class="spin"></div>
   <div class="loading-txt">명반을 읽고 있습니다…</div>
 </div>
 
 <!-- 결과 -->
-
 <div id="s-main" class="hidden result">
   <div class="result-hd">
     <div class="result-name" id="r-name"></div>
@@ -163,7 +158,6 @@ select.inp option{background:#120e1c;}
   <div class="mj-box"><div id="mj-res"></div></div>
 
   <!-- 구독 상태 -->
-
   <div id="sub-status"></div>
   <div id="sub-code-box" class="sub-box">
     <div class="sub-box-title">✦ 구독 코드 입력</div>
@@ -179,7 +173,6 @@ select.inp option{background:#120e1c;}
   </div>
 
   <!-- 탭 -->
-
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('analysis',this)">☯ 명반</button>
     <button class="tab-btn" onclick="switchTab('timeline',this)">📊 운세흐름</button>
@@ -189,7 +182,6 @@ select.inp option{background:#120e1c;}
   </div>
 
   <!-- 명반 탭 -->
-
   <div id="tab-analysis" class="tab-content active">
     <div class="prg-wrap">
       <div class="prg-bar"><div class="prg-fill" id="prg-fill"></div></div>
@@ -206,7 +198,6 @@ select.inp option{background:#120e1c;}
   </div>
 
   <!-- 운세 흐름 탭 -->
-
   <div id="tab-timeline" class="tab-content">
     <div id="timeline-content"></div>
     <div class="share-box">
@@ -219,7 +210,6 @@ select.inp option{background:#120e1c;}
   </div>
 
   <!-- 커리어 탭 -->
-
   <div id="tab-career" class="tab-content">
     <div id="career-content"></div>
     <div class="share-box">
@@ -232,7 +222,6 @@ select.inp option{background:#120e1c;}
   </div>
 
   <!-- 재물 탭 -->
-
   <div id="tab-wealth" class="tab-content">
     <div id="wealth-content"></div>
     <div class="share-box">
@@ -245,7 +234,6 @@ select.inp option{background:#120e1c;}
   </div>
 
   <!-- 연애 탭 -->
-
   <div id="tab-love" class="tab-content">
     <div id="love-content"></div>
     <div class="share-box">
@@ -413,7 +401,7 @@ function saveCache(k,v){try{localStorage.setItem('sc-'+k,JSON.stringify(v));}cat
 function loadCache(k){try{var d=localStorage.getItem('sc-'+k);return d?JSON.parse(d):null;}catch(e){return null;}}
 
 // ===== API =====
-var SYS='당신은 사주를 잘 아는 친구입니다. 규칙: 1) 한자 절대 금지. 2) 사주 용어 대신 쉬운 말로 바꾸세요. 예: 일간→타고난 성격, 용신→너한테 필요한 에너지, 재성→돈 복, 관성→직업 운. 3) 친구한테 카톡 보내듯 편하고 솔직하게 써주세요. "너는 이런 사람이야", "이 시기엔 이렇게 해봐" 같은 식으로요. 4) 너무 격식체 말고 자연스럽게. 5) 각 항목은 500자 이내. 사주 명식은 수정하지 마세요.';
+var SYS='당신은 사주를 잘 아는 친구입니다. 규칙: 1) 한자 절대 금지. 2) 사주 용어 대신 쉬운 말로 바꾸세요. 예: 일간은 타고난 성격, 용신은 너한테 필요한 에너지, 재성은 돈 복, 관성은 직업 운. 3) 친구한테 카톡 보내듯 편하고 솔직하게 써주세요. 4) 너무 격식체 말고 자연스럽게. 5) 각 항목은 500자 이내. 사주 명식은 수정하지 마세요.';
 function callAPI(prompt){
   return fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:SYS,user:prompt})})
   .then(function(r){
@@ -918,6 +906,5 @@ async function saveImage(){
 
 window.addEventListener('DOMContentLoaded',function(){});
 </script>
-
 </body>
 </html>
