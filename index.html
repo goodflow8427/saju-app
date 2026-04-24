@@ -75,10 +75,15 @@ select.inp option{background:#120e1c;}
 .loading-fact{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.1);border-radius:10px;padding:14px;margin-top:12px;font-size:12px;color:#7a6a5a;line-height:1.8;text-align:left;transition:opacity .4s;}
 .loading-fact-label{font-size:10px;color:#c9a84c;letter-spacing:2px;margin-bottom:6px;}
 .result{padding:16px 20px;}
-.result-hd{text-align:center;padding:14px 0 10px;}
-.result-name{font-size:22px;color:#f0e6d0;font-weight:600;}
+.result-hd{text-align:center;padding:20px 0 16px;animation:fadeUp .5s ease both;}
+.result-badge{font-size:10px;letter-spacing:3px;color:#c9a84c;margin-bottom:8px;opacity:.8;}
+.result-name{font-size:26px;color:#f0e6d0;font-weight:700;margin-bottom:6px;}
 .result-meta{font-size:11px;color:#6a5a4a;margin-top:4px;}
-.mj-box{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.12);border-radius:11px;padding:14px;margin-bottom:14px;overflow-x:auto;}
+.result-daymaster{display:inline-block;padding:6px 16px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:20px;font-size:12px;color:#c9a84c;margin-top:8px;}
+.result-keyword{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px;}
+.result-kw{font-size:11px;padding:4px 10px;background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.15);border-radius:12px;color:#9a8a6a;}
+.mj-box{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.12);border-radius:11px;padding:14px;margin-bottom:14px;overflow-x:auto;animation:fadeUp .5s ease .2s both;}
+.mj-box-title{font-size:10px;letter-spacing:3px;color:#4a3a2a;margin-bottom:12px;text-align:center;}
 .mj-table{width:100%;border-collapse:collapse;min-width:240px;}
 .mj-table th{font-size:9px;color:#6a5a4a;padding:5px;text-align:center;letter-spacing:2px;}
 .mj-table td{text-align:center;padding:7px 3px;}
@@ -297,10 +302,15 @@ select.inp option{background:#120e1c;}
 <!-- 결과 -->
 <div id="s-main" class="hidden result">
   <div class="result-hd">
+    <div class="result-badge">✦ 사주 분석 결과</div>
     <div class="result-name" id="r-name"></div>
     <div class="result-meta" id="r-meta"></div>
+    <div class="result-daymaster" id="r-daymaster"></div>
   </div>
-  <div class="mj-box"><div id="mj-res"></div></div>
+  <div class="mj-box">
+    <div class="mj-box-title">✦ 나의 사주 명식</div>
+    <div id="mj-res"></div>
+  </div>
 
   <!-- 구독 상태 -->
   <div id="sub-status"></div>
@@ -851,9 +861,25 @@ async function startAnalysis(){
     var dc=descSaju(sj)+' ('+yr+'년 '+mo+'월 '+dy+'일 '+hr+'시 '+(gd==='female'?'여성':'남성')+')';
     G={form:{name:nm,year:yr,month:mo,day:dy,hour:hr,minute:mn,gender:gd},saju:sj,dc:dc};
     stopLoadingMsg();show('s-main');
-    document.getElementById('r-name').textContent=nm||'명반 분석 결과';
+    var dispName=nm||'나의 사주';
+    document.getElementById('r-name').textContent=dispName;
     document.getElementById('r-meta').textContent=yr+'.'+mo+'.'+dy+' '+String(hr).padStart(2,'0')+':'+String(mn).padStart(2,'0')+' · '+(gd==='female'?'여성':'남성');
     document.getElementById('mj-res').innerHTML=mjHTML(sj);
+    // 일간 키워드 표시
+    var dayMasters={
+      0:'나무처럼 곧고 성장하는 사람',
+      1:'부드럽게 피어나는 감성적인 사람',
+      2:'태양처럼 따뜻하고 밝은 사람',
+      3:'촛불처럼 세심하고 따뜻한 사람',
+      4:'대지처럼 든든하고 믿음직한 사람',
+      5:'흙처럼 포용력이 넓은 사람',
+      6:'금속처럼 강하고 원칙적인 사람',
+      7:'보석처럼 섬세하고 완벽한 사람',
+      8:'큰 강처럼 지혜롭고 깊은 사람',
+      9:'이슬처럼 맑고 유연한 사람'
+    };
+    var dmEl=document.getElementById('r-daymaster');
+    if(dmEl)dmEl.textContent='✦ '+dayMasters[sj.day.g];
     initSecs();
     var cached=loadCache('an-'+dc.slice(0,15));
     if(cached){
