@@ -550,7 +550,7 @@ function applyCode(){
     if(d.valid){
       localStorage.setItem('saju-sub-exp',String(new Date().getTime()+(d.days*86400000)));
       msg.className='sub-msg ok';msg.textContent='✓ 구독 활성화! '+d.days+'일 이용 가능';
-      setTimeout(function(){updateSubUI();careerLoaded=false;wealthLoaded=false;loveLoaded=false;},1000);
+      setTimeout(function(){updateSubUI();careerLoaded=false;wealthLoaded=false;loveLoaded=false;journeyLoaded=false;var jel=document.getElementById('journey-content');if(jel)jel.innerHTML='';},1000);
     } else {msg.className='sub-msg err';msg.textContent=d.error||'유효하지 않은 코드입니다.';}
   }).catch(function(){msg.className='sub-msg err';msg.textContent='서버 오류. 다시 시도해주세요.';});
 }
