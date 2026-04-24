@@ -61,10 +61,19 @@ body{background:#08080f;color:#e8dcc8;font-family:'Noto Serif KR',serif;min-heig
 select.inp option{background:#120e1c;}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .start-btn{width:100%;margin-top:18px;padding:15px;background:linear-gradient(135deg,#b8922a,#e8c96a);border:none;border-radius:11px;color:#08080f;font-family:inherit;font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;}
-.loading{padding:60px 20px;text-align:center;}
-.spin{display:inline-block;width:36px;height:36px;border:3px solid rgba(201,168,76,.2);border-top-color:#c9a84c;border-radius:50%;animation:spin .8s linear infinite;}
+.loading{padding:40px 20px;text-align:center;}
+.spin{display:inline-block;width:48px;height:48px;border:3px solid rgba(201,168,76,.15);border-top-color:#c9a84c;border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-txt{margin-top:14px;color:#6a5a4a;font-size:12px;letter-spacing:2px;transition:opacity .3s;}
+.loading-txt{margin-top:16px;color:#9a8a6a;font-size:13px;letter-spacing:1px;transition:opacity .3s;}
+.loading-steps{display:flex;flex-direction:column;gap:8px;margin:20px 0;text-align:left;}
+.loading-step{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.08);border-radius:9px;font-size:12px;color:#4a3a2a;transition:all .5s;}
+.loading-step.active{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.25);color:#c9a84c;}
+.loading-step.done{background:rgba(109,179,109,.05);border-color:rgba(109,179,109,.2);color:#6db36d;}
+.loading-step-icon{font-size:16px;width:20px;text-align:center;}
+.loading-step-txt{flex:1;}
+.loading-step-check{font-size:12px;}
+.loading-fact{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.1);border-radius:10px;padding:14px;margin-top:12px;font-size:12px;color:#7a6a5a;line-height:1.8;text-align:left;transition:opacity .4s;}
+.loading-fact-label{font-size:10px;color:#c9a84c;letter-spacing:2px;margin-bottom:6px;}
 .result{padding:16px 20px;}
 .result-hd{text-align:center;padding:14px 0 10px;}
 .result-name{font-size:22px;color:#f0e6d0;font-weight:600;}
@@ -254,7 +263,35 @@ select.inp option{background:#120e1c;}
 <!-- 로딩 -->
 <div id="s-loading" class="hidden loading">
   <div class="spin"></div>
-  <div class="loading-txt" id="loading-msg">별자리를 읽는 중…</div>
+  <div class="loading-txt" id="loading-msg">사주를 분석하는 중이에요…</div>
+
+  <div class="loading-steps">
+    <div class="loading-step active" id="lstep-1">
+      <span class="loading-step-icon">🔮</span>
+      <span class="loading-step-txt">사주 명식 계산</span>
+      <span class="loading-step-check" id="lcheck-1"></span>
+    </div>
+    <div class="loading-step" id="lstep-2">
+      <span class="loading-step-icon">🌟</span>
+      <span class="loading-step-txt">성격과 기질 분석</span>
+      <span class="loading-step-check" id="lcheck-2"></span>
+    </div>
+    <div class="loading-step" id="lstep-3">
+      <span class="loading-step-icon">⚡</span>
+      <span class="loading-step-txt">타고난 재능 파악</span>
+      <span class="loading-step-check" id="lcheck-3"></span>
+    </div>
+    <div class="loading-step" id="lstep-4">
+      <span class="loading-step-icon">📊</span>
+      <span class="loading-step-txt">운세 흐름 계산</span>
+      <span class="loading-step-check" id="lcheck-4"></span>
+    </div>
+  </div>
+
+  <div class="loading-fact" id="loading-fact">
+    <div class="loading-fact-label">✦ 사주 이야기</div>
+    <div id="loading-fact-txt">사주는 태어난 년·월·일·시의 기운을 분석해요. 같은 날 태어나도 태어난 시간에 따라 전혀 다른 사주가 나와요.</div>
+  </div>
 </div>
 
 <!-- 결과 -->
@@ -1098,32 +1135,57 @@ function scrollToForm(){
 }
 
 // 로딩 메시지 순환
-var loadingMsgs=[
-  '별자리를 읽는 중…',
-  '천간과 지지를 계산하는 중…',
-  '타고난 기운을 분석하는 중…',
-  '운의 흐름을 살피는 중…',
-  'AI가 깊이 들여다보는 중…',
-  '거의 다 됐어요…'
+var loadingFacts=[
+  '사주는 태어난 년·월·일·시의 기운을 분석해요. 같은 날 태어나도 시간에 따라 전혀 다른 사주가 나와요.',
+  '오행(목·화·토·금·수)은 자연의 5가지 에너지예요. 내 사주에 어떤 에너지가 많고 적은지가 성격을 결정해요.',
+  '일간(일주의 천간)은 나를 나타내는 가장 중요한 글자예요. 태양 같은 병화, 물 같은 임수 등 다양한 기운이 있어요.',
+  '대운은 10년마다 바뀌는 큰 흐름이에요. 인생의 터닝포인트는 대운이 바뀌는 시기와 맞물릴 때가 많아요.',
+  '용신은 내게 가장 필요한 에너지예요. 용신을 활용하면 운이 열리고, 피해야 할 기운을 알면 실수를 줄일 수 있어요.',
+  'AI가 명리학 원리를 바탕으로 분석하고 있어요. 거의 다 됐어요! 조금만 기다려주세요 😊'
+];
+var loadingSteps=[
+  {step:1,msg:'사주 명식을 계산하는 중이에요…'},
+  {step:2,msg:'성격과 기질을 분석하는 중이에요…'},
+  {step:3,msg:'타고난 재능을 파악하는 중이에요…'},
+  {step:4,msg:'운세 흐름을 계산하는 중이에요…'}
 ];
 var loadingTimer=null;
+var loadingStepTimer=null;
 function startLoadingMsg(){
-  var i=0;
-  var el=document.getElementById('loading-msg');
-  if(el)el.textContent=loadingMsgs[0];
+  var fi=0;
+  var si=0;
+  // 팩트 순환
   loadingTimer=setInterval(function(){
-    i=(i+1)%loadingMsgs.length;
-    var el=document.getElementById('loading-msg');
-    if(el){
-      el.style.opacity='0';
-      setTimeout(function(){
-        if(el){el.textContent=loadingMsgs[i];el.style.opacity='1';}
-      },300);
-    }
-  },3000);
+    fi=(fi+1)%loadingFacts.length;
+    var el=document.getElementById('loading-fact-txt');
+    var wrap=document.getElementById('loading-fact');
+    if(wrap){wrap.style.opacity='0';setTimeout(function(){if(el)el.textContent=loadingFacts[fi];if(wrap)wrap.style.opacity='1';},400);}
+  },5000);
+  // 스텝 순환
+  loadingStepTimer=setInterval(function(){
+    // 이전 스텝 완료 표시
+    var prev=document.getElementById('lstep-'+(si+1));
+    var prevCheck=document.getElementById('lcheck-'+(si+1));
+    if(prev){prev.classList.remove('active');prev.classList.add('done');}
+    if(prevCheck)prevCheck.textContent='✓';
+    si=(si+1)%loadingSteps.length;
+    // 다음 스텝 활성화
+    var next=document.getElementById('lstep-'+(si+1));
+    var msgEl=document.getElementById('loading-msg');
+    if(next)next.classList.add('active');
+    if(msgEl){msgEl.style.opacity='0';setTimeout(function(){if(msgEl){msgEl.textContent=loadingSteps[si].msg;msgEl.style.opacity='1';}},300);}
+  },4000);
 }
 function stopLoadingMsg(){
   if(loadingTimer){clearInterval(loadingTimer);loadingTimer=null;}
+  if(loadingStepTimer){clearInterval(loadingStepTimer);loadingStepTimer=null;}
+  // 모든 스텝 완료
+  for(var i=1;i<=4;i++){
+    var s=document.getElementById('lstep-'+i);
+    var c=document.getElementById('lcheck-'+i);
+    if(s){s.classList.remove('active');s.classList.add('done');}
+    if(c)c.textContent='✓';
+  }
 }
 window.addEventListener('DOMContentLoaded',function(){});
 </script>
