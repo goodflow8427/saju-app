@@ -565,15 +565,18 @@ async function loadJourney(){
       '겨울 해당 나이 (예: 49~56세)',
       '',
       '=== 커리어점수 ===',
-      cy+'~'+(cy+7)+'년 커리어 점수 8개 1-100 쉼표 구분',
+      '반드시 숫자 8개만 쉼표로 구분. 예시: 65,70,80,75,60,55,70,85',
       '',
       '=== 재물점수 ===',
-      cy+'~'+(cy+7)+'년 재물 점수 8개 1-100 쉼표 구분'
+      '반드시 숫자 8개만 쉼표로 구분. 예시: 60,55,70,80,75,65,60,72'
     ];
     var text=await callAPI(parts.join('\n'));
     function parseNums(key){
       var v=pk(text,key);
-      return v.split(',').map(function(x){return Math.min(100,Math.max(1,parseInt(x.trim())||50));}).slice(0,8);
+      if(!v)return [55,60,65,70,68,72,65,60];
+      var nums=v.replace(/[^0-9,]/g,',').split(',').map(function(x){return parseInt(x.trim());}).filter(function(x){return !isNaN(x)&&x>0&&x<=100;});
+      while(nums.length<8)nums.push(60);
+      return nums.slice(0,8);
     }
     var data={
       기질:pk(text,'기질'),
@@ -686,7 +689,10 @@ function renderJourney(data){
   el.innerHTML=html;
 
   // 올해 자동 선택
-  setTimeout(function(){selectYear(cy);},200);
+  setTimeout(function(){
+    var btn=document.getElementById('ybtn-'+cy);
+    if(btn)selectYear(cy);
+  },500);
 }
 
 // ===== 연도별 분석 =====
@@ -700,7 +706,13 @@ function selectYear(yr){
     btn.className='year-btn'+(isThis?' active':((cy+i)===cy?' now':''));
   }
   var wrap=document.getElementById('year-detail');
-  if(!wrap)return;
+  if(!wrap){
+    // year-detail이 없으면 journey-content 다시 렌더
+    var jcache=loadCache('jn-'+G.dc.slice(0,15));
+    if(jcache){renderJourney(jcache);}
+    return;
+  }
+  if(!G.dc){showToast('먼저 사주를 분석해주세요.');return;}
 
   // 구독 체크
   if(!isSubscribed()){
