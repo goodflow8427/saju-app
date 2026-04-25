@@ -464,8 +464,8 @@ function getDay(y, m, d) {
   var jdn = d + Math.floor((153 * mo + 2) / 5) + 365 * yr + Math.floor(yr / 4) - Math.floor(yr / 100) + Math.floor(yr / 400) - 32045;
   // 갑자일(JDN 2299161 = 1582년 10월 15일) 기준
   // 실제로는 임의 기준점 사용
-  var BASE_JDN = 2415021; // 1900년 1월 1일 JDN (갑자일 기준)
-  var BASE_GANJIGA = 16; // 1900년 1월 1일의 간지 인덱스 (갑자=0)
+  var BASE_JDN = 2415021; // 1900년 1월 1일 JDN
+  var BASE_GANJIGA = 10; // 1900년 1월 1일 = 甲戌(갑술)일 기준 검증완료
   var diff = jdn - BASE_JDN;
   var idx = ((diff + BASE_GANJIGA) % 60 + 60) % 60;
   return {g: idx % 10, j: idx % 12};
