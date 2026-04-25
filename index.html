@@ -268,75 +268,59 @@ select.inp option{background:#fff;}
   <button class="hero-btn" onclick="scrollToForm()">지금 무료로 확인하기 →</button>
   <div class="hero-note">✓ 완전 무료 &nbsp;·&nbsp; ✓ 가입 불필요 &nbsp;·&nbsp; ✓ 입력은 30초!</div>
   <!-- 신뢰 섹션 -->
-  <div id="trust-section" style="margin-top:16px;">
+  <div id="trust-section" style="margin-top:18px;">
 
-    <!-- 실시간 카운터 -->
-    <div style="display:flex;justify-content:center;gap:16px;margin-bottom:14px;flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);border-radius:20px;padding:7px 14px;box-shadow:0 1px 6px rgba(0,0,0,.04);">
-        <span style="font-size:14px;">🔥</span>
-        <span style="font-size:12px;color:var(--text2);">오늘 <b id="today-count" style="color:var(--gold);">47</b>명 분석했어요</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);border-radius:20px;padding:7px 14px;box-shadow:0 1px 6px rgba(0,0,0,.04);">
-        <span style="font-size:14px;">⭐</span>
-        <span style="font-size:12px;color:var(--text2);"><b style="color:var(--gold);">4.9</b> / 5.0 &nbsp;·&nbsp; 누적 <b style="color:var(--gold);">1,247명</b></span>
-      </div>
-    </div>
+  <!-- 베타 배지 + 한정 코드 -->
+  <div style="background:linear-gradient(135deg,#fdf5e8,#faecd0);border:1.5px solid rgba(196,135,58,.25);border-radius:16px;padding:18px 18px 16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(196,135,58,.08);position:relative;overflow:hidden;">
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+  <span style="display:inline-block;padding:3px 9px;background:var(--gold);color:#fff;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:1.5px;">BETA</span>
+  <span style="font-size:11px;color:var(--gold);font-weight:600;">베타 서비스 운영 중</span>
+  </div>
+  <div style="font-family:'Nanum Myeongjo',serif;font-size:16px;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:6px;">
+  🎁 베타 오픈 기념<br>
+  <span style="color:var(--gold);">첫 100명 한정 7일 무료 체험</span>
+  </div>
+  <div style="background:#fff;border:1.5px dashed rgba(196,135,58,.4);border-radius:10px;padding:11px 14px;margin:10px 0 8px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+  <div>
+  <div style="font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:2px;">코드</div>
+  <div style="font-family:'Nanum Myeongjo',serif;font-size:18px;font-weight:800;color:var(--gold);letter-spacing:2px;">OPEN100</div>
+  </div>
+  <button onclick="copyBetaCode()" style="padding:8px 14px;background:var(--gold);border:none;border-radius:8px;color:#fff;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">코드 복사</button>
+  </div>
+  <div style="font-size:11px;color:var(--text2);line-height:1.7;">
+  결과 페이지에서 코드를 입력하면 7일 동안 모든 기능을 무료로 이용할 수 있어요.
+  </div>
+  </div>
 
-    <!-- 후기 슬라이더 -->
-    <div style="position:relative;overflow:hidden;margin-bottom:10px;">
-      <div id="review-slider" style="display:flex;transition:transform .5s ease;will-change:transform;">
-        <div class="review-card" style="min-width:100%;padding:0 2px;">
-          <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,.04);">
-            <div style="display:flex;gap:2px;margin-bottom:6px;">⭐⭐⭐⭐⭐</div>
-            <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:8px;">"진짜 소름... 직업 얘기가 너무 맞아요. 이직 고민 중이었는데 타이밍까지 딱 집어줘서 결정했어요 😭"</div>
-            <div style="font-size:11px;color:var(--muted);">32세 직장인 · 커리어 분석</div>
-          </div>
-        </div>
-        <div class="review-card" style="min-width:100%;padding:0 2px;">
-          <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,.04);">
-            <div style="display:flex;gap:2px;margin-bottom:6px;">⭐⭐⭐⭐⭐</div>
-            <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:8px;">"재물운 설명이 너무 정확해서 놀랐어요. 올해 돈 나가는 시기까지 맞혔어요. 친구한테도 공유했어요!"</div>
-            <div style="font-size:11px;color:var(--muted);">35세 프리랜서 · 재물 분석</div>
-          </div>
-        </div>
-        <div class="review-card" style="min-width:100%;padding:0 2px;">
-          <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,.04);">
-            <div style="display:flex;gap:2px;margin-bottom:6px;">⭐⭐⭐⭐⭐</div>
-            <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:8px;">"썸 탔던 사람이랑 결과대로 됐어요 💕 애정운 분석이 이렇게 구체적일 줄 몰랐어요. 완전 강추!"</div>
-            <div style="font-size:11px;color:var(--muted);">27세 직장인 · 애정운 분석</div>
-          </div>
-        </div>
-        <div class="review-card" style="min-width:100%;padding:0 2px;">
-          <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,.04);">
-            <div style="display:flex;gap:2px;margin-bottom:6px;">⭐⭐⭐⭐⭐</div>
-            <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:8px;">"무료인데 이 퀄리티가 말이 되나요? 명식 분석이랑 기질 설명이 진짜 나 얘기 하는 것 같았어요 ㅋㅋ"</div>
-            <div style="font-size:11px;color:var(--muted);">29세 대학원생 · 명반 분석</div>
-          </div>
-        </div>
-        <div class="review-card" style="min-width:100%;padding:0 2px;">
-          <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,.04);">
-            <div style="display:flex;gap:2px;margin-bottom:6px;">⭐⭐⭐⭐⭐</div>
-            <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:8px;">"연도별 운세 지도가 진짜 신기해요. 2026년 분석 보고 투자 계획 바꿨어요. 이런 앱 처음이에요."</div>
-            <div style="font-size:11px;color:var(--muted);">38세 자영업 · 재물 분석</div>
-          </div>
-        </div>
-      </div>
+  <!-- 왜 사주봐인가 -->
+  <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px;">
+  <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:11px;padding:12px 14px;box-shadow:0 1px 6px rgba(0,0,0,.04);">
+  <span style="font-size:18px;flex-shrink:0;">⚙️</span>
+  <div>
+  <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:1px;">정통 만세력 기반</div>
+  <div style="font-size:11px;color:var(--muted);line-height:1.5;">절기 경계까지 정확하게 계산해요</div>
+  </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:11px;padding:12px 14px;box-shadow:0 1px 6px rgba(0,0,0,.04);">
+  <span style="font-size:18px;flex-shrink:0;">💬</span>
+  <div>
+  <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:1px;">AI가 풀어주는 쉬운 해석</div>
+  <div style="font-size:11px;color:var(--muted);line-height:1.5;">한자 없이, 친구한테 듣듯이</div>
+  </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:11px;padding:12px 14px;box-shadow:0 1px 6px rgba(0,0,0,.04);">
+  <span style="font-size:18px;flex-shrink:0;">☕</span>
+  <div>
+  <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:1px;">카페 한 잔 값으로 7일</div>
+  <div style="font-size:11px;color:var(--muted);line-height:1.5;">2,000원에 모든 분석 풀세트</div>
+  </div>
+  </div>
+  </div>
 
-      <!-- 슬라이더 도트 -->
-      <div style="display:flex;justify-content:center;gap:5px;margin-top:10px;" id="review-dots">
-        <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);transition:all .3s;"></div>
-        <div style="width:6px;height:6px;border-radius:50%;background:rgba(196,135,58,.2);transition:all .3s;"></div>
-        <div style="width:6px;height:6px;border-radius:50%;background:rgba(196,135,58,.2);transition:all .3s;"></div>
-        <div style="width:6px;height:6px;border-radius:50%;background:rgba(196,135,58,.2);transition:all .3s;"></div>
-        <div style="width:6px;height:6px;border-radius:50%;background:rgba(196,135,58,.2);transition:all .3s;"></div>
-      </div>
-    </div>
-
-    <!-- 실시간 알림 -->
-    <div id="live-notice" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px 14px;box-shadow:0 1px 6px rgba(0,0,0,.04);font-size:12px;color:var(--text2);">
-      <span style="width:7px;height:7px;border-radius:50%;background:var(--spring);flex-shrink:0;animation:blink 1.5s ease-in-out infinite;"></span>
-      <span id="live-notice-txt">방금 서울에서 누군가 분석을 완료했어요</span>
-    </div>
+  <!-- 솔직한 안내 -->
+  <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:11px;color:var(--text2);line-height:1.7;text-align:center;">
+  💌 베타 기간 중 솔직한 피드백 한 줄이 큰 도움이 됩니다
+  </div>
 
   </div>
 </div>
@@ -1585,58 +1569,18 @@ function showLoveYearDetail(yr,d){
   wrap.innerHTML=html;
 }
 
-// ===== 신뢰 섹션 =====
-(function(){
-  var base = 43 + Math.floor(Math.random() * 9);
-  var el = document.getElementById('today-count');
-  if(el) el.textContent = base;
-  setInterval(function(){
-    if(Math.random() > 0.7){
-      base += Math.floor(Math.random() * 2);
-      if(el) el.textContent = base;
-    }
-  }, 8000);
-
-  var slider = document.getElementById('review-slider');
-  var dots = document.getElementById('review-dots');
-  if(!slider) return;
-  var cur = 0;
-  var total = 5;
-  function goTo(n){
-    cur = (n + total) % total;
-    slider.style.transform = 'translateX(-' + (cur * 100) + '%)';
-    if(dots){
-      Array.from(dots.children).forEach(function(d, i){
-        d.style.background = i === cur ? 'var(--gold)' : 'rgba(196,135,58,.2)';
-        d.style.width = i === cur ? '18px' : '6px';
-        d.style.borderRadius = '3px';
-      });
-    }
+// ===== 베타 코드 복사 =====
+function copyBetaCode(){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText('OPEN100').then(function(){
+      showToast('✓ 코드가 복사되었습니다 (OPEN100)');
+    }).catch(function(){
+      showToast('OPEN100');
+    });
+  } else {
+    showToast('OPEN100');
   }
-  setInterval(function(){ goTo(cur + 1); }, 4000);
-
-  var notices = [
-    '방금 서울에서 누군가 분석을 완료했어요',
-    '방금 부산에서 커리어 분석을 완료했어요',
-    '방금 인천에서 재물운을 확인했어요',
-    '방금 대구에서 애정운 분석을 완료했어요',
-    '방금 제주에서 운의 흐름을 확인했어요',
-    '방금 경기도에서 누군가 분석을 완료했어요',
-    '방금 수원에서 커리어 분석을 완료했어요',
-    '방금 광주에서 재물운을 확인했어요',
-  ];
-  var ni = 0;
-  var noticeEl = document.getElementById('live-notice-txt');
-  setInterval(function(){
-    if(!noticeEl) return;
-    ni = (ni + 1) % notices.length;
-    noticeEl.style.opacity = '0';
-    setTimeout(function(){
-      noticeEl.textContent = notices[ni];
-      noticeEl.style.opacity = '1';
-    }, 400);
-  }, 5000);
-})();
+}
 
 function scrollToForm(){var el=document.getElementById('s-form');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
 
