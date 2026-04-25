@@ -253,6 +253,29 @@ select.inp option{background:#fff;}
 .footer-business-row{font-size:10px;color:var(--muted);line-height:1.7;display:flex;gap:6px;flex-wrap:wrap;}
 .footer-business-row b{color:var(--text2);font-weight:500;min-width:78px;}
 .footer-copyright{font-size:9px;color:var(--muted);margin-top:8px;opacity:.7;}
+.product-card{background:var(--card);border:1.5px solid var(--gold-mid);border-radius:18px;padding:20px 20px 18px;margin-bottom:18px;box-shadow:0 2px 14px rgba(196,135,58,.08);position:relative;overflow:hidden;}
+.product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),#E8A85A);}
+.product-header{margin-bottom:14px;}
+.product-badge{font-size:10px;letter-spacing:3px;color:var(--gold);margin-bottom:6px;}
+.product-title{font-family:'Nanum Myeongjo',serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.product-price{font-family:'Nanum Myeongjo',serif;display:flex;align-items:baseline;gap:2px;}
+.product-price-amount{font-size:24px;font-weight:800;color:var(--gold);}
+.product-price-unit{font-size:13px;color:var(--muted);font-weight:400;}
+.product-features{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;padding:12px 14px;background:var(--bg);border-radius:10px;}
+.product-feature{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--text2);line-height:1.5;}
+.pf-icon{font-size:14px;flex-shrink:0;width:18px;text-align:center;}
+.pf-text{flex:1;}
+.pf-text b{color:var(--text);font-weight:600;}
+.product-payment{padding:11px 14px;background:rgba(0,0,0,.02);border-radius:9px;margin-bottom:12px;}
+.product-payment-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:4px;}
+.pp-label{color:var(--muted);}
+.pp-value{color:var(--text2);font-weight:600;}
+.product-payment-note{font-size:10px;color:var(--muted);line-height:1.5;margin-top:2px;}
+.product-beta-tip{background:var(--gold-light);border:1px dashed rgba(196,135,58,.35);border-radius:9px;padding:10px 12px;font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:12px;text-align:center;}
+.product-beta-tip b{color:var(--gold);font-weight:700;}
+.product-refund-link{text-align:center;font-size:10px;color:var(--muted);}
+.product-refund-link a{color:var(--muted);text-decoration:underline;margin:0 4px;}
+.product-refund-link a:hover{color:var(--gold);}
 </style>
 </head>
 <body>
@@ -331,6 +354,35 @@ select.inp option{background:#fff;}
   💌 베타 기간 중 솔직한 피드백 한 줄이 큰 도움이 됩니다
   </div>
 
+  </div>
+</div>
+
+<!-- 유료 구독 안내 -->
+
+<div class="product-card">
+  <div class="product-header">
+    <div class="product-badge">✦ 유료 분석 (선택)</div>
+    <div class="product-title">운의 흐름 · 애정운 분석</div>
+    <div class="product-price"><span class="product-price-amount">₩2,000</span><span class="product-price-unit"> / 7일</span></div>
+  </div>
+  <div class="product-features">
+    <div class="product-feature"><span class="pf-icon">📈</span><span class="pf-text"><b>운의 흐름</b> · 커리어와 재물의 8년 곡선</span></div>
+    <div class="product-feature"><span class="pf-icon">💕</span><span class="pf-text"><b>애정운 분석</b> · 현재 상황 맞춤 진단</span></div>
+    <div class="product-feature"><span class="pf-icon">📅</span><span class="pf-text"><b>연도별 운세 지도</b> · 월별 캘린더 포함</span></div>
+    <div class="product-feature"><span class="pf-icon">🎯</span><span class="pf-text"><b>핵심 조언</b> · 매년 가장 중요한 한 마디</span></div>
+  </div>
+  <div class="product-payment">
+    <div class="product-payment-row">
+      <span class="pp-label">결제수단</span>
+      <span class="pp-value">카카오페이</span>
+    </div>
+    <div class="product-payment-note">정식 PG(토스페이먼츠) 연동 시 카드결제·계좌이체 추가 예정</div>
+  </div>
+  <div class="product-beta-tip">
+    🎁 <b>베타 기간 한정</b> · 코드 <b>OPEN100</b> 입력 시 7일 무료 체험 (첫 100명)
+  </div>
+  <div class="product-refund-link">
+    <a href="/refund.html">환불정책</a> · <a href="/terms.html">이용약관</a> · <a href="/privacy.html">개인정보처리방침</a>
   </div>
 </div>
 
