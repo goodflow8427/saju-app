@@ -732,8 +732,9 @@ function selectYear(yr){
     return;
   }
 
-  // 캐시 확인
-  if(yearCache[yr]){showYearDetail(yr,yearCache[yr]);return;}
+  // 캐시 확인 (커리어/재물 없으면 재요청)
+  if(yearCache[yr]&&yearCache[yr].커리어&&yearCache[yr].재물){showYearDetail(yr,yearCache[yr]);return;}
+  delete yearCache[yr];
 
   // 로딩
   wrap.innerHTML='<div class="yd-loading"><div class="spin" style="width:32px;height:32px;border-width:2.5px;"></div><div style="margin-top:12px;font-size:13px;color:var(--muted);">'+yr+'년 운세 분석 중…</div></div>';
@@ -759,7 +760,7 @@ async function loadYearDetail(yr){
       yr+'년 재물 흐름. 돈 풀리는 시기. 조심할 시기. (250자)',
       '',
       '=== 월별 ===',
-      yr+'년 1~12월 운세를 good/normal/bad로 12개 쉼표 구분',
+      '반드시 good/normal/bad 12개만 쉼표로. 예: good,normal,good,bad,normal,good,good,normal,bad,normal,good,normal',
       '',
       '=== 핵심조언 ===',
       yr+'년 가장 중요한 한 마디 (70자)'
@@ -783,7 +784,16 @@ function showYearDetail(yr,d){
   var wrap=document.getElementById('year-detail');
   if(!wrap)return;
   var months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-  var scores=(d.월별||'').split(',').map(function(s){return s.trim().toLowerCase();});
+  var rawMonthly=d.월별||'';
+  // 한글로 올 수도 있으니 변환
+  rawMonthly=rawMonthly.replace(/좋음/g,'good').replace(/보통/g,'normal').replace(/나쁨|주의/g,'bad');
+  var scores=rawMonthly.split(',').map(function(s){
+    var v=s.trim().toLowerCase();
+    if(v.indexOf('good')>=0)return 'good';
+    if(v.indexOf('bad')>=0)return 'bad';
+    return 'normal';
+  });
+  while(scores.length<12)scores.push('normal');
   var calHTML='<div class="cal-grid">';
   months.forEach(function(m,i){
     var s=scores[i]||'normal';
@@ -794,12 +804,8 @@ function showYearDetail(yr,d){
   var html='<div class="year-detail">';
   html+='<div class="yd-header"><div class="yd-year">✦ '+yr+'년 운세 지도</div><div class="yd-summary">'+(d.총운||'')+'</div></div>';
   html+='<div class="yd-cal"><div class="yd-cal-title">월별 운세 흐름</div>'+calHTML+'</div>';
-  if(d.커리어){
-    html+='<div class="yd-section"><div class="yd-sec-header"><span class="yd-sec-icon">💼</span><span class="yd-sec-title" style="color:var(--gold);">커리어</span></div><div class="yd-sec-txt">'+d.커리어+'</div></div>';
-  }
-  if(d.재물){
-    html+='<div class="yd-section"><div class="yd-sec-header"><span class="yd-sec-icon">💰</span><span class="yd-sec-title" style="color:var(--spring);">재물</span></div><div class="yd-sec-txt">'+d.재물+'</div></div>';
-  }
+  html+='<div class="yd-section"><div class="yd-sec-header"><span class="yd-sec-icon">💼</span><span class="yd-sec-title" style="color:var(--gold);">커리어</span></div><div class="yd-sec-txt">'+(d.커리어||'분석 중 오류가 발생했어요.')+'</div></div>';
+  html+='<div class="yd-section"><div class="yd-sec-header"><span class="yd-sec-icon">💰</span><span class="yd-sec-title" style="color:var(--spring);">재물</span></div><div class="yd-sec-txt">'+(d.재물||'분석 중 오류가 발생했어요.')+'</div></div>';
   if(d.핵심조언){
     html+='<div class="yd-advice"><div class="yd-advice-lbl">🎯 핵심 조언</div><div class="yd-advice-txt">'+d.핵심조언+'</div></div>';
   }
