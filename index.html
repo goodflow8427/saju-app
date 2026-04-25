@@ -501,11 +501,28 @@ function callAPI(prompt){
 function pk(text,key){
   var m='=== '+key+' ===';
   var i=text.indexOf(m);
-  if(i<0)return '';
-  var r=text.slice(i+m.length);
-  var e=r.indexOf('===');
-  return(e>=0?r.slice(0,e):r).trim();
+  if(i>=0){
+    var r=text.slice(i+m.length);
+    var e=r.indexOf('===');
+    return(e>=0?r.slice(0,e):r).trim();
+  }
+  var patterns=['## '+key,'### '+key,'# '+key,'**'+key+'**'];
+  for(var p=0;p<patterns.length;p++){
+    var mi=text.indexOf(patterns[p]);
+    if(mi>=0){
+      var rest=text.slice(mi+patterns[p].length);
+      var sep='\n## ';
+      var n1=rest.indexOf(sep);
+      var sep2='\n---';
+      var n2=rest.indexOf(sep2);
+      var candidates=[n1,n2].filter(function(x){return x>=0;});
+      var nextH=candidates.length>0?Math.min.apply(null,candidates):-1;
+      return(nextH>=0?rest.slice(0,nextH):rest).trim();
+    }
+  }
+  return '';
 }
+
 
 // ===== 명반 =====
 function initSecs(){
@@ -796,14 +813,20 @@ function showYearDetail(yr,d){
   if(!wrap)return;
   var months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
   var rawMonthly=d.월별||'';
-  // 한글로 올 수도 있으니 변환
-  rawMonthly=rawMonthly.replace(/좋음/g,'good').replace(/보통/g,'normal').replace(/나쁨|주의/g,'bad');
+  // 백틱/코드블록 제거
+  rawMonthly=rawMonthly.replace(/```[^`]*```/g,function(m){return m.replace(/```/g,'');});
+  rawMonthly=rawMonthly.replace(/`/g,'');
+  // 한글 변환
+  rawMonthly=rawMonthly.replace(/좋음/g,'good').replace(/보통/g,'normal').replace(/나쁨|주의|나쁨/g,'bad');
+  // > 인용구 제거
+  rawMonthly=rawMonthly.replace(/^>\s*/gm,'');
   var scores=rawMonthly.split(',').map(function(s){
     var v=s.trim().toLowerCase();
     if(v.indexOf('good')>=0)return 'good';
     if(v.indexOf('bad')>=0)return 'bad';
+    if(v.indexOf('normal')>=0)return 'normal';
     return 'normal';
-  });
+  }).filter(function(s,i){return i<12;});
   while(scores.length<12)scores.push('normal');
   var calHTML='<div class="cal-grid">';
   months.forEach(function(m,i){
