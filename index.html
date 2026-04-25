@@ -241,6 +241,37 @@ select.inp option{background:#fff;}
 .sc-btn{padding:10px;background:var(--gold);border:none;border-radius:9px;color:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;}
 .sc-btn2{padding:10px;background:rgba(255,255,255,.08);border:1px solid rgba(196,135,58,.2);border-radius:9px;color:#c9a84c;font-family:inherit;font-size:12px;cursor:pointer;}
 
+/* 애정운 */
+.love-step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:13px;box-shadow:0 2px 12px rgba(0,0,0,.04);}
+.love-step-title{font-family:'Nanum Myeongjo',serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+.love-step-sub{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+.love-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.love-option{padding:13px 10px;background:var(--bg);border:1.5px solid var(--border);border-radius:11px;text-align:center;cursor:pointer;transition:all .2s;font-family:inherit;font-size:13px;color:var(--text2);}
+.love-option:hover{border-color:rgba(224,107,58,.4);background:var(--summer-light);}
+.love-option.selected{background:var(--summer-light);border-color:var(--summer);color:var(--summer);font-weight:700;}
+.love-option .lo-icon{font-size:22px;display:block;margin-bottom:5px;}
+.love-option .lo-txt{font-size:12px;line-height:1.4;}
+.love-sub-options{display:flex;flex-direction:column;gap:7px;margin-top:4px;}
+.love-sub-opt{padding:11px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;font-family:inherit;font-size:13px;color:var(--text2);text-align:left;display:flex;align-items:center;gap:8px;}
+.love-sub-opt:hover{border-color:rgba(224,107,58,.4);background:var(--summer-light);}
+.love-sub-opt.selected{background:var(--summer-light);border-color:var(--summer);color:var(--summer);font-weight:600;}
+.love-sub-opt .lo-sub-icon{font-size:16px;flex-shrink:0;}
+.love-analyze-btn{width:100%;padding:14px;background:var(--summer);border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;box-shadow:0 4px 16px rgba(224,107,58,.3);transition:all .2s;display:none;}
+.love-analyze-btn:hover{transform:translateY(-1px);}
+.love-analyze-btn.show{display:block;}
+.love-result{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.05);margin-bottom:13px;}
+.love-result-header{padding:16px 18px;background:linear-gradient(135deg,rgba(224,107,58,.1),rgba(224,107,58,.04));border-bottom:1px solid rgba(224,107,58,.1);}
+.love-result-badge{font-size:10px;letter-spacing:3px;color:var(--summer);margin-bottom:4px;}
+.love-result-title{font-family:'Nanum Myeongjo',serif;font-size:15px;font-weight:700;}
+.love-sec{padding:14px 16px;border-bottom:1px solid var(--border);}
+.love-sec:last-child{border-bottom:none;}
+.love-sec-header{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+.love-sec-icon{font-size:17px;}
+.love-sec-title{font-size:12px;font-weight:700;color:var(--summer);}
+.love-sec-txt{font-size:13px;color:var(--text2);line-height:1.8;}
+.love-advice{padding:16px 18px;background:var(--summer-light);}
+.love-advice-lbl{font-size:10px;letter-spacing:2px;color:var(--summer);margin-bottom:6px;}
+.love-advice-txt{font-family:'Nanum Myeongjo',serif;font-size:14px;font-weight:700;color:var(--text);line-height:1.7;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:10px 20px;border-radius:9px;font-size:12px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
 .toast.show{opacity:1;}
 .reset-btn{background:none;border:1.5px solid var(--border);border-radius:9px;padding:9px 18px;color:var(--muted);font-size:11px;cursor:pointer;margin-top:14px;font-family:inherit;transition:all .2s;}
@@ -340,6 +371,7 @@ select.inp option{background:#fff;}
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('analysis',this)">☯ 명반</button>
     <button class="tab-btn" onclick="switchTab('journey',this)">🌱 운의 흐름</button>
+    <button class="tab-btn" onclick="switchTab('love',this)">💕 애정운 🔒</button>
   </div>
 
   <!-- 명반 탭 -->
@@ -358,6 +390,11 @@ select.inp option{background:#fff;}
   <!-- 운의흐름 탭 -->
   <div id="tab-journey" class="tab-content">
     <div id="journey-content"></div>
+  </div>
+
+  <!-- 애정운 탭 -->
+  <div id="tab-love" class="tab-content">
+    <div id="love-content"></div>
   </div>
 
   <div style="text-align:center;">
@@ -1143,6 +1180,7 @@ function switchTab(id,btn){
   btn.classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
   if(id==='journey')loadJourney();
+  if(id==='love')loadLove();
 }
 
 // ===== 공유 =====
@@ -1210,6 +1248,274 @@ function copyLink(){
   if(navigator.clipboard)navigator.clipboard.writeText('https://sajubao.com').then(function(){showToast('✓ 링크가 복사되었습니다');});
   else showToast('sajubao.com');
 }
+// ===== 애정운 =====
+var loveState = {status:'', period:'', concern:''};
+
+function loadLove(){
+  if(!G.dc){
+    document.getElementById('love-content').innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);">먼저 명반을 분석해주세요.</div>';
+    return;
+  }
+  if(!isSubscribed()){
+    document.getElementById('love-content').innerHTML='<div class="lock-card">'
+      +'<div class="lock-icon">💕</div>'
+      +'<div class="lock-title">애정운 분석은 구독 후 이용</div>'
+      +'<div class="lock-sub">현재 상태에 맞는 맞춤 분석을 해드려요</div>'
+      +'<div class="lock-feats">'
+      +'<div class="lock-feat"><span class="lock-feat-icon">💑</span><span>연애 중 — 관계 흐름과 갈등 시기</span></div>'
+      +'<div class="lock-feat"><span class="lock-feat-icon">💔</span><span>싱글 — 만남 시기와 이상형</span></div>'
+      +'<div class="lock-feat"><span class="lock-feat-icon">💍</span><span>기혼 — 부부운과 좋은 시기</span></div>'
+      +'<div class="lock-feat"><span class="lock-feat-icon">🤔</span><span>썸 — 이 사람과 될 수 있을까</span></div>'
+      +'</div>'
+      +'<a class="lock-cta" href="'+KAKAO+'" target="_blank">카카오페이로 구독하기 ₩2,000/7일</a>'
+      +'<div class="lock-note">입금 후 카카오톡으로 이메일을 보내주세요</div>'
+      +'</div>';
+    return;
+  }
+  renderLoveStep1();
+}
+
+function renderLoveStep1(){
+  loveState = {status:'', period:'', concern:''};
+  var el=document.getElementById('love-content');
+  var statuses=[
+    {id:'dating',icon:'💑',txt:'연애 중'},
+    {id:'single',icon:'💔',txt:'싱글'},
+    {id:'married',icon:'💍',txt:'기혼'},
+    {id:'crush',icon:'🤔',txt:'썸 타는 중'}
+  ];
+  var html='<div class="love-step">'
+    +'<div class="love-step-title">지금 어떤 상태예요?</div>'
+    +'<div class="love-step-sub">현재 상황에 맞게 분석해드릴게요</div>'
+    +'<div class="love-options">';
+  statuses.forEach(function(s){
+    html+='<button class="love-option" id="ls-'+s.id+'" data-id="'+s.id+'" onclick="selectLoveStatus(this.dataset.id)">'
+      +'<span class="lo-icon">'+s.icon+'</span>'
+      +'<span class="lo-txt">'+s.txt+'</span>'
+      +'</button>';
+  });
+  html+='</div></div>';
+  html+='<div id="love-step2"></div>';
+  html+='<div id="love-step3"></div>';
+  html+='<button class="love-analyze-btn" id="love-analyze-btn" onclick="analyzeLove()">💕 애정운 분석하기</button>';
+  el.innerHTML=html;
+}
+
+function selectLoveStatus(id){
+  loveState.status=id;
+  loveState.period='';
+  loveState.concern='';
+  document.querySelectorAll('.love-option').forEach(function(b){b.classList.remove('selected');});
+  var btn=document.getElementById('ls-'+id);
+  if(btn)btn.classList.add('selected');
+  document.getElementById('love-analyze-btn').classList.remove('show');
+  renderLoveStep2(id);
+}
+
+function renderLoveStep2(status){
+  var el=document.getElementById('love-step2');
+  document.getElementById('love-step3').innerHTML='';
+  var config={
+    dating:{
+      title:'만난 지 얼마나 됐나요?',
+      opts:[
+        {id:'new',icon:'🌱',txt:'3개월 미만'},
+        {id:'mid',icon:'🌿',txt:'3개월~1년'},
+        {id:'long',icon:'🌳',txt:'1년 이상'}
+      ]
+    },
+    single:{
+      title:'싱글 기간은 얼마나 됐나요?',
+      opts:[
+        {id:'recent',icon:'🌱',txt:'6개월 미만'},
+        {id:'mid',icon:'🌿',txt:'6개월~2년'},
+        {id:'long',icon:'🌳',txt:'2년 이상'}
+      ]
+    },
+    married:{
+      title:'결혼 몇 년 됐나요?',
+      opts:[
+        {id:'new',icon:'🌱',txt:'3년 미만'},
+        {id:'mid',icon:'🌿',txt:'3~10년'},
+        {id:'long',icon:'🌳',txt:'10년 이상'}
+      ]
+    },
+    crush:{
+      title:'어느 단계예요?',
+      opts:[
+        {id:'new',icon:'👀',txt:'막 알게 됨'},
+        {id:'mid',icon:'💬',txt:'어느 정도 친해짐'},
+        {id:'long',icon:'💭',txt:'고백 고민 중'}
+      ]
+    }
+  };
+  var c=config[status];
+  var html='<div class="love-step">'
+    +'<div class="love-step-title">'+c.title+'</div>'
+    +'<div class="love-sub-options">';
+  c.opts.forEach(function(o){
+    html+='<button class="love-sub-opt" id="lp-'+o.id+'" data-id="'+o.id+'" onclick="selectLovePeriod(this.dataset.id)">'
+      +'<span class="lo-sub-icon">'+o.icon+'</span>'
+      +'<span>'+o.txt+'</span>'
+      +'</button>';
+  });
+  html+='</div></div>';
+  el.innerHTML=html;
+}
+
+function selectLovePeriod(id){
+  loveState.period=id;
+  document.querySelectorAll('#love-step2 .love-sub-opt').forEach(function(b){b.classList.remove('selected');});
+  var btn=document.getElementById('lp-'+id);
+  if(btn)btn.classList.add('selected');
+  document.getElementById('love-analyze-btn').classList.remove('show');
+  renderLoveStep3(loveState.status);
+}
+
+function renderLoveStep3(status){
+  var el=document.getElementById('love-step3');
+  var config={
+    dating:{
+      title:'지금 가장 고민이 뭔가요?',
+      opts:[
+        {id:'growth',icon:'🚀',txt:'관계를 더 발전시키고 싶어요'},
+        {id:'conflict',icon:'⚡',txt:'갈등이나 다툼이 있어요'},
+        {id:'marriage',icon:'💍',txt:'결혼을 고민 중이에요'},
+        {id:'boredom',icon:'😶',txt:'권태기인 것 같아요'}
+      ]
+    },
+    single:{
+      title:'지금 원하는 게 뭔가요?',
+      opts:[
+        {id:'meet',icon:'💫',txt:'새로운 만남을 원해요'},
+        {id:'ok',icon:'😊',txt:'혼자도 나쁘지 않아요'},
+        {id:'unsure',icon:'🤷',txt:'잘 모르겠어요'},
+        {id:'specific',icon:'💝',txt:'마음에 두는 사람이 있어요'}
+      ]
+    },
+    married:{
+      title:'지금 가장 고민이 뭔가요?',
+      opts:[
+        {id:'relation',icon:'💑',txt:'부부 관계를 개선하고 싶어요'},
+        {id:'child',icon:'👶',txt:'자녀 계획이 있어요'},
+        {id:'conflict',icon:'⚡',txt:'갈등이나 위기가 있어요'},
+        {id:'good',icon:'😊',txt:'잘 지내고 있어요'}
+      ]
+    },
+    crush:{
+      title:'상대방 반응이 어떤 것 같아요?',
+      opts:[
+        {id:'good',icon:'😊',txt:'좋은 것 같아요'},
+        {id:'unsure',icon:'🤔',txt:'잘 모르겠어요'},
+        {id:'cold',icon:'🥶',txt:'차갑게 느껴져요'},
+        {id:'mixed',icon:'😅',txt:'뜨겁다 차갑다 헷갈려요'}
+      ]
+    }
+  };
+  var c=config[status];
+  var html='<div class="love-step">'
+    +'<div class="love-step-title">'+c.title+'</div>'
+    +'<div class="love-sub-options">';
+  c.opts.forEach(function(o){
+    html+='<button class="love-sub-opt" id="lc-'+o.id+'" data-id="'+o.id+'" onclick="selectLoveConcern(this.dataset.id)">'
+      +'<span class="lo-sub-icon">'+o.icon+'</span>'
+      +'<span>'+o.txt+'</span>'
+      +'</button>';
+  });
+  html+='</div></div>';
+  el.innerHTML=html;
+}
+
+function selectLoveConcern(id){
+  loveState.concern=id;
+  document.querySelectorAll('#love-step3 .love-sub-opt').forEach(function(b){b.classList.remove('selected');});
+  var btn=document.getElementById('lc-'+id);
+  if(btn)btn.classList.add('selected');
+  document.getElementById('love-analyze-btn').classList.add('show');
+}
+
+async function analyzeLove(){
+  if(!loveState.status||!loveState.period||!loveState.concern){
+    showToast('모든 항목을 선택해주세요.');return;
+  }
+  var el=document.getElementById('love-content');
+  el.innerHTML='<div class="loading"><div class="spin"></div><div class="loading-msg">애정운을 분석하는 중이에요…</div></div>';
+
+  var statusLabel={dating:'연애 중',single:'싱글',married:'기혼',crush:'썸 타는 중'};
+  var periodLabel={
+    dating:{new:'만난 지 3개월 미만',mid:'만난 지 3개월~1년',long:'만난 지 1년 이상'},
+    single:{recent:'싱글 6개월 미만',mid:'싱글 6개월~2년',long:'싱글 2년 이상'},
+    married:{new:'결혼 3년 미만',mid:'결혼 3~10년',long:'결혼 10년 이상'},
+    crush:{new:'막 알게 된 사이',mid:'어느 정도 친해진 사이',long:'고백 고민 중'}
+  };
+  var concernLabel={
+    dating:{growth:'관계 발전 고민',conflict:'갈등·다툼',marriage:'결혼 고민',boredom:'권태기'},
+    single:{meet:'새 만남 원함',ok:'혼자도 괜찮음',unsure:'잘 모르겠음',specific:'마음에 두는 사람 있음'},
+    married:{relation:'부부 관계 개선',child:'자녀 계획',conflict:'갈등·위기',good:'잘 지내고 있음'},
+    crush:{good:'상대 반응 좋음',unsure:'상대 반응 모르겠음',cold:'상대가 차가움',mixed:'반응이 뜨겁다 차갑다'}
+  };
+
+  var cy=new Date().getFullYear();
+  var situation=statusLabel[loveState.status]+' / '+(periodLabel[loveState.status]||{})[loveState.period]+' / '+(concernLabel[loveState.status]||{})[loveState.concern];
+
+  var parts=[
+    '현재 '+cy+'년. 사주: '+G.dc,
+    '현재 상황: '+situation,
+    '',
+    '이 사람의 애정운을 현재 상황에 맞게 분석해주세요.',
+    '한자 금지. 쉬운 말로. 친구한테 카톡 보내듯.',
+    '',
+    '=== 타고난 애정 스타일 ===',
+    '이 사람이 연애할 때 어떤 사람인지 특징 200자',
+    '',
+    '=== 현재 상황 분석 ===',
+    situation+'에 대한 사주 관점 분석 250자',
+    '',
+    '=== 이상형 ===',
+    '사주로 보는 잘 맞는 상대 유형 150자',
+    '',
+    '=== 올해 애정운 ===',
+    cy+'년 애정 흐름과 주요 시기 200자',
+    '',
+    '=== 주의할 점 ===',
+    '연애에서 조심해야 할 패턴 150자',
+    '',
+    '=== 핵심 조언 ===',
+    '지금 이 상황에서 가장 중요한 한 마디 70자'
+  ];
+
+  try{
+    var text=await callAPI(parts.join('\n'));
+    var secs=[
+      {key:'타고난 애정 스타일',icon:'💫',title:'타고난 애정 스타일'},
+      {key:'현재 상황 분석',icon:'🔍',title:'현재 상황 분석'},
+      {key:'이상형',icon:'💝',title:'나와 잘 맞는 상대'},
+      {key:'올해 애정운',icon:'📅',title:cy+'년 애정운'},
+      {key:'주의할 점',icon:'⚠️',title:'주의할 패턴'}
+    ];
+    var html='<div class="love-result">';
+    html+='<div class="love-result-header">'
+      +'<div class="love-result-badge">💕 애정운 분석 결과</div>'
+      +'<div class="love-result-title">'+situation+'</div>'
+      +'</div>';
+    secs.forEach(function(s){
+      var val=pk(text,s.key);
+      if(val){
+        html+='<div class="love-sec"><div class="love-sec-header"><span class="love-sec-icon">'+s.icon+'</span><span class="love-sec-title">'+s.title+'</span></div><div class="love-sec-txt">'+val+'</div></div>';
+      }
+    });
+    var advice=pk(text,'핵심 조언');
+    if(advice){
+      html+='<div class="love-advice"><div class="love-advice-lbl">💌 핵심 조언</div><div class="love-advice-txt">'+advice+'</div></div>';
+    }
+    html+='</div>';
+    html+='<div style="text-align:center;margin-top:12px;"><button class="reset-btn" onclick="renderLoveStep1()">다시 선택하기</button></div>';
+    el.innerHTML=html;
+  }catch(e){
+    el.innerHTML='<div style="padding:22px;text-align:center;"><div style="color:var(--summer);font-size:13px;margin-bottom:12px;">'+e.message+'</div><button class="reset-btn" onclick="analyzeLove()">다시 시도하기</button></div>';
+  }
+}
+
 function scrollToForm(){var el=document.getElementById('s-form');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
 
 // ===== 로딩 메시지 =====
