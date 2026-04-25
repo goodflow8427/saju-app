@@ -812,7 +812,159 @@ function calcSaju(y, m, d, h) {
 function descSaju(sj) {
   return TG[sj.year.g]+JJ[sj.year.j]+' '+TG[sj.month.g]+JJ[sj.month.j]+' '+TG[sj.day.g]+JJ[sj.day.j]+' '+TG[sj.time.g]+JJ[sj.time.j];
 }
-function mjHTML(sj) {
+// ===== 대운/오행/계절/점수 계산 =====
+function calcDaeun(sj, year, month, day, gender) {
+  var yg = sj.year.g;
+  var isYang = (yg % 2 === 0);
+  var isMale = (gender === 'male');
+  var forward = (isYang && isMale) || (!isYang && !isMale);
+  var startAge = 5; // 근사치 (라이브러리 사용 시 정확한 값으로 교체 가능)
+  var daeuns = [];
+  var monthIdx = sj.month.j;
+  for (var i = 0; i < 8; i++) {
+    var offset = forward ? (i + 1) : -(i + 1);
+    var dg2 = ((sj.month.g + offset) % 10 + 10) % 10;
+    var dj = ((monthIdx + offset) % 12 + 12) % 12;
+    daeuns.push({
+      g: dg2, j: dj,
+      startAge: startAge + i * 10,
+      startYear: year + startAge + i * 10 - (new Date().getFullYear() - year)
+    });
+  }
+  return {startAge: startAge, daeuns: daeuns, forward: forward};
+}
+
+function calcOhengStrength(sj) {
+  var ohCount = {목:0, 화:0, 토:0, 금:0, 수:0};
+  var pillars = [sj.year, sj.month, sj.day, sj.time];
+  pillars.forEach(function(p) { ohCount[OHT[p.g]] += 1.0; });
+  pillars.forEach(function(p) { ohCount[OHJ[p.j]] += 1.2; });
+  var jijanggan = {
+    0: [{oh:'수',w:0.7}],
+    1: [{oh:'토',w:0.6},{oh:'수',w:0.3}],
+    2: [{oh:'목',w:0.7},{oh:'화',w:0.2}],
+    3: [{oh:'목',w:0.8}],
+    4: [{oh:'토',w:0.6},{oh:'목',w:0.2}],
+    5: [{oh:'화',w:0.6},{oh:'토',w:0.3}],
+    6: [{oh:'화',w:0.7},{oh:'토',w:0.2}],
+    7: [{oh:'토',w:0.6},{oh:'화',w:0.3}],
+    8: [{oh:'금',w:0.7},{oh:'수',w:0.2}],
+    9: [{oh:'금',w:0.8}],
+    10:[{oh:'토',w:0.6},{oh:'금',w:0.2}],
+    11:[{oh:'수',w:0.6},{oh:'목',w:0.2}]
+  };
+  pillars.forEach(function(p) {
+    var jzg = jijanggan[p.j] || [];
+    jzg.forEach(function(z) { ohCount[z.oh] += z.w; });
+  });
+  return ohCount;
+}
+
+function calcDayMasterStrength(sj) {
+  var dayOh = OHT[sj.day.g];
+  var ohStr = calcOhengStrength(sj);
+  var saengMap = {목:'수', 화:'목', 토:'화', 금:'토', 수:'금'};
+  var dayStr = ohStr[dayOh] + ohStr[saengMap[dayOh]] * 0.7;
+  var totalStr = Object.values(ohStr).reduce(function(a,b){return a+b;},0);
+  return {
+    strength: dayStr / totalStr,
+    isStrong: dayStr / totalStr > 0.3,
+    ohCount: ohStr
+  };
+}
+
+function calcLifeSeason(sj, birthYear, periodTexts) {
+  var cy = new Date().getFullYear();
+  var age = cy - birthYear + 1;
+  function parseAgeRange(text) {
+    if(!text) return null;
+    var m = text.match(/(\d+)\s*[~\-~]\s*(\d+)/);
+    if(m) return {min: parseInt(m[1]), max: parseInt(m[2])};
+    var m2 = text.match(/(\d+)\s*세/);
+    if(m2) return {min: parseInt(m2[1]), max: parseInt(m2[1])+9};
+    return null;
+  }
+  if(periodTexts) {
+    var seasons = ['봄','여름','가을','겨울'];
+    var keys = ['봄기간','여름기간','가을기간','겨울기간'];
+    for(var i=0; i<keys.length; i++){
+      var range = parseAgeRange(periodTexts[keys[i]]);
+      if(range && age >= range.min && age <= range.max) {
+        return seasons[i];
+      }
+    }
+  }
+  var dmStr = calcDayMasterStrength(sj);
+  var ageSeason;
+  if (dmStr.isStrong) {
+    if (age <= 28) ageSeason = '봄';
+    else if (age <= 43) ageSeason = '여름';
+    else if (age <= 58) ageSeason = '가을';
+    else ageSeason = '겨울';
+  } else {
+    if (age <= 32) ageSeason = '봄';
+    else if (age <= 47) ageSeason = '여름';
+    else if (age <= 62) ageSeason = '가을';
+    else ageSeason = '겨울';
+  }
+  return ageSeason;
+}
+
+function calcYearScores(sj, birthYear) {
+  var cy = new Date().getFullYear();
+  var scores = {career: [], wealth: [], love: []};
+  var dmStr = calcDayMasterStrength(sj);
+  var dayOh = OHT[sj.day.g];
+  var chukeMap = {목:'토', 화:'금', 토:'수', 금:'목', 수:'화'};
+  var saengMap = {목:'화', 화:'토', 토:'금', 금:'수', 수:'목'};
+  var wealthOh = chukeMap[dayOh];
+  var officerOh = chukeMap[wealthOh];
+  for (var i = 0; i < 8; i++) {
+    var yr = cy + i;
+    // lunar-javascript로 정확한 세운 간지 계산
+    var solar = Solar.fromYmdHms(yr, 6, 15, 12, 0, 0);
+    var lunar = solar.getLunar();
+    var bazi = lunar.getBaZi();
+    var yrChars = bazi[0].split('');
+    var yrG = TG_MAP[yrChars[0]];
+    var yrJ = JJ_MAP[yrChars[1]];
+    var yrOh = OHT[yrG];
+    var yrJiOh = OHJ[yrJ];
+
+    var careerScore = 60;
+    if (yrOh === officerOh || yrJiOh === officerOh) careerScore += 20;
+    if (yrOh === saengMap[dayOh] || yrJiOh === saengMap[dayOh]) careerScore += 10;
+    if (yrOh === dayOh || yrJiOh === dayOh) careerScore -= 10;
+    if (dmStr.isStrong && (yrOh === chukeMap[dayOh] || yrJiOh === chukeMap[dayOh])) careerScore += 15;
+
+    var wealthScore = 60;
+    if (yrOh === wealthOh || yrJiOh === wealthOh) wealthScore += 22;
+    if (yrOh === saengMap[wealthOh] || yrJiOh === saengMap[wealthOh]) wealthScore += 10;
+    if (yrOh === dayOh || yrJiOh === dayOh) wealthScore -= 8;
+
+    var dayJ = sj.day.j;
+    var chungPairs = [[0,6],[1,7],[2,8],[3,9],[4,10],[5,11]];
+    var isChung = chungPairs.some(function(pair){return (dayJ===pair[0]&&yrJ===pair[1])||(dayJ===pair[1]&&yrJ===pair[0]);});
+    if (isChung) { careerScore -= 12; wealthScore -= 12; }
+
+    var hapPairs = [[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
+    var isHap = hapPairs.some(function(pair){return (dayJ===pair[0]&&yrJ===pair[1])||(dayJ===pair[1]&&yrJ===pair[0]);});
+    if (isHap) { careerScore += 8; wealthScore += 8; }
+
+    scores.career.push(Math.min(95, Math.max(25, Math.round(careerScore))));
+    scores.wealth.push(Math.min(95, Math.max(25, Math.round(wealthScore))));
+
+    var loveOh = (G.form && G.form.gender === 'male') ? wealthOh : officerOh;
+    var loveScore = 60;
+    if (yrOh === loveOh || yrJiOh === loveOh) loveScore += 22;
+    if (yrOh === saengMap[loveOh] || yrJiOh === saengMap[loveOh]) loveScore += 10;
+    if (yrOh === dayOh || yrJiOh === dayOh) loveScore -= 8;
+    if (isHap) loveScore += 15;
+    if (isChung) loveScore -= 12;
+    scores.love.push(Math.min(95, Math.max(25, Math.round(loveScore))));
+  }
+  return scores;
+}function mjHTML(sj) {
   var cols=[{l:'년주',d:sj.year},{l:'월주',d:sj.month},{l:'일주',d:sj.day},{l:'시주',d:sj.time}];
   var h='<table class="mj-table"><tr><th></th>';
   cols.forEach(function(c){h+='<th>'+c.l+'</th>';});
