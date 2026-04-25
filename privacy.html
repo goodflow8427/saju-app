@@ -1,71 +1,170 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>개인정보처리방침 - 사주봐</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+<title>개인정보처리방침 — 사주봐</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:#08080f;color:#e8dcc8;font-family:'Noto Serif KR',serif;line-height:1.8;padding:30px 20px;}
-.wrap{max-width:720px;margin:0 auto;}
-h1{font-size:24px;color:#c9a84c;text-align:center;margin-bottom:8px;letter-spacing:3px;}
-.sub{text-align:center;color:#6a5a4a;font-size:12px;margin-bottom:30px;}
-h2{font-size:16px;color:#c9a84c;margin:24px 0 10px;border-left:3px solid #c9a84c;padding-left:10px;}
-p{font-size:13px;color:#c8b88a;margin-bottom:10px;}
-ul{margin-left:20px;color:#c8b88a;font-size:13px;}
-li{margin-bottom:6px;}
-.back{display:inline-block;margin-top:30px;padding:10px 20px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:8px;color:#c9a84c;text-decoration:none;font-size:12px;}
-.info{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:16px;margin:20px 0;font-size:12px;color:#9a8a6a;}
+:root{
+  --gold:#C4873A;--gold-light:#FDF5E8;--gold-mid:rgba(196,135,58,.15);
+  --bg:#F7F5F2;--card:#FFFFFF;--text:#1A1814;--text2:#5A5248;--muted:#9A9590;--border:rgba(0,0,0,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;line-height:1.7;}
+.wrap{max-width:720px;margin:0 auto;padding:40px 20px 80px;}
+.title{font-family:'Nanum Myeongjo',serif;font-size:28px;font-weight:800;text-align:center;margin-bottom:6px;color:var(--gold);}
+.subtitle{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px;}
+.info-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:32px;box-shadow:0 1px 6px rgba(0,0,0,.04);}
+.info-row{display:flex;gap:8px;font-size:13px;color:var(--text2);margin-bottom:5px;line-height:1.7;}
+.info-row:last-child{margin-bottom:0;}
+.info-label{color:var(--muted);min-width:120px;flex-shrink:0;}
+.info-value{color:var(--text);}
+.section{margin-bottom:28px;}
+.section-title{font-family:'Nanum Myeongjo',serif;font-size:16px;font-weight:700;color:var(--gold);padding-left:12px;border-left:3px solid var(--gold);margin-bottom:12px;line-height:1.4;}
+.section-body{font-size:14px;color:var(--text2);line-height:1.85;padding-left:15px;}
+.section-body p{margin-bottom:6px;}
+.section-body ul{margin:8px 0 8px 4px;padding-left:18px;}
+.section-body li{margin-bottom:4px;line-height:1.85;}
+.back-btn{display:inline-block;margin-top:32px;padding:11px 22px;background:var(--card);border:1.5px solid var(--gold);border-radius:10px;color:var(--gold);font-family:inherit;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;}
+.back-btn:hover{background:var(--gold);color:#fff;}
+.notice{background:var(--gold-light);border:1px solid rgba(196,135,58,.2);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--text2);line-height:1.7;margin-top:12px;}
+.officer-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-top:8px;}
+.officer-row{display:flex;gap:8px;font-size:13px;color:var(--text2);margin-bottom:4px;}
+.officer-row:last-child{margin-bottom:0;}
+.officer-label{color:var(--muted);min-width:80px;flex-shrink:0;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>개인정보처리방침</h1>
-  <div class="sub">사주봐 (sajubao.com)</div>
+  <div class="title">개인정보처리방침</div>
+  <div class="subtitle">사주봐 (sajubao.com)</div>
 
-  <div class="info">
-    사주봐는 이용자의 개인정보를 소중히 다루며, 관련 법령을 준수합니다.<br>
-    <strong>시행일:</strong> 2026년 4월 17일
+  <div class="info-box">
+    <div class="info-row"><span class="info-label">서비스 제공자</span><span class="info-value">연지타이어앤오프피스 (대표: 이가영)</span></div>
+    <div class="info-row"><span class="info-label">사업자등록번호</span><span class="info-value">144-08-02847</span></div>
+    <div class="info-row"><span class="info-label">사업장 주소</span><span class="info-value">전북특별자치도 정읍시 서부산업도로 250 (연지동)</span></div>
+    <div class="info-row"><span class="info-label">통신판매업 신고</span><span class="info-value">준비 중</span></div>
+    <div class="info-row"><span class="info-label">이메일</span><span class="info-value">goodflow8427@gmail.com</span></div>
+    <div class="info-row"><span class="info-label">카카오톡 채널</span><span class="info-value">@사주봐</span></div>
+    <div class="info-row"><span class="info-label">시행일</span><span class="info-value">2026년 4월 25일</span></div>
   </div>
 
-  <h2>1. 수집하는 개인정보 항목</h2>
-  <p>본 서비스는 최소한의 개인정보만 수집합니다.</p>
-  <ul>
-    <li>이름 (선택 입력)</li>
-    <li>생년월일시 (사주 분석용)</li>
-    <li>성별 (사주 분석용)</li>
-    <li>이메일 주소 (구독 시)</li>
-  </ul>
+  <div class="section">
+    <div class="section-body" style="padding-left:0;">
+      <p>연지타이어앤오프피스(이하 "회사")는 사주봐 (sajubao.com, 이하 "서비스") 이용자의 개인정보를 소중히 다루며, 「개인정보 보호법」 및 관련 법령을 준수합니다.</p>
+    </div>
+  </div>
 
-  <h2>2. 개인정보 수집 및 이용 목적</h2>
-  <ul>
-    <li>사주 분석 서비스 제공</li>
-    <li>유료 구독 관리</li>
-    <li>고객 문의 응대</li>
-  </ul>
+  <div class="section">
+    <div class="section-title">1. 수집하는 개인정보 항목</div>
+    <div class="section-body">
+      <p>본 서비스는 최소한의 개인정보만 수집합니다.</p>
+      <ul>
+        <li>이름 (선택 입력)</li>
+        <li>생년월일시 (사주 분석에 필수)</li>
+        <li>성별 (사주 분석에 필수)</li>
+        <li>이메일 주소 (유료 구독 시)</li>
+        <li>구독 코드 (유료 구독 시)</li>
+      </ul>
+    </div>
+  </div>
 
-  <h2>3. 개인정보 보관 기간</h2>
-  <p>① 입력된 생년월일시 등의 정보는 브라우저(localStorage)에만 저장되며, 서버에 저장되지 않습니다.<br>
-  ② 구독 이메일 및 코드 정보는 구독 종료 후 30일 이내 파기됩니다.</p>
+  <div class="section">
+    <div class="section-title">2. 개인정보 수집 및 이용 목적</div>
+    <div class="section-body">
+      <ul>
+        <li>사주 분석 서비스 제공</li>
+        <li>유료 구독 관리 및 본인 인증</li>
+        <li>고객 문의 응대 및 환불 처리</li>
+        <li>서비스 개선 및 통계 분석 (개인 식별 불가능한 형태)</li>
+      </ul>
+    </div>
+  </div>
 
-  <h2>4. 개인정보 제3자 제공</h2>
-  <p>본 서비스는 이용자의 개인정보를 제3자에게 제공하지 않습니다. 다만, AI 분석을 위해 Anthropic Claude API에 사주 정보(이름·생년월일)가 전달되며, 해당 데이터는 분석 완료 후 즉시 폐기됩니다.</p>
+  <div class="section">
+    <div class="section-title">3. 개인정보 보관 및 파기</div>
+    <div class="section-body">
+      <p>① 입력된 생년월일시·이름·성별 등의 정보는 이용자의 브라우저(localStorage)에만 저장되며, 회사 서버에는 저장되지 않습니다.</p>
+      <p>② 유료 구독 시 입력하신 이메일 및 구독 코드 정보는 구독 종료 후 30일 이내에 파기됩니다.</p>
+      <p>③ 결제 관련 정보는 「전자상거래 등에서의 소비자보호에 관한 법률」에 따라 5년간 보관됩니다.</p>
+      <p>④ 이용자가 브라우저 데이터를 삭제하면 저장된 정보가 즉시 삭제됩니다.</p>
+    </div>
+  </div>
 
-  <h2>5. 쿠키 사용</h2>
-  <p>본 서비스는 기본 쿠키 외에 추적 쿠키를 사용하지 않습니다.</p>
+  <div class="section">
+    <div class="section-title">4. 개인정보 제3자 제공</div>
+    <div class="section-body">
+      <p>본 서비스는 이용자의 개인정보를 제3자에게 제공하지 않습니다. 다만, 다음의 경우에 한하여 외부 서비스에 일부 정보가 전달됩니다.</p>
+      <ul>
+        <li><b>Anthropic Claude API</b>: AI 분석을 위해 사주 정보(생년월일시·성별)가 전달되며, 분석 완료 후 즉시 폐기됩니다. 이름은 전달되지 않습니다.</li>
+        <li><b>결제 서비스 제공자</b>: 카카오페이 등 결제 처리를 위해 필요한 최소 정보가 전달됩니다.</li>
+      </ul>
+      <p>법령에 의해 요구되는 경우 또는 수사기관의 적법한 요청이 있는 경우에 한하여 정보를 제공할 수 있습니다.</p>
+    </div>
+  </div>
 
-  <h2>6. 이용자 권리</h2>
-  <p>이용자는 언제든지 자신의 개인정보 열람·수정·삭제를 요청할 수 있습니다. 브라우저 데이터를 삭제하면 저장된 정보가 즉시 삭제됩니다.</p>
+  <div class="section">
+    <div class="section-title">5. 쿠키 및 추적 기술</div>
+    <div class="section-body">
+      <p>본 서비스는 서비스 제공을 위한 기본 쿠키 및 localStorage만 사용하며, 광고·추적 목적의 쿠키는 사용하지 않습니다.</p>
+    </div>
+  </div>
 
-  <h2>7. 개인정보 보호 책임자</h2>
-  <p>성명: 이가영<br>
-  연락처: 카카오톡 채널 @사주봐</p>
+  <div class="section">
+    <div class="section-title">6. 이용자 권리</div>
+    <div class="section-body">
+      <p>이용자는 언제든지 본인의 개인정보에 대해 다음의 권리를 행사할 수 있습니다.</p>
+      <ul>
+        <li>개인정보 열람 요청</li>
+        <li>오류가 있는 정보의 정정 요청</li>
+        <li>개인정보 삭제 요청</li>
+        <li>개인정보 처리 정지 요청</li>
+      </ul>
+      <p>브라우저 데이터를 삭제하시면 저장된 정보가 즉시 삭제됩니다. 회사가 보관 중인 결제 관련 정보의 삭제 요청은 이메일(goodflow8427@gmail.com)로 문의주세요.</p>
+    </div>
+  </div>
 
-  <h2>8. 고지 의무</h2>
-  <p>본 방침이 변경될 경우, 변경 7일 전 홈페이지를 통해 고지합니다.</p>
+  <div class="section">
+    <div class="section-title">7. 개인정보 보호 책임자</div>
+    <div class="section-body">
+      <p>회사는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 이용자의 불만 처리 및 피해 구제 등을 위하여 다음과 같이 개인정보 보호 책임자를 지정하고 있습니다.</p>
+      <div class="officer-box">
+        <div class="officer-row"><span class="officer-label">성명</span><span>이가영</span></div>
+        <div class="officer-row"><span class="officer-label">소속</span><span>연지타이어앤오프피스</span></div>
+        <div class="officer-row"><span class="officer-label">이메일</span><span>goodflow8427@gmail.com</span></div>
+        <div class="officer-row"><span class="officer-label">카카오톡</span><span>채널 @사주봐</span></div>
+      </div>
+    </div>
+  </div>
 
-  <a href="/" class="back">← 사주봐로 돌아가기</a>
+  <div class="section">
+    <div class="section-title">8. 권익 침해 구제 방법</div>
+    <div class="section-body">
+      <p>개인정보 침해로 인한 신고나 상담이 필요하신 경우 아래 기관에 문의하시기 바랍니다.</p>
+      <ul>
+        <li>개인정보 침해신고센터 (privacy.kisa.or.kr / 국번없이 118)</li>
+        <li>개인정보 분쟁조정위원회 (kopico.go.kr / 1833-6972)</li>
+        <li>대검찰청 사이버수사과 (spo.go.kr / 국번없이 1301)</li>
+        <li>경찰청 사이버수사국 (cyberbureau.police.go.kr / 국번없이 182)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">9. 개인정보 처리방침 변경</div>
+    <div class="section-body">
+      <p>본 방침은 시행일로부터 적용되며, 법령 및 방침에 따른 변경내용 추가, 삭제, 수정이 있을 경우 변경 시행 7일 전 홈페이지를 통해 공지합니다.</p>
+    </div>
+  </div>
+
+  <div class="notice">
+    💌 개인정보 관련 문의는 이메일(goodflow8427@gmail.com) 또는 카카오톡 채널 @사주봐로 연락 주시기 바랍니다.
+  </div>
+
+<a href="/" class="back-btn">← 사주봐로 돌아가기</a>
+
 </div>
 </body>
 </html>
