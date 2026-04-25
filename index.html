@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>사주봐 — 커리어·재물 운의 흐름</title>
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.3/lunar.js"></script>
 <style>
 :root{
   --gold:#C4873A;--gold-light:#FDF5E8;--gold-mid:rgba(196,135,58,.15);
@@ -18,8 +19,6 @@
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;}
 .hidden{display:none!important;}
 .wrap{max-width:640px;margin:0 auto;padding:0 18px 80px;}
-
-/* 히어로 */
 .hero{text-align:center;padding:44px 20px 32px;margin-bottom:24px;}
 .hero-logo{font-size:38px;display:block;margin-bottom:6px;}
 .hero-brand{font-size:10px;letter-spacing:5px;color:var(--gold);margin-bottom:14px;}
@@ -34,8 +33,6 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .hero-note{font-size:11px;color:var(--muted);margin-top:10px;}
 .trust{display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:12px;color:var(--muted);}
 .trust b{color:var(--gold);}
-
-/* 폼 */
 .form-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:26px 22px;box-shadow:0 2px 16px rgba(0,0,0,.05);}
 .form-title{font-family:'Nanum Myeongjo',serif;font-size:18px;font-weight:700;margin-bottom:4px;}
 .form-sub{font-size:12px;color:var(--muted);margin-bottom:18px;}
@@ -46,8 +43,6 @@ select.inp option{background:#fff;}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .start-btn{width:100%;margin-top:18px;padding:14px;background:var(--gold);border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;box-shadow:0 4px 16px rgba(196,135,58,.3);transition:all .2s;}
 .start-btn:hover{transform:translateY(-1px);}
-
-/* 로딩 */
 .loading{padding:60px 20px;text-align:center;}
 .spin{display:inline-block;width:40px;height:40px;border:3px solid var(--gold-mid);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -61,24 +56,16 @@ select.inp option{background:#fff;}
 .lstep-chk{font-size:11px;}
 .loading-fact{background:var(--gold-light);border:1px solid rgba(196,135,58,.15);border-radius:10px;padding:13px;margin-top:10px;font-size:12px;color:var(--text2);line-height:1.8;}
 .loading-fact-lbl{font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:4px;}
-
-/* 결과 */
 .result{padding:8px 0;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-
-/* 결과 헤더 */
 .r-header{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px 20px;margin-bottom:14px;text-align:center;box-shadow:0 2px 14px rgba(0,0,0,.04);animation:fadeUp .5s ease both;}
 .r-badge{font-size:10px;letter-spacing:3px;color:var(--gold);margin-bottom:7px;}
 .r-name{font-family:'Nanum Myeongjo',serif;font-size:24px;font-weight:800;margin-bottom:4px;}
 .r-meta{font-size:11px;color:var(--muted);margin-bottom:8px;}
 .r-daymaster{display:inline-block;padding:5px 14px;background:var(--gold-light);border:1px solid rgba(196,135,58,.2);border-radius:14px;font-size:12px;color:var(--gold);}
-
-/* 공유 */
 .share-bar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;animation:fadeUp .5s ease .1s both;}
 .share-bar-btn{padding:11px;background:var(--card);border:1px solid var(--border);border-radius:11px;color:var(--gold);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 1px 6px rgba(0,0,0,.04);}
 .share-bar-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
-
-/* 구독 */
 .sub-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 1px 8px rgba(0,0,0,.03);}
 .sub-active{background:#f0faf2;border:1px solid rgba(74,154,90,.2);border-radius:10px;padding:9px 14px;margin-bottom:12px;font-size:12px;color:var(--spring);}
 .sub-title{font-size:10px;letter-spacing:3px;color:var(--gold);margin-bottom:10px;}
@@ -90,15 +77,11 @@ select.inp option{background:#fff;}
 .sub-btn{padding:10px 16px;background:var(--gold);border:none;border-radius:9px;color:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;}
 .sub-msg{font-size:11px;text-align:center;margin-top:6px;}
 .sub-msg.ok{color:var(--spring);}.sub-msg.err{color:var(--summer);}
-
-/* 탭 */
 .tab-nav{display:flex;gap:6px;margin-bottom:14px;}
 .tab-btn{flex:1;padding:10px;background:var(--card);border:1.5px solid var(--border);border-radius:11px;color:var(--muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;}
 .tab-btn.active{background:var(--gold);border-color:var(--gold);color:#fff;}
 .tab-content{display:none;}
 .tab-content.active{display:block;}
-
-/* 명반 섹션 */
 .mj-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:13px;overflow-x:auto;box-shadow:0 1px 8px rgba(0,0,0,.03);}
 .mj-title{font-size:10px;letter-spacing:3px;color:var(--muted);margin-bottom:11px;text-align:center;}
 .mj-table{width:100%;border-collapse:collapse;min-width:240px;}
@@ -122,16 +105,11 @@ select.inp option{background:#fff;}
 .sec-bd{max-height:0;overflow:hidden;transition:max-height .4s;}
 .sec-bd.open{max-height:3000px;}
 .sec-txt{padding:14px 15px;font-size:13px;line-height:1.9;color:var(--text2);border-top:1px solid var(--border);white-space:pre-wrap;}
-
-/* 운의흐름 탭 */
-/* 기질 카드 */
 .temp-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:13px;box-shadow:0 1px 8px rgba(0,0,0,.03);}
 .temp-lbl{font-size:10px;letter-spacing:3px;color:var(--muted);margin-bottom:8px;}
 .temp-desc{font-size:13px;color:var(--text2);line-height:1.8;}
 .temp-traits{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px;}
 .temp-trait{padding:4px 11px;background:var(--gold-light);border:1px solid rgba(196,135,58,.2);border-radius:14px;font-size:11px;color:var(--gold);}
-
-/* 그래프 */
 .graph-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px 18px 16px;margin-bottom:13px;box-shadow:0 2px 14px rgba(0,0,0,.05);position:relative;overflow:hidden;}
 .graph-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--spring),var(--gold),var(--summer),var(--winter));}
 .graph-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
@@ -162,8 +140,6 @@ select.inp option{background:#fff;}
 .graph-legend{display:flex;gap:14px;justify-content:center;margin:10px 0 4px;}
 .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
 .legend-dot{width:8px;height:8px;border-radius:50%;}
-
-/* 연도 지도 */
 .year-map-section{margin-bottom:14px;}
 .year-map-title{font-size:10px;letter-spacing:3px;color:var(--muted);margin-bottom:11px;}
 .year-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:13px;}
@@ -171,8 +147,6 @@ select.inp option{background:#fff;}
 .year-btn:hover{border-color:var(--gold);color:var(--gold);}
 .year-btn.active{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:700;}
 .year-btn.now{border-color:var(--gold);color:var(--gold);font-weight:600;}
-
-/* 연도 상세 카드 */
 .year-detail{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.05);animation:fadeUp .4s ease both;}
 .yd-header{padding:16px 18px;background:var(--gold-light);border-bottom:1px solid rgba(196,135,58,.12);}
 .yd-year{font-size:10px;letter-spacing:3px;color:var(--gold);margin-bottom:4px;}
@@ -194,8 +168,6 @@ select.inp option{background:#fff;}
 .yd-advice-lbl{font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:6px;}
 .yd-advice-txt{font-family:'Nanum Myeongjo',serif;font-size:14px;font-weight:700;color:var(--text);line-height:1.7;}
 .yd-loading{padding:36px 20px;text-align:center;}
-
-/* 잠금 */
 .lock-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 22px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.04);}
 .lock-icon{font-size:36px;margin-bottom:10px;}
 .lock-title{font-family:'Nanum Myeongjo',serif;font-size:16px;font-weight:700;margin-bottom:6px;}
@@ -207,8 +179,6 @@ select.inp option{background:#fff;}
 .lock-cta:hover{transform:translateY(-1px);}
 .lock-note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.7;}
 .lock-note b{color:var(--gold);}
-
-/* 공유카드 모달 */
 #sc-wrap{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;}
 .sc-card{background:linear-gradient(160deg,#1a1208,#0f0c05);border:1px solid rgba(196,135,58,.3);border-radius:22px;padding:22px 18px;width:100%;max-width:320px;text-align:center;position:relative;}
 .sc-close{position:absolute;top:11px;right:12px;background:rgba(255,255,255,.08);border:none;color:#6a5a4a;font-size:13px;cursor:pointer;padding:5px 8px;border-radius:6px;}
@@ -240,8 +210,6 @@ select.inp option{background:#fff;}
 .sc-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .sc-btn{padding:10px;background:var(--gold);border:none;border-radius:9px;color:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;}
 .sc-btn2{padding:10px;background:rgba(255,255,255,.08);border:1px solid rgba(196,135,58,.2);border-radius:9px;color:#c9a84c;font-family:inherit;font-size:12px;cursor:pointer;}
-
-/* 애정운 */
 .love-step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:13px;box-shadow:0 2px 12px rgba(0,0,0,.04);}
 .love-step-title{font-family:'Nanum Myeongjo',serif;font-size:16px;font-weight:700;margin-bottom:6px;}
 .love-step-sub{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;}
@@ -504,7 +472,7 @@ select.inp option{background:#fff;}
 
 </div><!-- /wrap -->
 <script>
-// ===== 사주 계산 (정교한 버전) =====
+// ===== 사주 계산 (lunar-javascript 기반) =====
 var TG=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 var JJ=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 var TGN=['갑','을','병','정','무','기','경','신','임','계'];
@@ -514,311 +482,38 @@ var OHJ=['수','토','목','목','토','화','화','토','금','금','토','수'
 var OHC={목:'wood',화:'fire',토:'earth',금:'metal',수:'water'};
 var OHK={목:'🌳 나무',화:'🔥 불',토:'🌍 흙',금:'⚙️ 금',수:'💧 물'};
 
-// 절기 데이터 (년도별 정확한 절기일 - 입춘~소한)
-// 각 월의 절기일 (1900~2050 평균값 기반 정밀 계산)
-var JEOLGI_TABLE = {
-  // [입춘,경칩,청명,입하,망종,소서,입추,백로,한로,입동,대설,소한]
-  // 평년 기준
-  default: [4,6,5,5,6,7,7,8,8,7,7,6]
-};
+var TG_MAP={'甲':0,'乙':1,'丙':2,'丁':3,'戊':4,'己':5,'庚':6,'辛':7,'壬':8,'癸':9};
+var JJ_MAP={'子':0,'丑':1,'寅':2,'卯':3,'辰':4,'巳':5,'午':6,'未':7,'申':8,'酉':9,'戌':10,'亥':11};
 
-// 정밀 절기 계산 (천문학적 근사값)
-function getJeolgiDay(year, month) {
-  // 월별 절기 기준일 (음력→양력 변환 근사)
-  var base = JEOLGI_TABLE.default[month-1];
-  // 4년 주기 윤년 보정
-  var leapAdj = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? -1 : 0;
-  // 세기별 보정 (1900년대는 +1, 2000년대는 0)
-  var centuryAdj = year < 2000 ? 1 : 0;
-  return base + leapAdj + centuryAdj;
-}
-
-// 년주 계산
-function getYear(y) {
-  var g = ((y - 4) % 10 + 10) % 10;
-  var j = ((y - 4) % 12 + 12) % 12;
-  return {g:g, j:j};
-}
-
-// 월주 계산 (절기 기준 정확)
-function getMonth(y, m, d) {
-  var jeolgi = getJeolgiDay(y, m);
-  var mj, mg;
-  if (d >= jeolgi) {
-    // 절기 이후 → 해당 월의 월지
-    var mjMap = {1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:0};
-    mj = mjMap[m];
-  } else {
-    // 절기 이전 → 전월의 월지
-    var mjPrevMap = {1:0,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
-    mj = mjPrevMap[m];
+// 핵심: lunar-javascript로 정확한 사주 계산
+function calcSaju(y, m, d, h, min) {
+  min = min || 0;
+  var solar = Solar.fromYmdHms(y, m, d, h, min, 0);
+  var lunar = solar.getLunar();
+  var bazi = lunar.getBaZi();
+  function parsePillar(ganzhi) {
+    var chars = ganzhi.split('');
+    return { g: TG_MAP[chars[0]], j: JJ_MAP[chars[1]] };
   }
-  // 월간 계산: 연간 기준
-  var yg = ((y - 4) % 10 + 10) % 10;
-  // 갑기년=병인월시작, 을경년=무인월시작, 병신년=경인월시작, 정임년=임인월시작, 무계년=갑인월시작
-  var monthBaseG = [2, 4, 6, 8, 0, 2, 4, 6, 8, 0][yg];
-  // 인월(mj=2)부터 시작하므로 offset 계산
-  var offset = (mj - 2 + 12) % 12;
-  mg = (monthBaseG + offset) % 10;
-  return {g:mg, j:mj};
-}
-
-// 일주 계산 (갑자일 기준 정확)
-function getDay(y, m, d) {
-  // 율리우스 일수 계산으로 정확한 일진 산출
-  var a = Math.floor((14 - m) / 12);
-  var yr = y + 4800 - a;
-  var mo = m + 12 * a - 3;
-  var jdn = d + Math.floor((153 * mo + 2) / 5) + 365 * yr + Math.floor(yr / 4) - Math.floor(yr / 100) + Math.floor(yr / 400) - 32045;
-  // 갑자일(JDN 2299161 = 1582년 10월 15일) 기준
-  // 실제로는 임의 기준점 사용
-  var BASE_JDN = 2415021; // 1900년 1월 1일 JDN
-  var BASE_GANJIGA = 10; // 1900년 1월 1일 = 甲戌(갑술)일 기준 검증완료
-  var diff = jdn - BASE_JDN;
-  var idx = ((diff + BASE_GANJIGA) % 60 + 60) % 60;
-  return {g: idx % 10, j: idx % 12};
-}
-
-// 시주 계산
-function getHour(dg, h) {
-  // 자시=23~1시, 축시=1~3시 ... (2시간 단위)
-  var hj = Math.floor((h + 1) / 2) % 12;
-  // 일간 기준 시간 천간
-  // 갑기일=갑자시, 을경일=병자시, 병신일=무자시, 정임일=경자시, 무계일=임자시
-  var hourBaseG = [0, 2, 4, 6, 8, 0, 2, 4, 6, 8][dg];
-  var hg = (hourBaseG + hj) % 10;
-  return {g:hg, j:hj};
-}
-
-// 대운 계산 (10년 대운)
-function calcDaeun(sj, year, month, day, gender) {
-  // 출생 후 다음/이전 절기까지의 일수로 대운수 계산
-  var yg = sj.year.g;
-  var isYang = (yg % 2 === 0); // 갑,병,무,경,임 = 양간
-  var isMale = (gender === 'male');
-  // 순행/역행 결정
-  var forward = (isYang && isMale) || (!isYang && !isMale);
-  
-  // 절기일 계산 (근사)
-  var jeolgi = getJeolgiDay(year, month);
-  var daysToJeolgi;
-  if (forward) {
-    // 다음 절기까지의 일수
-    var nextMonth = month === 12 ? 1 : month + 1;
-    var nextYear = month === 12 ? year + 1 : year;
-    var nextJeolgi = getJeolgiDay(nextYear, nextMonth);
-    var daysInMonth = new Date(nextYear, nextMonth - 1, 0).getDate();
-    daysToJeolgi = (day < jeolgi) ? (jeolgi - day) : (daysInMonth - day + nextJeolgi);
-  } else {
-    // 이전 절기까지의 일수
-    daysToJeolgi = (day >= jeolgi) ? (day - jeolgi) : (day + 30 - getJeolgiDay(year, month === 1 ? 12 : month - 1));
-  }
-  
-  // 3일 = 1년 원칙
-  var startAge = Math.round(daysToJeolgi / 3);
-  
-  // 대운 간지 계산
-  var daeuns = [];
-  var monthIdx = sj.month.j;
-  for (var i = 0; i < 8; i++) {
-    var offset = forward ? (i + 1) : -(i + 1);
-    var dg2 = ((sj.month.g + offset) % 10 + 10) % 10;
-    var dj = ((monthIdx + offset) % 12 + 12) % 12;
-    daeuns.push({
-      g: dg2, j: dj,
-      startAge: startAge + i * 10,
-      startYear: year + startAge + i * 10 - (new Date().getFullYear() - year)
-    });
-  }
-  return {startAge: startAge, daeuns: daeuns, forward: forward};
-}
-
-// 오행 강도 계산 (십이운성 기반)
-function calcOhengStrength(sj) {
-  var ohCount = {목:0, 화:0, 토:0, 금:0, 수:0};
-  var pillars = [sj.year, sj.month, sj.day, sj.time];
-  
-  // 천간 오행 (가중치 1.0)
-  pillars.forEach(function(p) {
-    ohCount[OHT[p.g]] += 1.0;
-  });
-  
-  // 지지 오행 (가중치 1.2 - 지지가 더 중요)
-  pillars.forEach(function(p) {
-    ohCount[OHJ[p.j]] += 1.2;
-  });
-  
-  // 지장간 (간략화 - 주기운만)
-  var jijanggan = {
-    0: [{oh:'수',w:0.7}],          // 자
-    1: [{oh:'토',w:0.6},{oh:'수',w:0.3}], // 축
-    2: [{oh:'목',w:0.7},{oh:'화',w:0.2}], // 인
-    3: [{oh:'목',w:0.8}],          // 묘
-    4: [{oh:'토',w:0.6},{oh:'목',w:0.2}], // 진
-    5: [{oh:'화',w:0.6},{oh:'토',w:0.3}], // 사
-    6: [{oh:'화',w:0.7},{oh:'토',w:0.2}], // 오
-    7: [{oh:'토',w:0.6},{oh:'화',w:0.3}], // 미
-    8: [{oh:'금',w:0.7},{oh:'수',w:0.2}], // 신
-    9: [{oh:'금',w:0.8}],          // 유
-    10:[{oh:'토',w:0.6},{oh:'금',w:0.2}], // 술
-    11:[{oh:'수',w:0.6},{oh:'목',w:0.2}]  // 해
-  };
-  pillars.forEach(function(p) {
-    var jzg = jijanggan[p.j] || [];
-    jzg.forEach(function(z) {
-      ohCount[z.oh] += z.w;
-    });
-  });
-  
-  return ohCount;
-}
-
-// 일간 강도 계산 (득지/실지)
-function calcDayMasterStrength(sj) {
-  var dayOh = OHT[sj.day.g];
-  var ohStr = calcOhengStrength(sj);
-  
-  // 일간과 같은 오행 또는 생하는 오행이 강할수록 신강
-  var saengMap = {목:'수', 화:'목', 토:'화', 금:'토', 수:'금'};
-  var dayStr = ohStr[dayOh] + ohStr[saengMap[dayOh]] * 0.7;
-  var totalStr = Object.values(ohStr).reduce(function(a,b){return a+b;},0);
-  
   return {
-    strength: dayStr / totalStr,
-    isStrong: dayStr / totalStr > 0.3,
-    ohCount: ohStr
+    year: parsePillar(bazi[0]),
+    month: parsePillar(bazi[1]),
+    day: parsePillar(bazi[2]),
+    time: parsePillar(bazi[3])
   };
 }
 
-// 인생 계절 계산 - 기간 문자열 파싱 기반
-function calcLifeSeason(sj, birthYear, periodTexts) {
-  var cy = new Date().getFullYear();
-  var age = cy - birthYear + 1;
-
-  // AI가 답한 기간 텍스트에서 나이 범위 파싱
-  // 예: "32~40세", "33세~40세", "25~30세" 등
-  function parseAgeRange(text) {
-    if(!text) return null;
-    var m = text.match(/(\d+)\s*[~\-~]\s*(\d+)/);
-    if(m) return {min: parseInt(m[1]), max: parseInt(m[2])};
-    var m2 = text.match(/(\d+)\s*세/);
-    if(m2) return {min: parseInt(m2[1]), max: parseInt(m2[1])+9};
-    return null;
-  }
-
-  if(periodTexts) {
-    var seasons = ['봄','여름','가을','겨울'];
-    var keys = ['봄기간','여름기간','가을기간','겨울기간'];
-    for(var i=0; i<keys.length; i++){
-      var range = parseAgeRange(periodTexts[keys[i]]);
-      if(range && age >= range.min && age <= range.max) {
-        return seasons[i];
-      }
-    }
-  }
-
-  // 파싱 실패 시 사주 오행 + 나이 기반 계산
-  var dmStr = calcDayMasterStrength(sj);
-  var dayOh = OHT[sj.day.g];
-  var ohSeason = {목:'봄', 화:'여름', 토:'가을', 금:'가을', 수:'겨울'};
-
-  // 신강/신약에 따른 대운 흐름
-  var ageSeason;
-  if (dmStr.isStrong) {
-    // 신강: 일찍 전성기
-    if (age <= 28) ageSeason = '봄';
-    else if (age <= 43) ageSeason = '여름';
-    else if (age <= 58) ageSeason = '가을';
-    else ageSeason = '겨울';
-  } else {
-    // 신약: 조금 늦게 전성기
-    if (age <= 32) ageSeason = '봄';
-    else if (age <= 47) ageSeason = '여름';
-    else if (age <= 62) ageSeason = '가을';
-    else ageSeason = '겨울';
-  }
-  return ageSeason;
-}
-
-// 연도별 운세 점수 계산 (사주 기반)
-function calcYearScores(sj, birthYear) {
-  var cy = new Date().getFullYear();
-  var scores = {career: [], wealth: [], love: []};
-  var dmStr = calcDayMasterStrength(sj);
-  var dayOh = OHT[sj.day.g];
-  var chukeMap = {목:'토', 화:'금', 토:'수', 금:'목', 수:'화'};
-  var saengMap = {목:'화', 화:'토', 토:'금', 금:'수', 수:'목'};
-  var wealthOh = chukeMap[dayOh]; // 재성
-  var officerOh = chukeMap[wealthOh]; // 관성
-  var isMale = false; // 기본값 (렌더링 시 업데이트)
-  
-  // 세운 간지
-  for (var i = 0; i < 8; i++) {
-    var yr = cy + i;
-    var yrGanji = getYear(yr);
-    var yrOh = OHT[yrGanji.g];
-    var yrJiOh = OHJ[yrGanji.j];
-    
-    // 커리어 점수 (관성이 강할수록, 비견이 약할수록 좋음)
-    var careerScore = 60;
-    if (yrOh === officerOh || yrJiOh === officerOh) careerScore += 20;
-    if (yrOh === saengMap[dayOh] || yrJiOh === saengMap[dayOh]) careerScore += 10;
-    if (yrOh === dayOh || yrJiOh === dayOh) careerScore -= 10; // 비겁 과다
-    if (dmStr.isStrong && (yrOh === chukeMap[dayOh] || yrJiOh === chukeMap[dayOh])) careerScore += 15;
-    
-    // 재물 점수 (재성이 강할수록 좋음)
-    var wealthScore = 60;
-    if (yrOh === wealthOh || yrJiOh === wealthOh) wealthScore += 22;
-    if (yrOh === saengMap[wealthOh] || yrJiOh === saengMap[wealthOh]) wealthScore += 10;
-    if (yrOh === dayOh || yrJiOh === dayOh) wealthScore -= 8; // 비겁 재성 겁탈
-    
-    // 형충파해 보정 (일지와 세운 지지)
-    var dayJ = sj.day.j;
-    var yrJ = yrGanji.j;
-    // 충: 자오충, 축미충, 인신충, 묘유충, 진술충, 사해충
-    var chungPairs = [[0,6],[1,7],[2,8],[3,9],[4,10],[5,11]];
-    var isChung = chungPairs.some(function(pair){return (dayJ===pair[0]&&yrJ===pair[1])||(dayJ===pair[1]&&yrJ===pair[0]);});
-    if (isChung) { careerScore -= 12; wealthScore -= 12; }
-    
-    // 합: 자축합, 인해합, 묘술합, 진유합, 사신합, 오미합
-    var hapPairs = [[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
-    var isHap = hapPairs.some(function(pair){return (dayJ===pair[0]&&yrJ===pair[1])||(dayJ===pair[1]&&yrJ===pair[0]);});
-    if (isHap) { careerScore += 8; wealthScore += 8; }
-    
-    scores.career.push(Math.min(95, Math.max(25, Math.round(careerScore))));
-    scores.wealth.push(Math.min(95, Math.max(25, Math.round(wealthScore))));
-
-    // 애정 점수 (남자=재성, 여자=관성이 인연)
-    var loveOh = (G.form && G.form.gender === 'male') ? wealthOh : officerOh;
-    var loveScore = 60;
-    if (yrOh === loveOh || yrJiOh === loveOh) loveScore += 22;
-    if (yrOh === saengMap[loveOh] || yrJiOh === saengMap[loveOh]) loveScore += 10;
-    if (yrOh === dayOh || yrJiOh === dayOh) loveScore -= 8;
-    if (isHap) loveScore += 15;
-    if (isChung) loveScore -= 12;
-    scores.love.push(Math.min(95, Math.max(25, Math.round(loveScore))));
-  }
-  return scores;
-}
-
-function calcSaju(y, m, d, h) {
-  return {
-    year: getYear(y),
-    month: getMonth(y, m, d),
-    day: getDay(y, m, d),
-    time: getHour(getDay(y, m, d).g, h)
-  };
-}
 function descSaju(sj) {
   return TG[sj.year.g]+JJ[sj.year.j]+' '+TG[sj.month.g]+JJ[sj.month.j]+' '+TG[sj.day.g]+JJ[sj.day.j]+' '+TG[sj.time.g]+JJ[sj.time.j];
 }
+
 // ===== 대운/오행/계절/점수 계산 =====
 function calcDaeun(sj, year, month, day, gender) {
   var yg = sj.year.g;
   var isYang = (yg % 2 === 0);
   var isMale = (gender === 'male');
   var forward = (isYang && isMale) || (!isYang && !isMale);
-  var startAge = 5; // 근사치 (라이브러리 사용 시 정확한 값으로 교체 가능)
+  var startAge = 5;
   var daeuns = [];
   var monthIdx = sj.month.j;
   for (var i = 0; i < 8; i++) {
@@ -921,7 +616,6 @@ function calcYearScores(sj, birthYear) {
   var officerOh = chukeMap[wealthOh];
   for (var i = 0; i < 8; i++) {
     var yr = cy + i;
-    // lunar-javascript로 정확한 세운 간지 계산
     var solar = Solar.fromYmdHms(yr, 6, 15, 12, 0, 0);
     var lunar = solar.getLunar();
     var bazi = lunar.getBaZi();
@@ -964,7 +658,9 @@ function calcYearScores(sj, birthYear) {
     scores.love.push(Math.min(95, Math.max(25, Math.round(loveScore))));
   }
   return scores;
-}function mjHTML(sj) {
+}
+
+function mjHTML(sj) {
   var cols=[{l:'년주',d:sj.year},{l:'월주',d:sj.month},{l:'일주',d:sj.day},{l:'시주',d:sj.time}];
   var h='<table class="mj-table"><tr><th></th>';
   cols.forEach(function(c){h+='<th>'+c.l+'</th>';});
@@ -1058,7 +754,6 @@ function pk(text,key){
   return '';
 }
 
-
 // ===== 명반 =====
 function initSecs(){
   document.getElementById('sec-list').innerHTML=SECS.map(function(s){
@@ -1120,7 +815,6 @@ async function loadJourney(){
       '지금 인생 계절의 의미와 커리어/재물 관점 조언 200자'
     ];
     var text=await callAPI(parts.join('\n'));
-    // 사주 기반 직접 계산
     var yearScores = calcYearScores(G.saju, G.form.year);
     var periodTexts = {봄기간:pk(text,'봄기간'),여름기간:pk(text,'여름기간'),가을기간:pk(text,'가을기간'),겨울기간:pk(text,'겨울기간')};
     var lifeSeason = calcLifeSeason(G.saju, G.form.year, periodTexts);
@@ -1160,13 +854,11 @@ function renderJourney(data){
 
   var html='';
 
-  // 1. 기질 카드
   var traits=(data.기질키워드||'').split(',').map(function(t){return t.trim();}).filter(Boolean);
   html+='<div class="temp-card"><div class="temp-lbl">✦ 타고난 기질</div><div class="temp-desc">'+(data.기질||'')+'</div>';
   if(traits.length)html+='<div class="temp-traits">'+traits.map(function(t){return '<span class="temp-trait">'+t+'</span>';}).join('')+'</div>';
   html+='</div>';
 
-  // 2. 그래프
   var W=640,H=180,padL=20,padR=20,padT=20,padB=30;
   var gW=W-padL-padR,gH=H-padT-padB;
   var allVals=career.concat(wealth);
@@ -1185,18 +877,14 @@ function renderJourney(data){
   html+='<div class="graph-legend"><div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>커리어</div><div class="legend-item"><div class="legend-dot" style="background:var(--spring)"></div>재물</div></div>';
   html+='<div class="graph-svg-wrap">';
   html+='<svg viewBox="0 0 '+W+' '+H+'" style="width:'+W+'px;min-width:'+W+'px;height:'+(H+10)+'px;">';
-  // 배경 그리드
   html+='<line x1="'+padL+'" y1="'+padT+'" x2="'+padL+'" y2="'+(padT+gH)+'" stroke="rgba(0,0,0,.06)" stroke-width="1"/>';
   [25,50,75].forEach(function(pct){var y=gy(minV+(maxV-minV)*pct/100);html+='<line x1="'+padL+'" y1="'+y.toFixed(1)+'" x2="'+(padL+gW)+'" y2="'+y.toFixed(1)+'" stroke="rgba(0,0,0,.05)" stroke-dasharray="4,4" stroke-width="1"/>';});
-  // 영역
   html+='<defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C4873A" stop-opacity=".15"/><stop offset="100%" stop-color="#C4873A" stop-opacity="0"/></linearGradient>';
   html+='<linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4A9A5A" stop-opacity=".12"/><stop offset="100%" stop-color="#4A9A5A" stop-opacity="0"/></linearGradient></defs>';
   html+='<path d="'+makeArea(career)+'" fill="url(#cg)"/>';
   html+='<path d="'+makeArea(wealth)+'" fill="url(#wg)"/>';
-  // 라인
   html+='<path class="chart-line" d="'+makePath(career)+'" fill="none" stroke="#C4873A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
   html+='<path class="chart-line2" d="'+makePath(wealth)+'" fill="none" stroke="#4A9A5A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
-  // 점 + 연도 라벨
   years.forEach(function(yr,i){
     var cx=gx(i),ccy=gy(career[i]),cwy=gy(wealth[i]);
     var isNow=yr===cy;
@@ -1209,18 +897,15 @@ function renderJourney(data){
     }
   });
   html+='</svg></div>';
-  // 계절 바
   html+='<div class="season-row">';
   seasons.forEach(function(s,i){var sm2=sMap[s];var isN=s===now;html+='<div class="season-cell'+(isN?' active':'')+'"><div class="s-icon">'+sm2.icon+'</div><div class="s-name">'+s+(isN?' ●':'')+'</div><div class="s-yr">'+(periods[i]||'')+'</div></div>';});
   html+='</div></div>';
 
-  // 3. 현재 계절 박스
   html+='<div style="background:var(--'+sm.cls+'-light);border:1.5px solid rgba(0,0,0,.06);border-radius:14px;padding:18px;margin-bottom:13px;">';
   html+='<div style="font-size:10px;letter-spacing:2px;color:var(--'+sm.cls+');margin-bottom:6px;font-weight:600;">'+sm.icon+' 지금 이 순간 — '+sm.label+'</div>';
   html+='<div style="font-size:13px;color:var(--text2);line-height:1.8;">'+(data.현재계절설명||'')+'</div>';
   html+='</div>';
 
-  // 4. 연도별 운세 지도
   html+='<div class="year-map-section">';
   html+='<div class="year-map-title">✦ 연도별 운세 지도</div>';
   html+='<div class="year-grid">';
@@ -1234,16 +919,13 @@ function renderJourney(data){
 
   el.innerHTML=html;
 
-  // 올해 자동 선택
   setTimeout(function(){
     var btn=document.getElementById('ybtn-'+cy);
     if(btn)selectYear(cy);
   },500);
 }
 
-// ===== 연도별 분석 =====
 function selectYear(yr){
-  // 버튼 활성화
   var cy=new Date().getFullYear();
   for(var i=0;i<8;i++){
     var btn=document.getElementById('ybtn-'+(cy+i));
@@ -1253,14 +935,12 @@ function selectYear(yr){
   }
   var wrap=document.getElementById('year-detail');
   if(!wrap){
-    // year-detail이 없으면 journey-content 다시 렌더
     var jcache=loadCache('jn-'+G.dc.slice(0,15));
     if(jcache){renderJourney(jcache);}
     return;
   }
   if(!G.dc){showToast('먼저 사주를 분석해주세요.');return;}
 
-  // 구독 체크
   if(!isSubscribed()){
     wrap.innerHTML='<div class="lock-card">'
       +'<div class="lock-icon">🔒</div>'
@@ -1278,14 +958,11 @@ function selectYear(yr){
     return;
   }
 
-  // 메모리 캐시 확인
   if(yearCache[yr]&&yearCache[yr].커리어&&yearCache[yr].재물){showYearDetail(yr,yearCache[yr]);return;}
-  // localStorage 캐시 확인
   var stored=loadCache('yr-'+G.dc.slice(0,10)+'-'+yr);
   if(stored&&stored.커리어&&stored.재물){yearCache[yr]=stored;showYearDetail(yr,stored);return;}
   delete yearCache[yr];
 
-  // 로딩 중복 방지
   if(wrap.dataset.loading===String(yr))return;
   wrap.dataset.loading=String(yr);
   wrap.innerHTML='<div class="yd-loading"><div class="spin" style="width:32px;height:32px;border-width:2.5px;"></div><div style="margin-top:12px;font-size:13px;color:var(--muted);">'+yr+'년 운세 분석 중…</div></div>';
@@ -1345,12 +1022,9 @@ function showYearDetail(yr,d){
   if(!wrap)return;
   var months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
   var rawMonthly=d.월별||'';
-  // 백틱/코드블록 제거
   rawMonthly=rawMonthly.replace(/```[^`]*```/g,function(m){return m.replace(/```/g,'');});
   rawMonthly=rawMonthly.replace(/`/g,'');
-  // 한글 변환
   rawMonthly=rawMonthly.replace(/좋음/g,'good').replace(/보통/g,'normal').replace(/나쁨|주의|나쁨/g,'bad');
-  // > 인용구 제거
   rawMonthly=rawMonthly.replace(/^>\s*/gm,'');
   var scores=rawMonthly.split(',').map(function(s){
     var v=s.trim().toLowerCase();
@@ -1396,7 +1070,7 @@ async function startAnalysis(){
   if(!yr||!mo||!dy||isNaN(hr)||isNaN(mn)){alert('생년월일시를 모두 입력해주세요.');return;}
   show('s-loading');startLoadingMsg();
   try{
-    var sj=calcSaju(yr,mo,dy,hr);
+    var sj=calcSaju(yr,mo,dy,hr,mn);
     var dc=descSaju(sj)+' ('+yr+'년 '+mo+'월 '+dy+'일 '+hr+'시 '+(gd==='female'?'여성':'남성')+')';
     G={form:{name:nm,year:yr,month:mo,day:dy,hour:hr,minute:mn,gender:gd},saju:sj,dc:dc};
     stopLoadingMsg();show('s-main');
@@ -1502,6 +1176,7 @@ function copyLink(){
   if(navigator.clipboard)navigator.clipboard.writeText('https://sajubao.com').then(function(){showToast('✓ 링크가 복사되었습니다');});
   else showToast('sajubao.com');
 }
+
 // ===== 애정운 =====
 var loveState = {status:'', period:'', concern:''};
 
@@ -1570,48 +1245,15 @@ function renderLoveStep2(status){
   var el=document.getElementById('love-step2');
   document.getElementById('love-step3').innerHTML='';
   var config={
-    dating:{
-      title:'만난 지 얼마나 됐나요?',
-      opts:[
-        {id:'new',icon:'🌱',txt:'3개월 미만'},
-        {id:'mid',icon:'🌿',txt:'3개월~1년'},
-        {id:'long',icon:'🌳',txt:'1년 이상'}
-      ]
-    },
-    single:{
-      title:'싱글 기간은 얼마나 됐나요?',
-      opts:[
-        {id:'recent',icon:'🌱',txt:'6개월 미만'},
-        {id:'mid',icon:'🌿',txt:'6개월~2년'},
-        {id:'long',icon:'🌳',txt:'2년 이상'}
-      ]
-    },
-    married:{
-      title:'결혼 몇 년 됐나요?',
-      opts:[
-        {id:'new',icon:'🌱',txt:'3년 미만'},
-        {id:'mid',icon:'🌿',txt:'3~10년'},
-        {id:'long',icon:'🌳',txt:'10년 이상'}
-      ]
-    },
-    crush:{
-      title:'어느 단계예요?',
-      opts:[
-        {id:'new',icon:'👀',txt:'막 알게 됨'},
-        {id:'mid',icon:'💬',txt:'어느 정도 친해짐'},
-        {id:'long',icon:'💭',txt:'고백 고민 중'}
-      ]
-    }
+    dating:{title:'만난 지 얼마나 됐나요?',opts:[{id:'new',icon:'🌱',txt:'3개월 미만'},{id:'mid',icon:'🌿',txt:'3개월~1년'},{id:'long',icon:'🌳',txt:'1년 이상'}]},
+    single:{title:'싱글 기간은 얼마나 됐나요?',opts:[{id:'recent',icon:'🌱',txt:'6개월 미만'},{id:'mid',icon:'🌿',txt:'6개월~2년'},{id:'long',icon:'🌳',txt:'2년 이상'}]},
+    married:{title:'결혼 몇 년 됐나요?',opts:[{id:'new',icon:'🌱',txt:'3년 미만'},{id:'mid',icon:'🌿',txt:'3~10년'},{id:'long',icon:'🌳',txt:'10년 이상'}]},
+    crush:{title:'어느 단계예요?',opts:[{id:'new',icon:'👀',txt:'막 알게 됨'},{id:'mid',icon:'💬',txt:'어느 정도 친해짐'},{id:'long',icon:'💭',txt:'고백 고민 중'}]}
   };
   var c=config[status];
-  var html='<div class="love-step">'
-    +'<div class="love-step-title">'+c.title+'</div>'
-    +'<div class="love-sub-options">';
+  var html='<div class="love-step"><div class="love-step-title">'+c.title+'</div><div class="love-sub-options">';
   c.opts.forEach(function(o){
-    html+='<button class="love-sub-opt" id="lp-'+o.id+'" data-id="'+o.id+'" onclick="selectLovePeriod(this.dataset.id)">'
-      +'<span class="lo-sub-icon">'+o.icon+'</span>'
-      +'<span>'+o.txt+'</span>'
-      +'</button>';
+    html+='<button class="love-sub-opt" id="lp-'+o.id+'" data-id="'+o.id+'" onclick="selectLovePeriod(this.dataset.id)"><span class="lo-sub-icon">'+o.icon+'</span><span>'+o.txt+'</span></button>';
   });
   html+='</div></div>';
   el.innerHTML=html;
@@ -1629,52 +1271,15 @@ function selectLovePeriod(id){
 function renderLoveStep3(status){
   var el=document.getElementById('love-step3');
   var config={
-    dating:{
-      title:'지금 가장 고민이 뭔가요?',
-      opts:[
-        {id:'growth',icon:'🚀',txt:'관계를 더 발전시키고 싶어요'},
-        {id:'conflict',icon:'⚡',txt:'갈등이나 다툼이 있어요'},
-        {id:'marriage',icon:'💍',txt:'결혼을 고민 중이에요'},
-        {id:'boredom',icon:'😶',txt:'권태기인 것 같아요'}
-      ]
-    },
-    single:{
-      title:'지금 원하는 게 뭔가요?',
-      opts:[
-        {id:'meet',icon:'💫',txt:'새로운 만남을 원해요'},
-        {id:'ok',icon:'😊',txt:'혼자도 나쁘지 않아요'},
-        {id:'unsure',icon:'🤷',txt:'잘 모르겠어요'},
-        {id:'specific',icon:'💝',txt:'마음에 두는 사람이 있어요'}
-      ]
-    },
-    married:{
-      title:'지금 가장 고민이 뭔가요?',
-      opts:[
-        {id:'relation',icon:'💑',txt:'부부 관계를 개선하고 싶어요'},
-        {id:'child',icon:'👶',txt:'자녀 계획이 있어요'},
-        {id:'conflict',icon:'⚡',txt:'갈등이나 위기가 있어요'},
-        {id:'good',icon:'😊',txt:'잘 지내고 있어요'}
-      ]
-    },
-    crush:{
-      title:'상대방 반응이 어떤 것 같아요?',
-      opts:[
-        {id:'good',icon:'😊',txt:'좋은 것 같아요'},
-        {id:'unsure',icon:'🤔',txt:'잘 모르겠어요'},
-        {id:'cold',icon:'🥶',txt:'차갑게 느껴져요'},
-        {id:'mixed',icon:'😅',txt:'뜨겁다 차갑다 헷갈려요'}
-      ]
-    }
+    dating:{title:'지금 가장 고민이 뭔가요?',opts:[{id:'growth',icon:'🚀',txt:'관계를 더 발전시키고 싶어요'},{id:'conflict',icon:'⚡',txt:'갈등이나 다툼이 있어요'},{id:'marriage',icon:'💍',txt:'결혼을 고민 중이에요'},{id:'boredom',icon:'😶',txt:'권태기인 것 같아요'}]},
+    single:{title:'지금 원하는 게 뭔가요?',opts:[{id:'meet',icon:'💫',txt:'새로운 만남을 원해요'},{id:'ok',icon:'😊',txt:'혼자도 나쁘지 않아요'},{id:'unsure',icon:'🤷',txt:'잘 모르겠어요'},{id:'specific',icon:'💝',txt:'마음에 두는 사람이 있어요'}]},
+    married:{title:'지금 가장 고민이 뭔가요?',opts:[{id:'relation',icon:'💑',txt:'부부 관계를 개선하고 싶어요'},{id:'child',icon:'👶',txt:'자녀 계획이 있어요'},{id:'conflict',icon:'⚡',txt:'갈등이나 위기가 있어요'},{id:'good',icon:'😊',txt:'잘 지내고 있어요'}]},
+    crush:{title:'상대방 반응이 어떤 것 같아요?',opts:[{id:'good',icon:'😊',txt:'좋은 것 같아요'},{id:'unsure',icon:'🤔',txt:'잘 모르겠어요'},{id:'cold',icon:'🥶',txt:'차갑게 느껴져요'},{id:'mixed',icon:'😅',txt:'뜨겁다 차갑다 헷갈려요'}]}
   };
   var c=config[status];
-  var html='<div class="love-step">'
-    +'<div class="love-step-title">'+c.title+'</div>'
-    +'<div class="love-sub-options">';
+  var html='<div class="love-step"><div class="love-step-title">'+c.title+'</div><div class="love-sub-options">';
   c.opts.forEach(function(o){
-    html+='<button class="love-sub-opt" id="lc-'+o.id+'" data-id="'+o.id+'" onclick="selectLoveConcern(this.dataset.id)">'
-      +'<span class="lo-sub-icon">'+o.icon+'</span>'
-      +'<span>'+o.txt+'</span>'
-      +'</button>';
+    html+='<button class="love-sub-opt" id="lc-'+o.id+'" data-id="'+o.id+'" onclick="selectLoveConcern(this.dataset.id)"><span class="lo-sub-icon">'+o.icon+'</span><span>'+o.txt+'</span></button>';
   });
   html+='</div></div>';
   el.innerHTML=html;
@@ -1748,10 +1353,7 @@ async function analyzeLove(){
       {key:'주의할 점',icon:'⚠️',title:'주의할 패턴'}
     ];
     var html='<div class="love-result">';
-    html+='<div class="love-result-header">'
-      +'<div class="love-result-badge">💕 애정운 분석 결과</div>'
-      +'<div class="love-result-title">'+situation+'</div>'
-      +'</div>';
+    html+='<div class="love-result-header"><div class="love-result-badge">💕 애정운 분석 결과</div><div class="love-result-title">'+situation+'</div></div>';
     secs.forEach(function(s){
       var val=pk(text,s.key);
       if(val){
@@ -1763,14 +1365,12 @@ async function analyzeLove(){
       html+='<div class="love-advice"><div class="love-advice-lbl">💌 핵심 조언</div><div class="love-advice-txt">'+advice+'</div></div>';
     }
     html+='</div>';
-    // 연도별 애정 흐름 추가
+
     var loveScores = calcYearScores(G.saju, G.form.year).love || [];
     if(loveScores.length > 0){
       var lcy = new Date().getFullYear();
       var lyears = [];
       for(var li=0;li<8;li++) lyears.push(lcy+li);
-
-      // 고점/저점 찾기
       var maxScore = Math.max.apply(null, loveScores);
       var minScore = Math.min.apply(null, loveScores);
       var maxIdx = loveScores.indexOf(maxScore);
@@ -1784,7 +1384,6 @@ async function analyzeLove(){
       function lgx(i){return lPadL+i*(lgW/(lyears.length-1));}
       function lgy(v){return lPadT+(lMax-v)/(lMax-lMin)*lgH;}
 
-      // 부드러운 곡선 (cubic bezier)
       function makeCurve(scores){
         var pts=scores.map(function(v,i){return {x:lgx(i),y:lgy(v)};});
         var d='M'+pts[0].x.toFixed(1)+','+pts[0].y.toFixed(1);
@@ -1811,55 +1410,40 @@ async function analyzeLove(){
       var lSvg='<svg viewBox="0 0 '+lW+' '+lH+'" style="width:'+lW+'px;min-width:'+lW+'px;height:'+(lH+10)+'px;" id="love-graph-svg">';
       lSvg+='<defs>';
       lSvg+='<linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E06B3A" stop-opacity=".18"/><stop offset="100%" stop-color="#E06B3A" stop-opacity="0"/></linearGradient>';
-      lSvg+='<filter id="glow2"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
       lSvg+='</defs>';
-
-      // 그리드
       lSvg+='<line x1="'+lPadL+'" y1="'+lPadT+'" x2="'+lPadL+'" y2="'+(lPadT+lgH)+'" stroke="rgba(0,0,0,.06)" stroke-width="1"/>';
       lSvg+='<line x1="'+lPadL+'" y1="'+(lPadT+lgH)+'" x2="'+(lPadL+lgW)+'" y2="'+(lPadT+lgH)+'" stroke="rgba(0,0,0,.06)" stroke-width="1"/>';
       [25,50,75].forEach(function(pct){
         var gy2=lgy(lMin+(lMax-lMin)*pct/100);
         lSvg+='<line x1="'+lPadL+'" y1="'+gy2.toFixed(1)+'" x2="'+(lPadL+lgW)+'" y2="'+gy2.toFixed(1)+'" stroke="rgba(0,0,0,.04)" stroke-dasharray="3,4" stroke-width="1"/>';
       });
-
-      // 영역 + 곡선
       lSvg+='<path d="'+makeAreaCurve(loveScores)+'" fill="url(#lg2)"/>';
       lSvg+='<path d="'+makeCurve(loveScores)+'" fill="none" stroke="#E06B3A" stroke-width="2.5" stroke-linecap="round"/>';
-
-      // 점들
       lyears.forEach(function(yr,i){
         var cx=lgx(i), cy2=lgy(loveScores[i]);
         var isNow=yr===lcy;
         var isMax=i===maxIdx;
         var isMin=i===minIdx;
-
         if(isNow){
-          // 현재 연도 강조
           lSvg+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy2.toFixed(1)+'" r="10" fill="#E06B3A" opacity=".12"/>';
           lSvg+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy2.toFixed(1)+'" r="6" fill="#E06B3A" opacity=".25"/>';
         }
         if(isMax && !isNow){
-          // 고점 강조
           lSvg+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy2.toFixed(1)+'" r="8" fill="#E06B3A" opacity=".15"/>';
         }
         lSvg+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy2.toFixed(1)+'" r="'+(isNow?5.5:isMax?5:3.5)+'" fill="'+(isMax?'#E06B3A':isMin?'#aaa':'#E06B3A')+'" stroke="#fff" stroke-width="'+(isNow||isMax?2:1.5)+'"/>';
-
-        // 고점 라벨
         if(isMax){
           lSvg+='<rect x="'+(cx-18).toFixed(1)+'" y="'+(cy2-22).toFixed(1)+'" width="36" height="16" rx="8" fill="#E06B3A"/>';
           lSvg+='<text x="'+cx.toFixed(1)+'" y="'+(cy2-11).toFixed(1)+'" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">💕 최고</text>';
         }
-        // 저점 라벨
         if(isMin && minScore < maxScore - 15){
           lSvg+='<rect x="'+(cx-18).toFixed(1)+'" y="'+(cy2+7).toFixed(1)+'" width="36" height="16" rx="8" fill="rgba(0,0,0,.12)"/>';
           lSvg+='<text x="'+cx.toFixed(1)+'" y="'+(cy2+18).toFixed(1)+'" text-anchor="middle" font-size="9" fill="#888" font-weight="600">주의</text>';
         }
-        // 현재 라벨
         if(isNow){
           lSvg+='<line x1="'+cx.toFixed(1)+'" y1="'+lPadT+'" x2="'+cx.toFixed(1)+'" y2="'+(lPadT+lgH)+'" stroke="#E06B3A" stroke-width="1" stroke-dasharray="3,3" opacity=".3"/>';
           lSvg+='<text x="'+cx.toFixed(1)+'" y="'+(lPadT-8)+'" text-anchor="middle" font-size="9" fill="#E06B3A" font-weight="700">지금</text>';
         }
-        // 연도 라벨
         lSvg+='<text x="'+cx.toFixed(1)+'" y="'+(lPadT+lgH+20)+'" text-anchor="middle" font-size="10" fill="'+(isNow?'#E06B3A':'rgba(0,0,0,.35)')+'" font-weight="'+(isNow?'700':'400')+'" style="cursor:pointer;" onclick="selectLoveYear('+yr+')">'+yr+'</text>';
       });
       lSvg+='</svg>';
@@ -1877,20 +1461,17 @@ async function analyzeLove(){
         +'<div id="love-year-detail" style="margin-top:12px;"></div>'
         +'</div>';
     }
-html+='<div style="text-align:center;margin-top:12px;"><button class="reset-btn" onclick="renderLoveStep1()">다시 선택하기</button></div>';
+    html+='<div style="text-align:center;margin-top:12px;"><button class="reset-btn" onclick="renderLoveStep1()">다시 선택하기</button></div>';
     el.innerHTML=html;
   }catch(e){
     el.innerHTML='<div style="padding:22px;text-align:center;"><div style="color:var(--summer);font-size:13px;margin-bottom:12px;">'+e.message+'</div><button class="reset-btn" onclick="analyzeLove()">다시 시도하기</button></div>';
   }
 }
 
-// 애정운 연도별 클릭
 var loveYearCache={};
 function selectLoveYear(yr){
   var wrap=document.getElementById('love-year-detail');
   if(!wrap)return;
-
-  // 버튼 활성화 효과 (SVG text 색상)
   var svg=document.getElementById('love-graph-svg');
   if(svg){
     svg.querySelectorAll('text').forEach(function(t){
@@ -1900,8 +1481,6 @@ function selectLoveYear(yr){
       }
     });
   }
-
-  // 구독 체크
   if(!isSubscribed()){
     wrap.innerHTML='<div style="background:var(--summer-light);border:1.5px solid rgba(224,107,58,.2);border-radius:12px;padding:16px;text-align:center;">'
       +'<div style="font-size:13px;font-weight:700;color:var(--summer);margin-bottom:6px;">🔒 '+yr+'년 상세 애정운</div>'
@@ -1910,12 +1489,8 @@ function selectLoveYear(yr){
       +'</div>';
     return;
   }
-
-  // 캐시 확인
   if(loveYearCache[yr]){showLoveYearDetail(yr,loveYearCache[yr]);return;}
-
   wrap.innerHTML='<div style="padding:20px;text-align:center;"><div class="spin" style="width:28px;height:28px;border-width:2px;"></div><div style="margin-top:10px;font-size:12px;color:var(--muted);">'+yr+'년 애정운 분석 중…</div></div>';
-
   loadLoveYearDetail(yr);
 }
 
@@ -1962,8 +1537,6 @@ async function loadLoveYearDetail(yr){
 function showLoveYearDetail(yr,d){
   var wrap=document.getElementById('love-year-detail');
   if(!wrap)return;
-
-  // 월별 캘린더
   var months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
   var raw=(d.월별||'').replace(/`/g,'').replace(/좋음/g,'good').replace(/보통/g,'normal').replace(/나쁨|주의/g,'bad');
   var scores=raw.split(',').map(function(s){
@@ -2014,7 +1587,6 @@ function showLoveYearDetail(yr,d){
 
 // ===== 신뢰 섹션 =====
 (function(){
-  // 오늘 카운터 - 랜덤 변동
   var base = 43 + Math.floor(Math.random() * 9);
   var el = document.getElementById('today-count');
   if(el) el.textContent = base;
@@ -2025,7 +1597,6 @@ function showLoveYearDetail(yr,d){
     }
   }, 8000);
 
-  // 후기 슬라이더 자동 전환
   var slider = document.getElementById('review-slider');
   var dots = document.getElementById('review-dots');
   if(!slider) return;
@@ -2044,7 +1615,6 @@ function showLoveYearDetail(yr,d){
   }
   setInterval(function(){ goTo(cur + 1); }, 4000);
 
-  // 실시간 알림
   var notices = [
     '방금 서울에서 누군가 분석을 완료했어요',
     '방금 부산에서 커리어 분석을 완료했어요',
