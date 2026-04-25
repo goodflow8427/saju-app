@@ -281,6 +281,7 @@ select.inp option{background:#fff;}
 .footer a:hover{color:var(--gold);}
 .footer-info{font-size:9px;color:var(--muted);margin-top:6px;line-height:1.7;opacity:.6;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.3/lunar.js"></script>
 </head>
 <body>
 <div id="toast" class="toast"></div>
@@ -504,7 +505,7 @@ select.inp option{background:#fff;}
 
 </div><!-- /wrap -->
 <script>
-// ===== 사주 계산 (정교한 버전) =====
+// ===== 사주 계산 (lunar-javascript 기반) =====
 var TG=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 var JJ=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 var TGN=['갑','을','병','정','무','기','경','신','임','계'];
@@ -514,304 +515,30 @@ var OHJ=['수','토','목','목','토','화','화','토','금','금','토','수'
 var OHC={목:'wood',화:'fire',토:'earth',금:'metal',수:'water'};
 var OHK={목:'🌳 나무',화:'🔥 불',토:'🌍 흙',금:'⚙️ 금',수:'💧 물'};
 
-// 절기 데이터 (년도별 정확한 절기일 - 입춘~소한)
-// 각 월의 절기일 (1900~2050 평균값 기반 정밀 계산)
-var JEOLGI_TABLE = {
-  // [입춘,경칩,청명,입하,망종,소서,입추,백로,한로,입동,대설,소한]
-  // 평년 기준
-  default: [4,6,5,5,6,7,7,8,8,7,7,6]
-};
+var TG_MAP={'甲':0,'乙':1,'丙':2,'丁':3,'戊':4,'己':5,'庚':6,'辛':7,'壬':8,'癸':9};
+var JJ_MAP={'子':0,'丑':1,'寅':2,'卯':3,'辰':4,'巳':5,'午':6,'未':7,'申':8,'酉':9,'戌':10,'亥':11};
 
-// 정밀 절기 계산 (천문학적 근사값)
-function getJeolgiDay(year, month) {
-  // 월별 절기 기준일 (음력→양력 변환 근사)
-  var base = JEOLGI_TABLE.default[month-1];
-  // 4년 주기 윤년 보정
-  var leapAdj = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? -1 : 0;
-  // 세기별 보정 (1900년대는 +1, 2000년대는 0)
-  var centuryAdj = year < 2000 ? 1 : 0;
-  return base + leapAdj + centuryAdj;
-}
-
-// 년주 계산
-function getYear(y) {
-  var g = ((y - 4) % 10 + 10) % 10;
-  var j = ((y - 4) % 12 + 12) % 12;
-  return {g:g, j:j};
-}
-
-// 월주 계산 (절기 기준 정확)
-function getMonth(y, m, d) {
-  var jeolgi = getJeolgiDay(y, m);
-  var mj, mg;
-  if (d >= jeolgi) {
-    // 절기 이후 → 해당 월의 월지
-    var mjMap = {1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:0};
-    mj = mjMap[m];
-  } else {
-    // 절기 이전 → 전월의 월지
-    var mjPrevMap = {1:0,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
-    mj = mjPrevMap[m];
+function calcSaju(y, m, d, h, min) {
+  min = min || 0;
+  var solar = Solar.fromYmdHms(y, m, d, h, min, 0);
+  var lunar = solar.getLunar();
+  var bazi = lunar.getBaZi();
+  function parsePillar(ganzhi) {
+    var chars = ganzhi.split('');
+    return { g: TG_MAP[chars[0]], j: JJ_MAP[chars[1]] };
   }
-  // 월간 계산: 연간 기준
-  var yg = ((y - 4) % 10 + 10) % 10;
-  // 갑기년=병인월시작, 을경년=무인월시작, 병신년=경인월시작, 정임년=임인월시작, 무계년=갑인월시작
-  var monthBaseG = [2, 4, 6, 8, 0, 2, 4, 6, 8, 0][yg];
-  // 인월(mj=2)부터 시작하므로 offset 계산
-  var offset = (mj - 2 + 12) % 12;
-  mg = (monthBaseG + offset) % 10;
-  return {g:mg, j:mj};
-}
-
-// 일주 계산 (갑자일 기준 정확)
-function getDay(y, m, d) {
-  // 율리우스 일수 계산으로 정확한 일진 산출
-  var a = Math.floor((14 - m) / 12);
-  var yr = y + 4800 - a;
-  var mo = m + 12 * a - 3;
-  var jdn = d + Math.floor((153 * mo + 2) / 5) + 365 * yr + Math.floor(yr / 4) - Math.floor(yr / 100) + Math.floor(yr / 400) - 32045;
-  // 갑자일(JDN 2299161 = 1582년 10월 15일) 기준
-  // 실제로는 임의 기준점 사용
-  var BASE_JDN = 2415021; // 1900년 1월 1일 JDN
-  var BASE_GANJIGA = 10; // 1900년 1월 1일 = 甲戌(갑술)일 기준 검증완료
-  var diff = jdn - BASE_JDN;
-  var idx = ((diff + BASE_GANJIGA) % 60 + 60) % 60;
-  return {g: idx % 10, j: idx % 12};
-}
-
-// 시주 계산
-function getHour(dg, h) {
-  // 자시=23~1시, 축시=1~3시 ... (2시간 단위)
-  var hj = Math.floor((h + 1) / 2) % 12;
-  // 일간 기준 시간 천간
-  // 갑기일=갑자시, 을경일=병자시, 병신일=무자시, 정임일=경자시, 무계일=임자시
-  var hourBaseG = [0, 2, 4, 6, 8, 0, 2, 4, 6, 8][dg];
-  var hg = (hourBaseG + hj) % 10;
-  return {g:hg, j:hj};
-}
-
-// 대운 계산 (10년 대운)
-function calcDaeun(sj, year, month, day, gender) {
-  // 출생 후 다음/이전 절기까지의 일수로 대운수 계산
-  var yg = sj.year.g;
-  var isYang = (yg % 2 === 0); // 갑,병,무,경,임 = 양간
-  var isMale = (gender === 'male');
-  // 순행/역행 결정
-  var forward = (isYang && isMale) || (!isYang && !isMale);
-  
-  // 절기일 계산 (근사)
-  var jeolgi = getJeolgiDay(year, month);
-  var daysToJeolgi;
-  if (forward) {
-    // 다음 절기까지의 일수
-    var nextMonth = month === 12 ? 1 : month + 1;
-    var nextYear = month === 12 ? year + 1 : year;
-    var nextJeolgi = getJeolgiDay(nextYear, nextMonth);
-    var daysInMonth = new Date(nextYear, nextMonth - 1, 0).getDate();
-    daysToJeolgi = (day < jeolgi) ? (jeolgi - day) : (daysInMonth - day + nextJeolgi);
-  } else {
-    // 이전 절기까지의 일수
-    daysToJeolgi = (day >= jeolgi) ? (day - jeolgi) : (day + 30 - getJeolgiDay(year, month === 1 ? 12 : month - 1));
-  }
-  
-  // 3일 = 1년 원칙
-  var startAge = Math.round(daysToJeolgi / 3);
-  
-  // 대운 간지 계산
-  var daeuns = [];
-  var monthIdx = sj.month.j;
-  for (var i = 0; i < 8; i++) {
-    var offset = forward ? (i + 1) : -(i + 1);
-    var dg2 = ((sj.month.g + offset) % 10 + 10) % 10;
-    var dj = ((monthIdx + offset) % 12 + 12) % 12;
-    daeuns.push({
-      g: dg2, j: dj,
-      startAge: startAge + i * 10,
-      startYear: year + startAge + i * 10 - (new Date().getFullYear() - year)
-    });
-  }
-  return {startAge: startAge, daeuns: daeuns, forward: forward};
-}
-
-// 오행 강도 계산 (십이운성 기반)
-function calcOhengStrength(sj) {
-  var ohCount = {목:0, 화:0, 토:0, 금:0, 수:0};
-  var pillars = [sj.year, sj.month, sj.day, sj.time];
-  
-  // 천간 오행 (가중치 1.0)
-  pillars.forEach(function(p) {
-    ohCount[OHT[p.g]] += 1.0;
-  });
-  
-  // 지지 오행 (가중치 1.2 - 지지가 더 중요)
-  pillars.forEach(function(p) {
-    ohCount[OHJ[p.j]] += 1.2;
-  });
-  
-  // 지장간 (간략화 - 주기운만)
-  var jijanggan = {
-    0: [{oh:'수',w:0.7}],          // 자
-    1: [{oh:'토',w:0.6},{oh:'수',w:0.3}], // 축
-    2: [{oh:'목',w:0.7},{oh:'화',w:0.2}], // 인
-    3: [{oh:'목',w:0.8}],          // 묘
-    4: [{oh:'토',w:0.6},{oh:'목',w:0.2}], // 진
-    5: [{oh:'화',w:0.6},{oh:'토',w:0.3}], // 사
-    6: [{oh:'화',w:0.7},{oh:'토',w:0.2}], // 오
-    7: [{oh:'토',w:0.6},{oh:'화',w:0.3}], // 미
-    8: [{oh:'금',w:0.7},{oh:'수',w:0.2}], // 신
-    9: [{oh:'금',w:0.8}],          // 유
-    10:[{oh:'토',w:0.6},{oh:'금',w:0.2}], // 술
-    11:[{oh:'수',w:0.6},{oh:'목',w:0.2}]  // 해
-  };
-  pillars.forEach(function(p) {
-    var jzg = jijanggan[p.j] || [];
-    jzg.forEach(function(z) {
-      ohCount[z.oh] += z.w;
-    });
-  });
-  
-  return ohCount;
-}
-
-// 일간 강도 계산 (득지/실지)
-function calcDayMasterStrength(sj) {
-  var dayOh = OHT[sj.day.g];
-  var ohStr = calcOhengStrength(sj);
-  
-  // 일간과 같은 오행 또는 생하는 오행이 강할수록 신강
-  var saengMap = {목:'수', 화:'목', 토:'화', 금:'토', 수:'금'};
-  var dayStr = ohStr[dayOh] + ohStr[saengMap[dayOh]] * 0.7;
-  var totalStr = Object.values(ohStr).reduce(function(a,b){return a+b;},0);
-  
   return {
-    strength: dayStr / totalStr,
-    isStrong: dayStr / totalStr > 0.3,
-    ohCount: ohStr
+    year: parsePillar(bazi[0]),
+    month: parsePillar(bazi[1]),
+    day: parsePillar(bazi[2]),
+    time: parsePillar(bazi[3])
   };
 }
 
-// 인생 계절 계산 - 기간 문자열 파싱 기반
-function calcLifeSeason(sj, birthYear, periodTexts) {
-  var cy = new Date().getFullYear();
-  var age = cy - birthYear + 1;
-
-  // AI가 답한 기간 텍스트에서 나이 범위 파싱
-  // 예: "32~40세", "33세~40세", "25~30세" 등
-  function parseAgeRange(text) {
-    if(!text) return null;
-    var m = text.match(/(\d+)\s*[~\-~]\s*(\d+)/);
-    if(m) return {min: parseInt(m[1]), max: parseInt(m[2])};
-    var m2 = text.match(/(\d+)\s*세/);
-    if(m2) return {min: parseInt(m2[1]), max: parseInt(m2[1])+9};
-    return null;
-  }
-
-  if(periodTexts) {
-    var seasons = ['봄','여름','가을','겨울'];
-    var keys = ['봄기간','여름기간','가을기간','겨울기간'];
-    for(var i=0; i<keys.length; i++){
-      var range = parseAgeRange(periodTexts[keys[i]]);
-      if(range && age >= range.min && age <= range.max) {
-        return seasons[i];
-      }
-    }
-  }
-
-  // 파싱 실패 시 사주 오행 + 나이 기반 계산
-  var dmStr = calcDayMasterStrength(sj);
-  var dayOh = OHT[sj.day.g];
-  var ohSeason = {목:'봄', 화:'여름', 토:'가을', 금:'가을', 수:'겨울'};
-
-  // 신강/신약에 따른 대운 흐름
-  var ageSeason;
-  if (dmStr.isStrong) {
-    // 신강: 일찍 전성기
-    if (age <= 28) ageSeason = '봄';
-    else if (age <= 43) ageSeason = '여름';
-    else if (age <= 58) ageSeason = '가을';
-    else ageSeason = '겨울';
-  } else {
-    // 신약: 조금 늦게 전성기
-    if (age <= 32) ageSeason = '봄';
-    else if (age <= 47) ageSeason = '여름';
-    else if (age <= 62) ageSeason = '가을';
-    else ageSeason = '겨울';
-  }
-  return ageSeason;
-}
-
-// 연도별 운세 점수 계산 (사주 기반)
-function calcYearScores(sj, birthYear) {
-  var cy = new Date().getFullYear();
-  var scores = {career: [], wealth: [], love: []};
-  var dmStr = calcDayMasterStrength(sj);
-  var dayOh = OHT[sj.day.g];
-  var chukeMap = {목:'토', 화:'금', 토:'수', 금:'목', 수:'화'};
-  var saengMap = {목:'화', 화:'토', 토:'금', 금:'수', 수:'목'};
-  var wealthOh = chukeMap[dayOh]; // 재성
-  var officerOh = chukeMap[wealthOh]; // 관성
-  var isMale = false; // 기본값 (렌더링 시 업데이트)
-  
-  // 세운 간지
-  for (var i = 0; i < 8; i++) {
-    var yr = cy + i;
-    var yrGanji = getYear(yr);
-    var yrOh = OHT[yrGanji.g];
-    var yrJiOh = OHJ[yrGanji.j];
-    
-    // 커리어 점수 (관성이 강할수록, 비견이 약할수록 좋음)
-    var careerScore = 60;
-    if (yrOh === officerOh || yrJiOh === officerOh) careerScore += 20;
-    if (yrOh === saengMap[dayOh] || yrJiOh === saengMap[dayOh]) careerScore += 10;
-    if (yrOh === dayOh || yrJiOh === dayOh) careerScore -= 10; // 비겁 과다
-    if (dmStr.isStrong && (yrOh === chukeMap[dayOh] || yrJiOh === chukeMap[dayOh])) careerScore += 15;
-    
-    // 재물 점수 (재성이 강할수록 좋음)
-    var wealthScore = 60;
-    if (yrOh === wealthOh || yrJiOh === wealthOh) wealthScore += 22;
-    if (yrOh === saengMap[wealthOh] || yrJiOh === saengMap[wealthOh]) wealthScore += 10;
-    if (yrOh === dayOh || yrJiOh === dayOh) wealthScore -= 8; // 비겁 재성 겁탈
-    
-    // 형충파해 보정 (일지와 세운 지지)
-    var dayJ = sj.day.j;
-    var yrJ = yrGanji.j;
-    // 충: 자오충, 축미충, 인신충, 묘유충, 진술충, 사해충
-    var chungPairs = [[0,6],[1,7],[2,8],[3,9],[4,10],[5,11]];
-    var isChung = chungPairs.some(function(pair){return (dayJ===pair[0]&&yrJ===pair[1])||(dayJ===pair[1]&&yrJ===pair[0]);});
-    if (isChung) { careerScore -= 12; wealthScore -= 12; }
-    
-    // 합: 자축합, 인해합, 묘술합, 진유합, 사신합, 오미합
-    var hapPairs = [[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
-    var isHap = hapPairs.some(function(pair){return (dayJ===pair[0]&&yrJ===pair[1])||(dayJ===pair[1]&&yrJ===pair[0]);});
-    if (isHap) { careerScore += 8; wealthScore += 8; }
-    
-    scores.career.push(Math.min(95, Math.max(25, Math.round(careerScore))));
-    scores.wealth.push(Math.min(95, Math.max(25, Math.round(wealthScore))));
-
-    // 애정 점수 (남자=재성, 여자=관성이 인연)
-    var loveOh = (G.form && G.form.gender === 'male') ? wealthOh : officerOh;
-    var loveScore = 60;
-    if (yrOh === loveOh || yrJiOh === loveOh) loveScore += 22;
-    if (yrOh === saengMap[loveOh] || yrJiOh === saengMap[loveOh]) loveScore += 10;
-    if (yrOh === dayOh || yrJiOh === dayOh) loveScore -= 8;
-    if (isHap) loveScore += 15;
-    if (isChung) loveScore -= 12;
-    scores.love.push(Math.min(95, Math.max(25, Math.round(loveScore))));
-  }
-  return scores;
-}
-
-function calcSaju(y, m, d, h) {
-  return {
-    year: getYear(y),
-    month: getMonth(y, m, d),
-    day: getDay(y, m, d),
-    time: getHour(getDay(y, m, d).g, h)
-  };
-}
 function descSaju(sj) {
   return TG[sj.year.g]+JJ[sj.year.j]+' '+TG[sj.month.g]+JJ[sj.month.j]+' '+TG[sj.day.g]+JJ[sj.day.j]+' '+TG[sj.time.g]+JJ[sj.time.j];
 }
+// ===== 끝 =====
 function mjHTML(sj) {
   var cols=[{l:'년주',d:sj.year},{l:'월주',d:sj.month},{l:'일주',d:sj.day},{l:'시주',d:sj.time}];
   var h='<table class="mj-table"><tr><th></th>';
@@ -1244,7 +971,7 @@ async function startAnalysis(){
   if(!yr||!mo||!dy||isNaN(hr)||isNaN(mn)){alert('생년월일시를 모두 입력해주세요.');return;}
   show('s-loading');startLoadingMsg();
   try{
-    var sj=calcSaju(yr,mo,dy,hr);
+    var sj=calcSaju(yr,mo,dy,hr,mn);
     var dc=descSaju(sj)+' ('+yr+'년 '+mo+'월 '+dy+'일 '+hr+'시 '+(gd==='female'?'여성':'남성')+')';
     G={form:{name:nm,year:yr,month:mo,day:dy,hour:hr,minute:mn,gender:gd},saju:sj,dc:dc};
     stopLoadingMsg();show('s-main');
