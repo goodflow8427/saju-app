@@ -690,35 +690,54 @@ function calcDayMasterStrength(sj) {
   };
 }
 
-// 인생 계절 계산 (사주 기반)
-function calcLifeSeason(sj, birthYear) {
+// 인생 계절 계산 - 기간 문자열 파싱 기반
+function calcLifeSeason(sj, birthYear, periodTexts) {
   var cy = new Date().getFullYear();
   var age = cy - birthYear + 1;
+
+  // AI가 답한 기간 텍스트에서 나이 범위 파싱
+  // 예: "32~40세", "33세~40세", "25~30세" 등
+  function parseAgeRange(text) {
+    if(!text) return null;
+    var m = text.match(/(\d+)\s*[~\-~]\s*(\d+)/);
+    if(m) return {min: parseInt(m[1]), max: parseInt(m[2])};
+    var m2 = text.match(/(\d+)\s*세/);
+    if(m2) return {min: parseInt(m2[1]), max: parseInt(m2[1])+9};
+    return null;
+  }
+
+  if(periodTexts) {
+    var seasons = ['봄','여름','가을','겨울'];
+    var keys = ['봄기간','여름기간','가을기간','겨울기간'];
+    for(var i=0; i<keys.length; i++){
+      var range = parseAgeRange(periodTexts[keys[i]]);
+      if(range && age >= range.min && age <= range.max) {
+        return seasons[i];
+      }
+    }
+  }
+
+  // 파싱 실패 시 사주 오행 + 나이 기반 계산
   var dmStr = calcDayMasterStrength(sj);
   var dayOh = OHT[sj.day.g];
-  
-  // 오행별 계절 매핑
   var ohSeason = {목:'봄', 화:'여름', 토:'가을', 금:'가을', 수:'겨울'};
-  var baseSeason = ohSeason[dayOh];
-  
-  // 나이 기반 계절 조정
-  // 20대 이하: 봄, 30~40대: 여름, 50~60대: 가을, 70+: 겨울
+
+  // 신강/신약에 따른 대운 흐름
   var ageSeason;
-  if (age <= 30) ageSeason = '봄';
-  else if (age <= 45) ageSeason = '여름';
-  else if (age <= 60) ageSeason = '가을';
-  else ageSeason = '겨울';
-  
-  // 일간 강도에 따른 조정
-  // 신강이면 전성기(여름), 신약이면 성장(봄) 또는 침체(겨울)
-  var finalSeason;
   if (dmStr.isStrong) {
-    finalSeason = (age <= 35) ? '여름' : ageSeason;
+    // 신강: 일찍 전성기
+    if (age <= 28) ageSeason = '봄';
+    else if (age <= 43) ageSeason = '여름';
+    else if (age <= 58) ageSeason = '가을';
+    else ageSeason = '겨울';
   } else {
-    finalSeason = (age <= 40) ? '봄' : ageSeason;
+    // 신약: 조금 늦게 전성기
+    if (age <= 32) ageSeason = '봄';
+    else if (age <= 47) ageSeason = '여름';
+    else if (age <= 62) ageSeason = '가을';
+    else ageSeason = '겨울';
   }
-  
-  return finalSeason;
+  return ageSeason;
 }
 
 // 연도별 운세 점수 계산 (사주 기반)
@@ -951,7 +970,8 @@ async function loadJourney(){
     var text=await callAPI(parts.join('\n'));
     // 사주 기반 직접 계산
     var yearScores = calcYearScores(G.saju, G.form.year);
-    var lifeSeason = calcLifeSeason(G.saju, G.form.year);
+    var periodTexts = {봄기간:pk(text,'봄기간'),여름기간:pk(text,'여름기간'),가을기간:pk(text,'가을기간'),겨울기간:pk(text,'겨울기간')};
+    var lifeSeason = calcLifeSeason(G.saju, G.form.year, periodTexts);
     var data={
       기질:pk(text,'기질'),
       기질키워드:pk(text,'기질키워드'),
