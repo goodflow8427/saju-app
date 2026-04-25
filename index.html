@@ -732,11 +732,16 @@ function selectYear(yr){
     return;
   }
 
-  // 캐시 확인 (커리어/재물 없으면 재요청)
+  // 메모리 캐시 확인
   if(yearCache[yr]&&yearCache[yr].커리어&&yearCache[yr].재물){showYearDetail(yr,yearCache[yr]);return;}
+  // localStorage 캐시 확인
+  var stored=loadCache('yr-'+G.dc.slice(0,10)+'-'+yr);
+  if(stored&&stored.커리어&&stored.재물){yearCache[yr]=stored;showYearDetail(yr,stored);return;}
   delete yearCache[yr];
 
-  // 로딩
+  // 로딩 중복 방지
+  if(wrap.dataset.loading===String(yr))return;
+  wrap.dataset.loading=String(yr);
   wrap.innerHTML='<div class="yd-loading"><div class="spin" style="width:32px;height:32px;border-width:2.5px;"></div><div style="margin-top:12px;font-size:13px;color:var(--muted);">'+yr+'년 운세 분석 중…</div></div>';
   loadYearDetail(yr);
 }
@@ -774,9 +779,15 @@ async function loadYearDetail(yr){
       핵심조언:pk(text,'핵심조언')
     };
     yearCache[yr]=d;
+    saveCache('yr-'+G.dc.slice(0,10)+'-'+yr, d);
+    if(wrap)wrap.dataset.loading='';
     showYearDetail(yr,d);
   }catch(e){
-    if(wrap)wrap.innerHTML='<div style="padding:16px;text-align:center;color:var(--summer);font-size:13px;">'+e.message+'<br><button class="reset-btn" onclick="delete yearCache['+yr+'];selectYear('+yr+')">다시 시도</button></div>';
+    if(wrap){
+      wrap.dataset.loading='';
+      wrap.innerHTML='<div style="padding:16px;text-align:center;color:var(--summer);font-size:13px;margin-bottom:10px;">'+e.message+'</div>'
+        +'<div style="text-align:center;"><button class="reset-btn" onclick="delete yearCache['+yr+'];selectYear('+yr+')">다시 시도하기</button></div>';
+    }
   }
 }
 
