@@ -653,7 +653,7 @@ function calcLifeSeason(sj, birthYear) {
 // 연도별 운세 점수 계산 (사주 기반)
 function calcYearScores(sj, birthYear) {
   var cy = new Date().getFullYear();
-  var scores = {career: [], wealth: []};
+  var scores = {career: [], wealth: [], love: []};
   var dmStr = calcDayMasterStrength(sj);
   var dayOh = OHT[sj.day.g];
   var chukeMap = {목:'토', 화:'금', 토:'수', 금:'목', 수:'화'};
@@ -697,6 +697,16 @@ function calcYearScores(sj, birthYear) {
     
     scores.career.push(Math.min(95, Math.max(25, Math.round(careerScore))));
     scores.wealth.push(Math.min(95, Math.max(25, Math.round(wealthScore))));
+
+    // 애정 점수 (남자=재성, 여자=관성이 인연)
+    var loveOh = (G.form && G.form.gender === 'male') ? wealthOh : officerOh;
+    var loveScore = 60;
+    if (yrOh === loveOh || yrJiOh === loveOh) loveScore += 22;
+    if (yrOh === saengMap[loveOh] || yrJiOh === saengMap[loveOh]) loveScore += 10;
+    if (yrOh === dayOh || yrJiOh === dayOh) loveScore -= 8;
+    if (isHap) loveScore += 15;
+    if (isChung) loveScore -= 12;
+    scores.love.push(Math.min(95, Math.max(25, Math.round(loveScore))));
   }
   return scores;
 }
