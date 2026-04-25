@@ -660,6 +660,7 @@ function calcYearScores(sj, birthYear) {
   var saengMap = {목:'화', 화:'토', 토:'금', 금:'수', 수:'목'};
   var wealthOh = chukeMap[dayOh]; // 재성
   var officerOh = chukeMap[wealthOh]; // 관성
+  var isMale = false; // 기본값 (렌더링 시 업데이트)
   
   // 세운 간지
   for (var i = 0; i < 8; i++) {
@@ -1509,6 +1510,47 @@ async function analyzeLove(){
       html+='<div class="love-advice"><div class="love-advice-lbl">💌 핵심 조언</div><div class="love-advice-txt">'+advice+'</div></div>';
     }
     html+='</div>';
+    // 연도별 애정 흐름 추가
+    var loveScores = calcYearScores(G.saju, G.form.year).love || [];
+    if(loveScores.length > 0){
+      var lcy = new Date().getFullYear();
+      var lyears = [];
+      for(var li=0;li<8;li++) lyears.push(lcy+li);
+      // SVG 그래프
+      var lW=600, lH=140, lPadL=20, lPadR=20, lPadT=16, lPadB=28;
+      var lgW=lW-lPadL-lPadR, lgH=lH-lPadT-lPadB;
+      var lMax=Math.min(95,Math.max.apply(null,loveScores)+8);
+      var lMin=Math.max(25,Math.min.apply(null,loveScores)-8);
+      if(lMax-lMin<30){lMax=Math.min(95,lMax+10);lMin=Math.max(25,lMin-10);}
+      function lgx(i){return lPadL+i*(lgW/(lyears.length-1));}
+      function lgy(v){return lPadT+(lMax-v)/(lMax-lMin)*lgH;}
+      var lPts=loveScores.map(function(v,i){return(i===0?'M':'L')+lgx(i).toFixed(1)+','+lgy(v).toFixed(1);}).join(' ');
+      var lArea='M'+lgx(0).toFixed(1)+','+(lPadT+lgH)+' L'+lPts.slice(1)+' L'+lgx(lyears.length-1).toFixed(1)+','+(lPadT+lgH)+'Z';
+      var lSvg='<svg viewBox="0 0 '+lW+' '+lH+'" style="width:'+lW+'px;min-width:'+lW+'px;height:'+(lH+10)+'px;">';
+      lSvg+='<defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E06B3A" stop-opacity=".15"/><stop offset="100%" stop-color="#E06B3A" stop-opacity="0"/></linearGradient></defs>';
+      // 그리드
+      lSvg+='<line x1="'+lPadL+'" y1="'+lPadT+'" x2="'+lPadL+'" y2="'+(lPadT+lgH)+'" stroke="rgba(0,0,0,.06)" stroke-width="1"/>';
+      lSvg+='<line x1="'+lPadL+'" y1="'+(lPadT+lgH/2)+'" x2="'+(lPadL+lgW)+'" y2="'+(lPadT+lgH/2)+'" stroke="rgba(0,0,0,.04)" stroke-dasharray="3,3" stroke-width="1"/>';
+      lSvg+='<path d="'+lArea+'" fill="url(#lg)"/>';
+      lSvg+='<path d="'+lPts+'" fill="none" stroke="#E06B3A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+      lyears.forEach(function(yr,i){
+        var cx=lgx(i), cy2=lgy(loveScores[i]);
+        var isNow=yr===lcy;
+        lSvg+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy2.toFixed(1)+'" r="'+(isNow?5:3.5)+'" fill="#E06B3A" stroke="'+(isNow?'#fff':'none')+'" stroke-width="2"/>';
+        lSvg+='<text x="'+cx.toFixed(1)+'" y="'+(lPadT+lgH+18)+'" text-anchor="middle" font-size="10" fill="'+(isNow?'var(--summer)':'rgba(0,0,0,.35)')+'" font-weight="'+(isNow?'700':'400')+'">'+yr+'</text>';
+        if(isNow) lSvg+='<line x1="'+cx.toFixed(1)+'" y1="'+lPadT+'" x2="'+cx.toFixed(1)+'" y2="'+(lPadT+lgH)+'" stroke="var(--summer)" stroke-width="1" stroke-dasharray="3,3" opacity=".4"/>';
+      });
+      lSvg+='</svg>';
+
+      html+='<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 18px 16px;margin-top:13px;box-shadow:0 2px 14px rgba(0,0,0,.05);position:relative;overflow:hidden;">'
+        +'<div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#E06B3A,#f0a090);"></div>'
+        +'<div style="font-family:Nanum Myeongjo,serif;font-size:15px;font-weight:700;margin-bottom:4px;">연도별 애정 흐름</div>'
+        +'<div style="font-size:11px;color:var(--muted);margin-bottom:14px;">사주 기반으로 계산된 애정 에너지예요</div>'
+        +'<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">'
+        +lSvg
+        +'</div></div>';
+    }
+
     html+='<div style="text-align:center;margin-top:12px;"><button class="reset-btn" onclick="renderLoveStep1()">다시 선택하기</button></div>';
     el.innerHTML=html;
   }catch(e){
